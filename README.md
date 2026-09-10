@@ -38,6 +38,9 @@ run with GPT-5.6 Luna at max reasoning:
 ./scripts/run-droid-chapter-1.sh
 ```
 
+To give Droid its complete tool set and bypass its permission prompts, add
+`--full-access`. The player-mode information boundary still applies.
+
 During play, the model advances the chapter with `detroit choose <action-id>`.
 Each command prints the resulting transcript and the next choices. The launcher
 resumes the same Droid session if it exits while a choice remains. Every run is
