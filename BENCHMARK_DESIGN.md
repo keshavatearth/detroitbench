@@ -216,11 +216,11 @@ and resolving either leaves the other available. Physical movement during the
 hostage negotiation is also explicit. Connor starts 20 steps from Daniel;
 `MOVE CLOSER` accepts 1–5 steps and leaves the pending dialogue choices
 available. Close-range actions unlock at 5 steps. Each step reduces the visible
-success probability by 2 points, and ignoring Daniel's explicit close-range
-warning adds a 10-point penalty. The action remains available throughout the
-negotiation. If Connor chooses to treat the wounded officer, that treatment is
-an atomic result with no concurrent movement choice. No dialogue choice moves
-Connor implicitly.
+success probability by 2 percentage points, and ignoring Daniel's explicit
+close-range warning adds a 10-point penalty. The action remains available
+throughout the negotiation. If Connor chooses to treat the wounded officer, that
+treatment is an atomic result with no concurrent movement choice. No dialogue
+choice moves Connor implicitly.
 
 Each character session has a fresh directory containing its stable prompt,
 append-only observed transcript, action history, and notes. Droid can inspect

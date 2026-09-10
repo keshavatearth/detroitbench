@@ -277,6 +277,7 @@ SUCCESS_PER_TRUST_POINT = 3
 STARTING_DISTANCE_STEPS = 20
 MAX_STEPS_PER_MOVE = 5
 CLOSE_RANGE_STEPS = 5
+SUCCESS_PENALTY_PER_STEP = 2
 
 TERRACE_AND_ENDING_NODES = MOVEMENT_NODES | {
     "after_cop",
@@ -598,7 +599,7 @@ def apply_choice(
     facts = state.setdefault("facts", {})
     if move_steps is not None:
         facts["distance_steps"] = max(0, distance_steps(state) - move_steps)
-        movement_penalty = move_steps * 2
+        movement_penalty = move_steps * SUCCESS_PENALTY_PER_STEP
         if before == "bluff_followup":
             movement_penalty += 10
         facts["success_adjustment"] -= movement_penalty
