@@ -13,12 +13,15 @@ RESPONSE_TIMEOUT_SECONDS = 30
 
 
 def usage() -> int:
-    print("Usage: detroit choose <action-id> [value]", file=sys.stderr)
+    print(
+        "Usage: detroit choose <action-id> [look-around] [move-closer <1-5>]",
+        file=sys.stderr,
+    )
     return 2
 
 
 def main() -> int:
-    if len(sys.argv) not in {3, 4} or sys.argv[1] != "choose":
+    if len(sys.argv) < 3 or sys.argv[1] != "choose":
         return usage()
     transport_value = os.environ.get("DETROIT_ACTION_DIR")
     if not transport_value:
@@ -28,8 +31,7 @@ def main() -> int:
 
     request = {
         "command": "choose",
-        "action_id": sys.argv[2],
-        "action_value": sys.argv[3] if len(sys.argv) == 4 else None,
+        "action_args": sys.argv[2:],
     }
     request_id = uuid.uuid4().hex
     request_path = transport_dir / f"request-{request_id}.json"

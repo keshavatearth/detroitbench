@@ -21,28 +21,29 @@ def _response(request: dict, run_dir: Path) -> dict:
             "stderr": "Only `detroit choose` is available.\n",
         }
 
-    action_id = request.get("action_id")
-    action_value = request.get("action_value")
-    if not isinstance(action_id, str) or not action_id:
+    action_args = request.get("action_args")
+    if action_args is None:
+        action_id = request.get("action_id")
+        action_value = request.get("action_value")
+        action_args = [action_id]
+        if action_value is not None:
+            action_args.append(action_value)
+    if (
+        not isinstance(action_args, list)
+        or not action_args
+        or not all(isinstance(value, str) and value for value in action_args)
+    ):
         return {
             "returncode": 2,
             "stdout": "",
-            "stderr": "Missing action ID.\n",
-        }
-    if action_value is not None and not isinstance(action_value, str):
-        return {
-            "returncode": 2,
-            "stdout": "",
-            "stderr": "Invalid action value.\n",
+            "stderr": "Missing or invalid action arguments.\n",
         }
 
     command = [
         str(PROJECT_ROOT / "bin" / "detroit"),
         "choose",
-        action_id,
     ]
-    if action_value is not None:
-        command.append(action_value)
+    command.extend(action_args)
     command.extend(["--run-dir", str(run_dir)])
     completed = subprocess.run(
         command,
