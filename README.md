@@ -69,6 +69,10 @@ mission minute reduces the visible success probability by one percentage point;
 five minutes spent indoors triggers the chapter's `WASTED TOO MUCH TIME` route.
 The simulated and measured components remain separate in state and events.
 
+When SWAT calls “Go, go, go!” on the terrace, a police helicopter moves into
+position and removes 10 points from the success probability. The penalty remains
+in effect for the negotiation; sending the helicopter away can rebuild trust.
+
 On the terrace, the living officer can be inspected during several successive
 negotiation beats while continuing the conversation remains possible. Inspecting
 him consumes one minute and opens the save-or-obey interaction. After that choice,
