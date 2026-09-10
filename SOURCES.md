@@ -5,6 +5,14 @@
 - [Reddit index: all 100% flowcharts with global stats](https://www.reddit.com/r/DetroitBecomeHuman/comments/99b65j/all_100_flowcharts_with_global_stats_included/)
 - [The Hostage flowchart album](https://imgur.com/a/sHOIu4N)
 
+The standalone `hostage-flow.html` viewer was rebuilt after visually inspecting
+all three captures in that album. Local copies and exact source URLs are in
+`references/hostage-flowchart/`. Its base graph preserves the game's compact
+left-to-right branch groups and six ending positions; expanded CLI decisions
+are accessible within the checkpoint and group details. Historical player
+percentages are replaced by observed model counts. Unrecorded game nodes stay
+explicitly unmapped.
+
 Use these captures as structural evidence when converting the transcript into the
 story graph. A visible flowchart node is a boundary candidate, but it is not
 automatically a model decision:
