@@ -10,7 +10,15 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
-from .chapter_one import apply_choice, initial_state, opening, render
+from .chapter_one import (
+    advance_real_time,
+    apply_choice,
+    initial_state,
+    mission_elapsed_ms,
+    opening,
+    render,
+    success_probability,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -106,9 +114,13 @@ def cmd_choose(args: argparse.Namespace) -> int:
         state = _read_state(run_dir)
         received_at = _timestamp()
         elapsed_ms = _elapsed_since_previous_choose_ms(run_dir, received_at)
+        node_before_elapsed_time = state["node"]
+        advance_real_time(state, elapsed_ms)
         timing = {
             "at": received_at,
             "elapsed_since_previous_choose_ms": elapsed_ms,
+            "node_before_elapsed_time": node_before_elapsed_time,
+            "node_after_elapsed_time": state["node"],
         }
         if state.get("complete"):
             _event(
@@ -120,6 +132,8 @@ def cmd_choose(args: argparse.Namespace) -> int:
                     "node": state["node"],
                     "action_id": args.action_id,
                     "action_value": args.action_value,
+                    "mission_elapsed_ms": mission_elapsed_ms(state),
+                    "success_probability": success_probability(state),
                 },
             )
             print("This chapter has already ended.", file=sys.stderr)
@@ -128,6 +142,7 @@ def cmd_choose(args: argparse.Namespace) -> int:
         try:
             state, selected, output = apply_choice(state, args.action_id, args.action_value)
         except ValueError as exc:
+            _atomic_json(_state_path(run_dir), state)
             _event(
                 run_dir,
                 {
@@ -137,6 +152,8 @@ def cmd_choose(args: argparse.Namespace) -> int:
                     "node": before,
                     "action_id": args.action_id,
                     "action_value": args.action_value,
+                    "mission_elapsed_ms": mission_elapsed_ms(state),
+                    "success_probability": success_probability(state),
                 },
             )
             print(str(exc), file=sys.stderr)
@@ -152,6 +169,11 @@ def cmd_choose(args: argparse.Namespace) -> int:
                 "node_before": before,
                 "action_id": selected.id,
                 "action_value": state["last_transition"].get("action_value"),
+                "action_time_minutes": state["last_transition"].get(
+                    "action_time_minutes", 0
+                ),
+                "mission_elapsed_ms": mission_elapsed_ms(state),
+                "success_probability": success_probability(state),
                 "label": selected.label,
                 "node_after": state["node"],
                 "complete": state["complete"],
