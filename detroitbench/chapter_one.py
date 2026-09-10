@@ -543,8 +543,7 @@ def _negotiation_round_actions(state: dict[str, Any]) -> list[Action]:
     used = list(_get(state, "negotiation_choices_used", []))
     candidates = _negotiation_candidates(state)
     unused = [action for action in candidates if action.id not in used]
-    previously_used = [action for action in candidates if action.id in used]
-    visible = (unused + previously_used)[:4]
+    visible = unused[:4]
     return [
         Action(
             action.id,

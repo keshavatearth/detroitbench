@@ -192,6 +192,24 @@ class ChapterOneTests(unittest.TestCase):
         self.assertEqual(state["node"], "helicopter")
         self.assertIn("Tell that helicopter", output)
 
+    def test_middle_dialogue_cannot_repeat_a_spoken_line(self) -> None:
+        state = self._reach_negotiation_round_one()
+        self.assertEqual(
+            self._dialogue_choices(state),
+            ["realistic", "blaming", "sympathetic", "defective"],
+        )
+
+        state, _, _ = apply_choice(state, "sympathetic")
+        self.assertNotIn("sympathetic", self._dialogue_choices(state))
+        with self.assertRaises(ValueError):
+            apply_choice(state, "sympathetic")
+
+        state, _, _ = apply_choice(state, "blaming")
+        self.assertEqual(
+            self._dialogue_choices(state),
+            ["realistic", "defective"],
+        )
+
     def test_final_negotiation_set_precedes_two_ending_exchanges(self) -> None:
         state = self._reach_part_two()
         self.assertEqual(

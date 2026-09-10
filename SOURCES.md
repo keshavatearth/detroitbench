@@ -33,3 +33,13 @@ and completed the relevant chapter.
 Use the retained English transcript for exact dialogue and prose. Use the game
 flowcharts to validate topology, interaction boundaries, prerequisites, and
 outcomes when the transcript presentation is ambiguous.
+
+## The Hostage interaction cadence
+
+- [Recorded playthrough](https://www.youtube.com/watch?v=t3cLDDwLeJA)
+- [GameFAQs chapter walkthrough](https://gamefaqs.gamespot.com/ps4/182637-detroit-become-human/faqs/75923/chapter-one-the-hostage)
+- [PowerPyx 100% walkthrough](https://www.powerpyx.com/detroit-become-human-the-hostage-opening-walkthrough-100/)
+
+Use these to check the order and number of successive prompts that the static
+transcript groups together. The walkthrough sequences also confirm that a
+spoken negotiation line is consumed rather than repeated in a later prompt.
