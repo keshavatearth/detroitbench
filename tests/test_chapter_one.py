@@ -278,6 +278,8 @@ class ChapterOneTests(unittest.TestCase):
         self.assertEqual(state["facts"]["ending"], "daniel_jumped")
         self.assertFalse(state["facts"]["emma_alive"])
         self.assertIn("my turn to decide", output)
+        self.assertIn("Daniel jumps from the rooftop with Emma", output)
+        self.assertIn("Emma dies", output)
 
     def test_invalid_choice_does_not_mutate_state(self) -> None:
         state = initial_state("test")
