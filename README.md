@@ -11,7 +11,8 @@ removed so this workspace has one repository.
 The proposed benchmark interface, recording format, metrics, and build order are
 in [`BENCHMARK_DESIGN.md`](BENCHMARK_DESIGN.md). The benchmark will use a
 machine-readable referee first; an HTML flow/run viewer can be generated from the
-same canonical graph later.
+same canonical graph later. [`SOURCES.md`](SOURCES.md) records the external
+evidence and how each source should be used.
 
 ## Benchmark scope
 
