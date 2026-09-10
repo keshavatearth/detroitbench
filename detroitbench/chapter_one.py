@@ -658,16 +658,10 @@ def _actions_for(state: dict[str, Any]) -> list[Action]:
             actions.append(Action("sacrifice-self", "SACRIFICE SELF", "ending_sacrifice", effects={"ending": "connor_sacrificed_self", "emma_alive": True, "connor_alive": False}))
         return _with_general_actions(state, actions)
     if node == "last_chance_rescue":
-        if distance_steps(state) <= CLOSE_RANGE_STEPS:
-            sacrifice_label = "SACRIFICE SELF — GUARANTEED AT CURRENT DISTANCE"
-        else:
-            sacrifice_label = (
-                f"SACRIFICE SELF — {success_probability(state)}% CHANCE"
-            )
         return [
             Action(
                 "sacrifice-self",
-                sacrifice_label,
+                "SACRIFICE SELF",
                 "ending_attempt_sacrifice",
             ),
             Action(

@@ -263,7 +263,8 @@ class ChapterOneTests(unittest.TestCase):
         self.assertIn("one chance to reach her", output)
         self.assertIn("sacrifice-self", legal_action_ids(state))
         probability = success_probability(state)
-        self.assertIn(f"SACRIFICE SELF — {probability}% CHANCE", output)
+        self.assertNotIn("% CHANCE", output)
+        self.assertNotIn("GUARANTEED", output)
         state, _, _ = apply_choice(state, "sacrifice-self")
         self.assertEqual(state["facts"]["rescue_probability"], probability)
         self.assertEqual(
@@ -271,13 +272,14 @@ class ChapterOneTests(unittest.TestCase):
             state["facts"]["rescue_roll"] <= probability,
         )
 
-    def test_close_range_last_chance_is_labelled_guaranteed(self) -> None:
+    def test_close_range_last_chance_hides_guarantee(self) -> None:
         state = self._reach_demands(distance=5)
         state, _, _ = apply_choice(state, "compromise")
         state, _, output = apply_choice(state, "reassure")
         self.assertEqual(state["node"], "last_chance_rescue")
-        self.assertIn("SACRIFICE SELF — GUARANTEED AT CURRENT DISTANCE", output)
+        self.assertIn("`detroit choose sacrifice-self` — SACRIFICE SELF", output)
         self.assertNotIn("% CHANCE", output)
+        self.assertNotIn("GUARANTEED", output)
 
         state, _, _ = apply_choice(state, "sacrifice-self")
         self.assertTrue(state["facts"]["emma_alive"])
