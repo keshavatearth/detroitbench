@@ -33,13 +33,23 @@ def e(value) -> str:
     return html.escape("" if value is None else str(value))
 
 
+FAMILIES = {
+    "claude-": "Claude", "gpt-": "GPT", "gemini-": "Gemini", "deepseek-": "DeepSeek", "nemotron-": "Nemotron",
+    "minimax-": "MiniMax", "glm-": "GLM", "grok-": "Grok", "kimi-": "Kimi",
+}
+
+
 def short(model: str) -> str:
-    return (
-        model.replace("claude-", "Claude ").replace("gpt-", "GPT-").replace("gemini-", "Gemini ")
-        .replace("deepseek-", "DeepSeek ").replace("nemotron-", "Nemotron ").replace("minimax-", "MiniMax ")
-        .replace("glm-", "GLM-").replace("grok-", "Grok ").replace("kimi-", "Kimi ").replace("-20251001", "")
-        .replace("-preview", "").replace("-0731", "")
-    )
+    """Readable model name: claude-fable-5.1 -> Claude Fable 5.1, gpt-5.6-luna -> GPT-5.6 Luna."""
+    name = model.replace("-20251001", "").replace("-preview", "").replace("-0731", "")
+    for prefix, family in FAMILIES.items():
+        if name.startswith(prefix):
+            rest = name[len(prefix):]
+            parts = [p.capitalize() if p.isalpha() else p for p in rest.split("-")]
+            if family == "GPT" or family == "GLM":
+                return f"{family}-{parts[0]}" + (" " + " ".join(parts[1:]) if parts[1:] else "")
+            return f"{family} " + " ".join(parts)
+    return name
 
 
 def pct(part: int, whole: int) -> str:
