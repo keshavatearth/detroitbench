@@ -58,6 +58,21 @@ class ChapterOneTests(unittest.TestCase):
             ["ask-deviants-name", "ask-emotional-shock"],
         )
 
+    def test_room_entry_can_be_stacked_with_a_scan(self) -> None:
+        state = self._reach_investigation()
+        state, _, _ = apply_choice(state, "look-around")
+        self.assertIn("look-around", legal_action_ids(state))
+        before = copy.deepcopy(state)
+        with self.assertRaises(ValueError):
+            apply_command(state, ["look-around"])
+        self.assertEqual(state, before)
+        state, _, output = apply_command(state, ["explore-living-room", "look-around"])
+        self.assertEqual(state["node"], "investigation_living_room")
+        self.assertIn("John Phillips's body", output)
+        self.assertEqual(
+            self._object_choices(state), ["inspect-fathers-body", "inspect-childs-shoe"]
+        )
+
     def test_look_around_reveals_four_room_choices(self) -> None:
         state = self._reach_investigation()
         self.assertEqual(legal_action_ids(state), ["look-around", "go-outside"])
@@ -72,6 +87,7 @@ class ChapterOneTests(unittest.TestCase):
                 "explore-living-room",
                 "explore-bathroom",
                 "go-outside",
+                "look-around",
             ],
         )
 

@@ -18,12 +18,13 @@ from detroitbench import chapter_one as game
 def build(run_root: Path) -> dict:
     matrix = json.loads((run_root / "summary.json").read_text())
     models = []
-    for summary in matrix["results"]:
-        directory = ROOT / summary["replay_path"]
-        directory = directory.parent
+    for summary in matrix["runs"]:
+        directory = ROOT / summary["run_dir"]
         manifest = json.loads((directory / "run.json").read_text())
         recorded = json.loads((directory / "state.json").read_text())
-        state = game.initial_state(manifest["run_id"], manifest["scenario_seed"])
+        if int(recorded.get("schema_version", 0)) < 9:
+            raise SystemExit(f"{directory.name}: state schema {recorded.get('schema_version')} predates the v1 engine; the flowchart can only be rebuilt for schema 9+ runs")
+        state = game.initial_state(manifest["run_id"], manifest["scenario_seed"], recorded.get("objective", game.DEFAULT_OBJECTIVE))
         model = {
             "id": manifest["model"], "effort": manifest["reasoning_effort"],
             "status": manifest["status"], "events": [], "frames": [],
@@ -42,7 +43,6 @@ def build(run_root: Path) -> dict:
             if event["type"] not in {"choice", "invalid_choice"}:
                 continue
             old = state["node"]
-            game.advance_real_time(state, event.get("elapsed_since_previous_choose_ms"))
             frame()
             before = state["node"]
             facts_before = copy.deepcopy(state["facts"])
@@ -67,7 +67,8 @@ def build(run_root: Path) -> dict:
                 "text": output.split("\n\nChoices:")[0].split("\n\nGeneral choices")[0],
             })
             frame()
-        assert state == recorded, (manifest["model"], "final state mismatch")
+        comparable = lambda value: {**value, "facts": {k: v for k, v in value["facts"].items() if k != "real_elapsed_ms"}}
+        assert comparable(state) == comparable(recorded), (manifest["model"], "final state mismatch")
         model["ending"] = state["node"] if state["complete"] else None
         model["decisions"] = state["decision_count"]
         models.append(model)
@@ -308,12 +309,18 @@ def build(run_root: Path) -> dict:
             assert e["s"] in present and e["t"] in present, e
     for model in models:
         model.pop("frames")
-    return {"models": models, "nodes": nodes, "sections": sections, "revision": matrix["protocol"]["source_revision"], "accepted": sum(m["decisions"] for m in models)}
+    return {
+        "models": models, "nodes": nodes, "sections": sections,
+        "revision": ", ".join(matrix["integrity"]["source_revisions"]),
+        "matrix": matrix["matrix_id"], "objective": ", ".join(matrix["integrity"]["objectives"]),
+        "defaults": [models[0]["id"] if models else "", models[1]["id"] if len(models) > 1 else ""],
+        "accepted": sum(m["decisions"] for m in models),
+    }
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--matrix", type=Path, default=ROOT / "runs/matrix-v1")
+    parser.add_argument("--matrix", type=Path, required=True, help="Cohort directory containing summary.json from build_matrix_report.py")
     parser.add_argument("--output", type=Path, default=ROOT / "hostage-flow.html")
     args = parser.parse_args()
     data = build(args.matrix)
@@ -339,7 +346,12 @@ def main():
     data["assets"] = {name: "data:image/webp;base64," + base64.b64encode((ROOT / "references/hostage-flowchart" / f"{name}.webp").read_bytes()).decode() for name in ["investigation", "endings", "overview"]}
     template = (ROOT / "visualizations/hostage-page.template.html").read_text()
     encoded = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
-    rendered = template.replace("<!-- FLOW_DATA -->", encoded)
+    rendered = (
+        template.replace("<!-- FLOW_DATA -->", encoded)
+        .replace("<!-- MODEL_COUNT -->", str(len(data["models"])))
+        .replace("<!-- MATRIX_ID -->", data["matrix"])
+        .replace("<!-- OBJECTIVE -->", data["objective"])
+    )
     assert rendered.startswith("<!doctype html>")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(rendered)

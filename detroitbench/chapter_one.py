@@ -466,7 +466,26 @@ def _investigation_hub_actions(state: dict[str, Any]) -> list[Action]:
             )
         )
     actions.append(_go_outside_action())
+    actions.append(Action("look-around", "LOOK AROUND", "investigation_hub", general=True))
     return actions
+
+
+def _scan_room(working: dict[str, Any], facts: dict[str, Any], room: str, text_parts: list[str]) -> None:
+    if room == "bathroom":
+        facts["searched_bathroom"] = True
+        text_parts.append("[Connor finds no useful evidence in the bathroom.]")
+        return
+    active = _discovered_room_clues(working, room)
+    capacity = max(0, 2 - len(active))
+    discovered = _discoverable_room_clues(working, room)[:capacity]
+    for step in discovered:
+        facts[_discovered_key(step)] = True
+    if discovered:
+        text_parts.append(
+            "Connor notices:\n" + "\n".join(f"- **{step['label']}**" for step in discovered)
+        )
+    else:
+        text_parts.append("[Connor finds no new evidence here.]")
 
 
 def _room_actions(state: dict[str, Any], room: str) -> list[Action]:
@@ -1050,25 +1069,12 @@ def apply_command(
         if before == "investigation_start":
             working["node"] = "investigation_hub"
         elif before == "investigation_hub":
-            pass
-        elif before in INVESTIGATION_ROOM_NODES:
-            room = before.removeprefix("investigation_")
-            if room == "bathroom":
-                facts["searched_bathroom"] = True
-                text_parts.append("[Connor finds no useful evidence in the bathroom.]")
+            if working["node"] in INVESTIGATION_ROOM_NODES:
+                _scan_room(working, facts, working["node"].removeprefix("investigation_"), text_parts)
             else:
-                active = _discovered_room_clues(working, room)
-                capacity = max(0, 2 - len(active))
-                discovered = _discoverable_room_clues(working, room)[:capacity]
-                for step in discovered:
-                    facts[_discovered_key(step)] = True
-                if discovered:
-                    text_parts.append(
-                        "Connor notices:\n"
-                        + "\n".join(f"- **{step['label']}**" for step in discovered)
-                    )
-                else:
-                    text_parts.append("[Connor finds no new evidence here.]")
+                raise ValueError("Enter a room to look around: `detroit choose explore-<room> look-around`")
+        elif before in INVESTIGATION_ROOM_NODES:
+            _scan_room(working, facts, before.removeprefix("investigation_"), text_parts)
         elif before in COP_INTERACTION_NODES:
             facts["cop_return_node"] = working["node"]
             working["node"] = "wounded_cop"
