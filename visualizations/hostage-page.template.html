@@ -54,7 +54,8 @@
     const points=new Map(graph.nodes.map(n=>[n.id,{...n,y:n.y*.68}]));
     const height=1000, width=graph.width, camera={x:24,y:0,scale:.62};
     let world,selected=null,selectedDetail=null,drag=null,hasDragged=false,initialized=false;
-    const short=id=>id.replace('gpt-','GPT ').replace('claude-','Claude ').replace('-20251001','').replace('-preview','').replace('gemini-','Gemini ').replace('deepseek-','DeepSeek ').replace('-0731','').replace('nemotron-','Nemotron ').replace('minimax-','MiniMax ').replace('glm-','GLM ').replace('grok-','Grok ').replace('kimi-','Kimi ');
+    const FAM={'claude-':'Claude','gpt-':'GPT','gemini-':'Gemini','deepseek-':'DeepSeek','nemotron-':'Nemotron','minimax-':'MiniMax','glm-':'GLM','grok-':'Grok','kimi-':'Kimi'};
+    const short=id=>{const n=id.replace('-20251001','').replace('-preview','').replace('-0731','').replace('haiku-4-5','haiku-4.5');for(const[p,f]of Object.entries(FAM)){if(n.startsWith(p)){const parts=n.slice(p.length).split('-').map(x=>/^[a-z]\d$/.test(x)?x.toUpperCase():/^[a-z]+$/i.test(x)?x[0].toUpperCase()+x.slice(1):x);return(f==='GPT'||f==='GLM')?f+'-'+parts[0]+(parts.length>1?' '+parts.slice(1).join(' '):''):f+' '+parts.join(' ');}}return n[0].toUpperCase()+n.slice(1);};
     const svg=(name,attrs={},text)=>{const n=document.createElementNS(NS,name);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;return n;};
     const html=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
     const count=n=>Object.keys(n.matches||{}).length;
