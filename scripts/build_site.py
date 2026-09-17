@@ -41,15 +41,18 @@ FAMILIES = {
 
 def short(model: str) -> str:
     """Readable model name: claude-fable-5.1 -> Claude Fable 5.1, gpt-5.6-luna -> GPT-5.6 Luna."""
-    name = model.replace("-20251001", "").replace("-preview", "").replace("-0731", "")
+    name = model.replace("-20251001", "").replace("-preview", "").replace("-0731", "").replace("haiku-4-5", "haiku-4.5")
     for prefix, family in FAMILIES.items():
         if name.startswith(prefix):
             rest = name[len(prefix):]
-            parts = [p.capitalize() if p.isalpha() else p for p in rest.split("-")]
-            if family == "GPT" or family == "GLM":
+            parts = [
+                p.upper() if len(p) == 2 and p[0].isalpha() and p[1].isdigit() else p.capitalize() if p.isalpha() else p
+                for p in rest.split("-")
+            ]
+            if family in {"GPT", "GLM"}:
                 return f"{family}-{parts[0]}" + (" " + " ".join(parts[1:]) if parts[1:] else "")
             return f"{family} " + " ".join(parts)
-    return name
+    return name.capitalize()
 
 
 def pct(part: int, whole: int) -> str:
