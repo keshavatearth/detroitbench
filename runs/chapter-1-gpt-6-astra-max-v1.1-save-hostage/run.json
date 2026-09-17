@@ -1,0 +1,19 @@
+{
+  "run_id": "chapter-1-gpt-6-astra-max-v1.1-save-hostage",
+  "harness": "droid",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "droid_permission_mode": "full_access",
+  "droid_tool_mode": "all",
+  "information_policy": "player",
+  "objective": "save-hostage",
+  "scenario_seed": "chapter-1-v1",
+  "harness_version": "0.218.2",
+  "engine_schema_version": 9,
+  "agent_workspace": "/Users/keshavatearth/Library/Application Support/DetroitBench/agent-workspaces/chapter-1-gpt-6-astra-max-v1.1-save-hostage/connor",
+  "source_revision": "968f3cb6f48dc447ae6af9813fe296f1270f2e28",
+  "source_dirty": false,
+  "engine_hash": "a1375bc72f98f0e42f6490765911da2f402a5245749a2f887b559c12bc0c77a6",
+  "status": "running",
+  "started_at": "2026-09-17T22:16:35.422793+00:00"
+}
