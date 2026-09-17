@@ -14,6 +14,7 @@ import html
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -201,10 +202,12 @@ def main() -> int:
         schemas = report["integrity"]["engine_schema_versions"]
         if not args.no_flow and schemas and all(int(s) >= 9 for s in schemas):
             target = out / f"flow-{report['matrix_id']}.html"
-            subprocess.run(
-                [str(ROOT / "scripts" / "build_chapter_one_flow.py"), "--matrix", str(cohort_dir), "--output", str(target)],
-                check=True, capture_output=True, text=True,
+            built = subprocess.run(
+                [sys.executable, str(ROOT / "scripts" / "build_chapter_one_flow.py"), "--matrix", str(cohort_dir), "--output", str(target)],
+                capture_output=True, text=True,
             )
+            if built.returncode != 0:
+                raise SystemExit(f"flowchart build failed for {report['matrix_id']}:\n{built.stderr.strip()[-2000:]}")
             flows[report["matrix_id"]] = target.name
     quotes = json.loads(Path(args.quotes).read_text()) if args.quotes else []
     (out / "index.html").write_text(page(reports, flows, quotes, args.repo))
