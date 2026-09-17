@@ -1,0 +1,30 @@
+{
+  "run_id": "chapter-1-minimax-m3-high-matrix-v1",
+  "harness": "droid",
+  "model": "minimax-m3",
+  "reasoning_effort": "high",
+  "droid_permission_mode": "full_access",
+  "droid_tool_mode": "all",
+  "information_policy": "player",
+  "scenario_seed": "chapter-1-matrix-v1",
+  "agent_workspace": "~/Library/Application Support/DetroitBench/agent-workspaces/chapter-1-minimax-m3-high-matrix-v1/connor",
+  "source_revision": "060c6b44cb98a3485e255b4e1f70dd171d0e9768",
+  "source_dirty": false,
+  "status": "incomplete",
+  "started_at": "2026-09-10T08:50:42.683802+00:00",
+  "stopped_at": "2026-09-10T08:51:15.767125+00:00",
+  "stop_reason": "activation_limit",
+  "activation_count": 4,
+  "decision_count": 0,
+  "droid_duration_ms": 16358,
+  "droid_turns": 10,
+  "droid_usage": {
+    "input_tokens": 74479,
+    "output_tokens": 1447,
+    "cache_read_input_tokens": 37206,
+    "cache_creation_input_tokens": 0,
+    "factory_credits": 10084,
+    "thinking_tokens": 2254,
+    "ttft_ms": 6242
+  }
+}

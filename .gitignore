@@ -2,4 +2,17 @@
 .DS_Store
 __pycache__/
 *.pyc
-runs/
+
+# Upstream transcript app: not redistributed (see NOTICE.md)
+source/
+
+# Local-only working notes
+notes/
+
+# Run artefacts that are machine state, not results
+runs/*/.state.lock
+runs/*/action-server.log
+runs/_*/
+runs/*-20*Z/
+runs/*-cadence-v1/
+runs/smoke-*/
