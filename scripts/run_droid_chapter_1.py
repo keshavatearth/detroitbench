@@ -24,6 +24,8 @@ AGENT_WORKSPACE_ROOT = Path(
     or Path.home() / "Library" / "Application Support" / "DetroitBench" / "agent-workspaces"
 )
 PLAYER_TOOLS = "Read,LS,Execute,Edit,ApplyPatch,Grep,Glob,Create,TodoWrite"
+sys.path.insert(0, str(PROJECT_ROOT))
+from detroitbench.provenance import ENGINE_PATHS, engine_hash  # noqa: E402
 
 
 def read_state(run_dir: Path) -> dict:
@@ -253,7 +255,7 @@ def main() -> int:
     ).stdout.strip()
     source_dirty = bool(
         subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=normal"],
+            ["git", "status", "--porcelain", "--", *ENGINE_PATHS],
             cwd=PROJECT_ROOT,
             check=True,
             capture_output=True,
@@ -297,6 +299,7 @@ def main() -> int:
                 "agent_workspace": str(workspace),
                 "source_revision": source_revision,
                 "source_dirty": source_dirty,
+                "engine_hash": engine_hash(),
                 "status": "running",
                 "started_at": datetime.now(timezone.utc).isoformat(),
             },

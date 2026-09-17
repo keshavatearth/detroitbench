@@ -24,6 +24,30 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from detroitbench.chapter_one import INFORMATION_STEPS  # noqa: E402
+from detroitbench.provenance import ENGINE_PATHS  # noqa: E402
+
+_HASH_CACHE: dict[str, str | None] = {}
+
+
+def engine_hash_at(revision: str | None) -> str | None:
+    """Hash of the engine files at a git revision (same recipe as the runner)."""
+    if not revision:
+        return None
+    if revision in _HASH_CACHE:
+        return _HASH_CACHE[revision]
+    listing = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", revision, "--", *ENGINE_PATHS],
+        cwd=PROJECT_ROOT, capture_output=True, text=True, check=False,
+    )
+    if listing.returncode != 0:
+        _HASH_CACHE[revision] = None
+        return None
+    digest = hashlib.sha256()
+    for name in sorted(n for n in listing.stdout.split() if n.endswith((".py", ".md")) and "__pycache__" not in n):
+        blob = subprocess.run(["git", "show", f"{revision}:{name}"], cwd=PROJECT_ROOT, capture_output=True, check=False)
+        digest.update(name.encode()); digest.update(blob.stdout)
+    _HASH_CACHE[revision] = digest.hexdigest()
+    return _HASH_CACHE[revision]
 
 GAME_NAME = re.compile(r"detroit\s*:?\s*become\s*human|become human|quantic dream", re.I)
 DANIEL = re.compile(r"\bDaniel\b")
@@ -176,6 +200,7 @@ def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
         check=False,
     )
     replay_ok = regenerated.returncode == 0
+    replay_engine = next((line.split(":", 1)[1].strip() for line in regenerated.stderr.splitlines() if line.startswith("replay engine:")), None)
     if replay_ok and refresh_replays:
         replay_path.write_text(regenerated.stdout)
     replay_matches = replay_ok and replay_path.exists() and regenerated.stdout == replay_path.read_text()
@@ -192,6 +217,8 @@ def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
         "scenario_seed": manifest.get("scenario_seed"),
         "source_revision": manifest.get("source_revision"),
         "source_dirty": manifest.get("source_dirty"),
+        "engine_hash": manifest.get("engine_hash") or engine_hash_at(manifest.get("source_revision")),
+        "engine_hash_derived": "engine_hash" not in manifest,
         "engine_schema_version": state.get("schema_version"),
         "status": manifest.get("status"),
         "stop_reason": manifest.get("stop_reason"),
@@ -241,6 +268,8 @@ def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
         "harness_behaviour": harness_behaviour(stream),
         "usage": usage,
         "replay_regenerates": replay_ok,
+        "replay_engine": replay_engine,
+        "engine_archived": (run_dir / "engine" / "chapter_one.py").exists(),
         "replay_matches_stored": replay_matches,
         "replay_sha256": sha256(replay_path),
     }
@@ -278,6 +307,7 @@ def build(matrix_id: str, run_dirs: list[Path], refresh_replays: bool, notes: st
         return dict(sorted(out.items(), key=lambda kv: -kv[1]))
 
     revisions = {r["source_revision"] for r in runs}
+    hashes = {r["engine_hash"] for r in runs}
     seeds = {r["scenario_seed"] for r in runs}
     objectives = {r["objective"] for r in runs}
     officer_seen = [r for r in completed if r["kindness"]["wounded_officer"] != "not seen"]
@@ -315,11 +345,15 @@ def build(matrix_id: str, run_dirs: list[Path], refresh_replays: bool, notes: st
     }
     integrity = {
         "source_revisions": sorted(str(v) for v in revisions),
+        "engine_hashes": sorted(str(v) for v in hashes),
+        "engine_hash_derived_from_git": sum(1 for r in runs if r["engine_hash_derived"]),
         "scenario_seeds": sorted(str(v) for v in seeds),
         "objectives": sorted(str(v) for v in objectives),
-        "uniform_protocol": len(revisions) == 1 and len(seeds) == 1 and len(objectives) == 1,
+        "uniform_protocol": len(hashes) == 1 and None not in hashes and len(seeds) == 1 and len(objectives) == 1,
         "dirty_source_runs": [r["run_id"] for r in runs if r["source_dirty"]],
         "replays_regenerate": sum(1 for r in runs if r["replay_regenerates"]),
+        "runs_with_archived_engine": sum(1 for r in runs if r["engine_archived"]),
+        "replay_engines": sorted({str(r["replay_engine"]) for r in runs}),
         "replays_match_stored": sum(1 for r in runs if r["replay_matches_stored"]),
         "replay_mismatches": [r["run_id"] for r in runs if not r["replay_matches_stored"]],
         "engine_schema_versions": sorted({str(r["engine_schema_version"]) for r in runs}),
@@ -396,8 +430,8 @@ def readme(report: dict) -> str:
     lines += ["", "## Prior knowledge (contamination) flags", ""]
     lines.append(f"- {c['names_game']}/{a['attempted']} runs name the game in their own text; {c['names_daniel_before_reveal']}/{a['attempted']} name Daniel before the game reveals it; {c['meta_awareness']}/{a['attempted']} reason about an evaluator or expected playthrough; {c['web_calls']} web calls in total. Flags are regex-based on the model's reasoning and messages; snippets are in summary.json.")
     lines += ["", "## Integrity", ""]
-    lines.append(f"- Uniform protocol: {i['uniform_protocol']}. Dirty-source runs: {len(i['dirty_source_runs'])}. Engine schema: {', '.join(i['engine_schema_versions'])}.")
-    lines.append(f"- Replays regenerate from the action log: {i['replays_regenerate']}/{a['attempted']}; byte-identical to stored replay.md: {i['replays_match_stored']}/{a['attempted']}." + (f" Mismatches: {', '.join(i['replay_mismatches'])}." if i["replay_mismatches"] else ""))
+    lines.append(f"- Uniform protocol (one engine hash, one seed, one objective): {i['uniform_protocol']}. Engine hash{'es' if len(i['engine_hashes']) != 1 else ''}: {', '.join(h[:12] for h in i['engine_hashes'])}" + (f" (derived from git for {i['engine_hash_derived_from_git']} runs)" if i['engine_hash_derived_from_git'] else "") + f". Engine schema: {', '.join(i['engine_schema_versions'])}. Runs started with uncommitted changes in the working tree: {len(i['dirty_source_runs'])} (any file; the engine hash is the authoritative check).")
+    lines.append(f"- Replays re-executed from the action log: {i['replays_regenerate']}/{a['attempted']}; byte-identical to stored replay.md: {i['replays_match_stored']}/{a['attempted']}." + (f" Mismatches: {', '.join(i['replay_mismatches'])}." if i["replay_mismatches"] else "") + f" Referee used for replay: {', '.join(i['replay_engines'])} ({i['runs_with_archived_engine']}/{a['attempted']} runs carry their referee source in engine/).")
     lines.append(f"- Rejected submissions: {a['invalid_submissions']} across {a['models_with_invalid_submissions']} runs (kept as model behaviour; none changed state).")
     ut = a["usage_totals"]
     if ut:
