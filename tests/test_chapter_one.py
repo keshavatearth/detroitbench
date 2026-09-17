@@ -73,6 +73,16 @@ class ChapterOneTests(unittest.TestCase):
             self._object_choices(state), ["inspect-fathers-body", "inspect-childs-shoe"]
         )
 
+    def test_exit_room_cannot_be_stacked_with_a_scan(self) -> None:
+        state = self._reach_room("living-room")
+        before = copy.deepcopy(state)
+        with self.assertRaises(ValueError):
+            apply_command(state, ["exit-room", "look-around"])
+        self.assertEqual(state, before)
+        hub, _, _ = apply_choice(copy.deepcopy(state), "exit-room")
+        with self.assertRaises(ValueError):
+            apply_command(hub, ["go-outside", "look-around"])
+
     def test_look_around_reveals_four_room_choices(self) -> None:
         state = self._reach_investigation()
         self.assertEqual(legal_action_ids(state), ["look-around", "go-outside"])

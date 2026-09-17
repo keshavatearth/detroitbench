@@ -1071,19 +1071,20 @@ def apply_command(
     # observations are free, as in the game before the HUD appears.
     action_time_ms = 0 if before == "opening_pool" else ACTION_SECONDS * 1000
     if look is not None:
+        # A stacked scan applies where Connor is after the primary action.
         action_time_ms += LOOK_AROUND_SECONDS * 1000
-        if before == "investigation_start":
+        here = working["node"]
+        if before == "investigation_start" and primary is None:
             working["node"] = "investigation_hub"
-        elif before == "investigation_hub":
-            if working["node"] in INVESTIGATION_ROOM_NODES:
-                _scan_room(working, facts, working["node"].removeprefix("investigation_"), text_parts)
-            else:
-                raise ValueError("Enter a room to look around: `detroit choose explore-<room> look-around`")
-        elif before in INVESTIGATION_ROOM_NODES:
-            _scan_room(working, facts, before.removeprefix("investigation_"), text_parts)
-        elif before in COP_INTERACTION_NODES:
-            facts["cop_return_node"] = working["node"]
+        elif here in INVESTIGATION_ROOM_NODES:
+            _scan_room(working, facts, here.removeprefix("investigation_"), text_parts)
+        elif here in {"investigation_hub", "investigation_start"}:
+            raise ValueError("Enter a room to look around: `detroit choose explore-<room> look-around`")
+        elif here in COP_INTERACTION_NODES and before in COP_INTERACTION_NODES:
+            facts["cop_return_node"] = here
             working["node"] = "wounded_cop"
+        else:
+            raise ValueError("LOOK AROUND cannot be combined with that choice")
         text_parts.append(f"[{LOOK_AROUND_SECONDS} seconds pass while Connor looks around.]")
         transitions.append({"id": "look-around", "value": None})
     facts["simulated_elapsed_ms"] = int(

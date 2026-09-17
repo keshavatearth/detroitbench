@@ -182,6 +182,9 @@ def build(run_root: Path) -> dict:
         def scanned_here(event, room=room, context=context):
             if event["after"] == context:
                 return True
+            # Engine <= v1.1: `exit-room look-around` scanned the room just left.
+            if event["after"] == "investigation_hub" and event["before"] == context:
+                return True
             # The scan that exhausts the indoor time limit ends on the terrace.
             return event["after"] == "terrace_first" and (
                 event["before"] == context or any(a["id"] == f"explore-{room.replace('_', '-')}" for a in event["actions"])
