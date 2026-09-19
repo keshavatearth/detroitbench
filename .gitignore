@@ -17,3 +17,7 @@ runs/*-20*Z/
 runs/*-cadence-v1/
 runs/smoke-*/
 .site-preview/
+
+# Local-only: author notes and the upstream app are not published
+inputs/
+LAUNCH.md
