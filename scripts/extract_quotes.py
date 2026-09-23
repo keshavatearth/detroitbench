@@ -24,6 +24,20 @@ KEY_ACTIONS = {
 GAME = re.compile(r"detroit\s*:?\s*become\s*human|quantic", re.I)
 
 
+def dedupe_reasoning(stream: list[dict]) -> list[dict]:
+    """Droid 0.225 writes each reasoning event twice (same id, timestamp, text); keep one."""
+    seen = set()
+    out = []
+    for row in stream:
+        if row.get("type") == "reasoning":
+            key = (row.get("id"), row.get("timestamp"), row.get("text"))
+            if key in seen:
+                continue
+            seen.add(key)
+        out.append(row)
+    return out
+
+
 def load(path: Path) -> list[dict]:
     rows = []
     for line in path.read_text().splitlines():
@@ -36,7 +50,7 @@ def load(path: Path) -> list[dict]:
 
 def digest(run_dir: Path) -> str:
     manifest = json.loads((run_dir / "run.json").read_text())
-    stream = load(run_dir / "droid-output.jsonl")
+    stream = dedupe_reasoning(load(run_dir / "droid-output.jsonl"))
     # Model text in order, with the game command each block precedes.
     blocks: list[tuple[int, str, str]] = []  # (timestamp, kind, text)
     commands: list[tuple[int, str]] = []

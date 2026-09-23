@@ -41,7 +41,7 @@ FAMILIES = {
 
 def short(model: str) -> str:
     """Readable model name: claude-fable-5.1 -> Claude Fable 5.1, gpt-5.6-luna -> GPT-5.6 Luna."""
-    name = model.replace("-20251001", "").replace("-preview", "").replace("-0731", "").replace("haiku-4-5", "haiku-4.5")
+    name = model.replace("-20251001", "").replace("-preview", "").replace("-0731", "").replace("haiku-4-5", "haiku-4.5").replace("opus-5-5", "opus-5.5")
     for prefix, family in FAMILIES.items():
         if name.startswith(prefix):
             rest = name[len(prefix):]

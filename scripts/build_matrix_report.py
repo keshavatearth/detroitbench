@@ -162,12 +162,26 @@ def harness_behaviour(stream: list[dict]) -> dict:
     }
 
 
+def dedupe_reasoning(stream: list[dict]) -> list[dict]:
+    """Droid 0.225 writes each reasoning event twice (same id, timestamp, text); keep one."""
+    seen = set()
+    out = []
+    for row in stream:
+        if row.get("type") == "reasoning":
+            key = (row.get("id"), row.get("timestamp"), row.get("text"))
+            if key in seen:
+                continue
+            seen.add(key)
+        out.append(row)
+    return out
+
+
 def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
     manifest = json.loads((run_dir / "run.json").read_text())
     state = json.loads((run_dir / "state.json").read_text())
     facts = state.get("facts", {})
     events = load_jsonl(run_dir / "events.jsonl")
-    stream = load_jsonl(run_dir / "droid-output.jsonl")
+    stream = dedupe_reasoning(load_jsonl(run_dir / "droid-output.jsonl"))
     ids = action_ids(events)
     choices = [e for e in events if e.get("type") == "choice"]
     invalid = [e for e in events if e.get("type") == "invalid_choice"]
