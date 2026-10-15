@@ -1,0 +1,11 @@
+# model	reasoning_effort — models added to v1.1 save-hostage on 2026-10-15 (Droid 0.242.0 catalogue).
+# Effort is the highest level each model's Droid registry entry lists ("max" where offered), as for the earlier rosters.
+gpt-6.1-sol	max
+claude-sonnet-5-5	max
+claude-haiku-5-5	max
+gemini-4-argon	high
+grok-4.7	xhigh
+deepseek-v4.1-flash	max
+qwen3.8-max	xhigh
+mistral-large-4	high
+muse-spark-1.2	xhigh

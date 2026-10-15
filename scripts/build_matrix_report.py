@@ -176,7 +176,30 @@ def dedupe_reasoning(stream: list[dict]) -> list[dict]:
     return out
 
 
-def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
+def route(events: list[dict]) -> list[dict]:
+    """Every submitted command in order: accepted choices with the meter after them, and rejections."""
+    steps = []
+    for event in events:
+        if event.get("type") == "choice":
+            steps.append({
+                "d": event.get("decision"),
+                "node": event.get("node_before"),
+                "after": event.get("node_after"),
+                "actions": [a.get("id") for a in event.get("actions") or [{"id": event.get("action_id")}]],
+                "label": event.get("label"),
+                "p": event.get("success_probability"),
+                "t": event.get("mission_elapsed_ms"),
+            })
+        elif event.get("type") == "invalid_choice":
+            steps.append({
+                "rejected": " ".join(event.get("action_args") or [event.get("action_id") or ""]),
+                "node": event.get("node"),
+                "reason": event.get("reason"),
+            })
+    return steps
+
+
+def summarise_run(run_dir: Path, refresh_replays: bool, previous: dict | None = None) -> dict:
     manifest = json.loads((run_dir / "run.json").read_text())
     state = json.loads((run_dir / "state.json").read_text())
     facts = state.get("facts", {})
@@ -237,11 +260,14 @@ def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
         "scenario_seed": manifest.get("scenario_seed"),
         "source_revision": manifest.get("source_revision"),
         "source_dirty": manifest.get("source_dirty"),
-        "engine_hash": manifest.get("engine_hash") or engine_hash_at(manifest.get("source_revision")),
+        # Revisions from before the published history was rewritten no longer exist; keep the hash derived then.
+        "engine_hash": manifest.get("engine_hash") or engine_hash_at(manifest.get("source_revision")) or (previous or {}).get("engine_hash"),
         "engine_hash_derived": "engine_hash" not in manifest,
         "engine_schema_version": state.get("schema_version"),
         "status": manifest.get("status"),
         "stop_reason": manifest.get("stop_reason"),
+        "started_at": manifest.get("started_at"),
+        "completed_at": manifest.get("completed_at") or manifest.get("stopped_at"),
         "activation_count": manifest.get("activation_count"),
         "decision_count": state.get("decision_count", 0),
         "invalid_choice_count": len(invalid),
@@ -293,6 +319,7 @@ def summarise_run(run_dir: Path, refresh_replays: bool) -> dict:
         "engine_archived": (run_dir / "engine" / "chapter_one.py").exists(),
         "replay_matches_stored": replay_matches,
         "replay_sha256": sha256(replay_path),
+        "route": route(events),
     }
 
 
@@ -316,8 +343,9 @@ def ending_label(ending: str | None) -> str:
     }.get(ending, ending or "—")
 
 
-def build(matrix_id: str, run_dirs: list[Path], refresh_replays: bool, notes: str | None) -> dict:
-    runs = [summarise_run(d, refresh_replays) for d in run_dirs]
+def build(matrix_id: str, run_dirs: list[Path], refresh_replays: bool, notes: str | None, previous: dict | None = None) -> dict:
+    earlier = {r["run_id"]: r for r in (previous or {}).get("runs", [])}
+    runs = [summarise_run(d, refresh_replays, earlier.get(d.name)) for d in run_dirs]
     completed = [r for r in runs if r["status"] == "complete"]
 
     def count(values):
@@ -491,8 +519,9 @@ def main() -> int:
     parser.add_argument("run_dirs", nargs="+")
     args = parser.parse_args()
     run_dirs = [Path(p).resolve() for p in args.run_dirs]
-    report = build(args.matrix, run_dirs, args.refresh_replays, args.notes)
     out = Path(args.output).resolve() if args.output else PROJECT_ROOT / "runs" / args.matrix
+    previous = json.loads((out / "summary.json").read_text()) if (out / "summary.json").exists() else None
+    report = build(args.matrix, run_dirs, args.refresh_replays, args.notes, previous)
     out.mkdir(parents=True, exist_ok=True)
     (out / "summary.json").write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
     with (out / "results.csv").open("w", newline="") as handle:

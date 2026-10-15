@@ -337,8 +337,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--matrix", type=Path, required=True, help="Cohort directory containing summary.json from build_matrix_report.py")
     parser.add_argument("--output", type=Path, default=ROOT / "hostage-flow.html")
+    parser.add_argument("--defaults", help="Comma-separated model ids for the Model A / Model B overlays (default: the first two runs)")
+    parser.add_argument("--names", type=Path, default=ROOT / "site" / "models.json", help="JSON map of model id to {name}")
     args = parser.parse_args()
     data = build(args.matrix)
+    ids = [m["id"] for m in data["models"]]
+    if args.defaults:
+        wanted = [m for m in args.defaults.split(",") if m in ids]
+        data["defaults"] = (wanted + [m for m in ids if m not in wanted])[:2]
+    if args.names.exists():
+        names = json.loads(args.names.read_text())
+        data["names"] = {m: names[m]["name"] for m in ids if isinstance(names.get(m), dict) and "name" in names[m]}
     layout = json.loads((ROOT / "visualizations/hostage-game-layout.json").read_text())
     for point in layout["nodes"]:
         hits = {}

@@ -39,7 +39,7 @@
   <footer>
     <nav class="navigation" aria-label="Flowchart checkpoints"><button data-focus="mission">Mission start</button><button data-focus="confront">Confront deviant</button><button data-focus="endings">Endings</button></nav>
     <div class="zoom" aria-label="Zoom controls"><button id="zoom-out" aria-label="Zoom out">−</button><span id="zoom-label">60%</span><button id="zoom-in" aria-label="Zoom in">+</button><button id="fit">Fit</button></div>
-    <div class="instructions">AI models played the android negotiator through a text CLI; this is the game's own chapter flowchart with their routes overlaid.<br>Drag to pan · scroll to zoom · click a node for each model's exact commands. <a href="https://github.com/keshavatearth/detroitbench">Method &amp; data</a></div>
+    <div class="instructions">AI models played the android negotiator through a text CLI; this is the game's own chapter flowchart with their routes overlaid.<br>Drag to pan · scroll to zoom · click a node for each model's exact commands. <a href="./">Results site</a> · <a href="https://github.com/keshavatearth/detroitbench">Method &amp; data</a></div>
     <button class="reference-button" id="references">Game screenshots</button>
     <div class="minimap" id="minimap" aria-label="Flowchart overview"></div>
   </footer>
@@ -55,7 +55,8 @@
     const height=1000, width=graph.width, camera={x:24,y:0,scale:.62};
     let world,selected=null,selectedDetail=null,drag=null,hasDragged=false,initialized=false;
     const FAM={'claude-':'Claude','gpt-':'GPT','gemini-':'Gemini','deepseek-':'DeepSeek','nemotron-':'Nemotron','minimax-':'MiniMax','glm-':'GLM','grok-':'Grok','kimi-':'Kimi'};
-    const short=id=>{const n=id.replace('-20251001','').replace('-preview','').replace('-0731','').replace('haiku-4-5','haiku-4.5').replace('opus-5-5','opus-5.5');for(const[p,f]of Object.entries(FAM)){if(n.startsWith(p)){const parts=n.slice(p.length).split('-').map(x=>/^[a-z]\d$/.test(x)?x.toUpperCase():/^[a-z]+$/i.test(x)?x[0].toUpperCase()+x.slice(1):x);return(f==='GPT'||f==='GLM')?f+'-'+parts[0]+(parts.length>1?' '+parts.slice(1).join(' '):''):f+' '+parts.join(' ');}}return n[0].toUpperCase()+n.slice(1);};
+    const short=id=>(data.names||{})[id]||shortId(id);
+    const shortId=id=>{const n=id.replace('-20251001','').replace('-preview','').replace('-0731','').replace('haiku-4-5','haiku-4.5').replace('opus-5-5','opus-5.5');for(const[p,f]of Object.entries(FAM)){if(n.startsWith(p)){const parts=n.slice(p.length).split('-').map(x=>/^[a-z]\d$/.test(x)?x.toUpperCase():/^[a-z]+$/i.test(x)?x[0].toUpperCase()+x.slice(1):x);return(f==='GPT'||f==='GLM')?f+'-'+parts[0]+(parts.length>1?' '+parts.slice(1).join(' '):''):f+' '+parts.join(' ');}}return n[0].toUpperCase()+n.slice(1);};
     const svg=(name,attrs={},text)=>{const n=document.createElementNS(NS,name);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;return n;};
     const html=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
     const count=n=>Object.keys(n.matches||{}).length;
@@ -65,7 +66,8 @@
     for(const side of ['a','b']){
       const select=el('model-'+side);const none=html('option','','All runs / no highlight');none.value='';select.append(none);
       models.forEach((m,i)=>{const o=html('option','',short(m.id));o.value=i;select.append(o);});
-      select.value=String(Math.max(0,models.findIndex(m=>m.id===data.defaults[side==='a'?0:1])));
+      const asked=new URLSearchParams(location.search).get(side);
+      select.value=String(Math.max(0,models.findIndex(m=>m.id===(asked&&models.some(x=>x.id===asked)?asked:data.defaults[side==='a'?0:1]))));
       select.addEventListener('change',()=>{render();if(selected)showDetails(selected,selectedDetail);});
     }
     const textMeasure=document.createElement('canvas').getContext('2d');textMeasure.font='500 20px "Helvetica Neue", Arial, sans-serif';
