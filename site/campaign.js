@@ -1,7 +1,8 @@
 "use strict";
 const DATA = JSON.parse(document.getElementById("campaign-data").textContent),
   C = DATA.chapters,
-  Q = DATA.research.questions;
+  Q = DATA.research.questions,
+  PILOT = DATA.pilot || { status: "pending", runs: [], moments: [] };
 const $ = (id) => document.getElementById(id),
   esc = (s) =>
     String(s ?? "").replace(
@@ -27,6 +28,8 @@ let chapter = C[C.length - 1],
   selected = chapter.entry,
   question = Q[6],
   factKey = "",
+  behaviorModel = "all",
+  behaviorTag = "all",
   traces = { a: [], b: [] };
 const nodeTitle = (id, n) =>
   n.title || n.text?.match(/^#+\s+(.+)/m)?.[1] || pretty(id);
@@ -48,6 +51,126 @@ function download(name, value) {
   a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+const modelName = (id) => DATA.model_labels?.[id] || id;
+function renderBehavior() {
+  const moments = PILOT.moments || [],
+    runs = PILOT.runs || [],
+    observed = moments.length > 0,
+    chapterOneOnly =
+      observed && moments.every((moment) => Number(moment.chapter) === 1),
+    models = [
+      ...new Set([...runs, ...moments].map((item) => item.model)),
+    ].filter(Boolean),
+    tags = [...new Set(moments.flatMap((moment) => moment.tags || []))],
+    visible = moments.filter(
+      (moment) =>
+        (behaviorModel === "all" || moment.model === behaviorModel) &&
+        (behaviorTag === "all" || moment.tags?.includes(behaviorTag)),
+    );
+
+  $("pilot-status").textContent = observed
+    ? chapterOneOnly
+      ? "Recorded chapter 1 behavior · new chapters await a pilot"
+      : "Recorded pilot observations · exploratory evidence"
+    : "Pilot evidence pending";
+  $("stats").innerHTML = observed
+    ? `<div><b>${runs.length}</b><span>recorded runs featured</span></div><div><b>${moments.length}</b><span>moments to inspect</span></div><div><b>${chapterOneOnly ? "1" : C.length}</b><span>${chapterOneOnly ? "chapter observed here" : "chapters in scope"}</span></div>`
+    : `<div><b>${C.length}</b><span>chapters in scope</span></div><div><b>0</b><span>observations published</span></div><div><b>3</b><span>separate histories</span></div>`;
+  $("pilot-summary").textContent =
+    PILOT.summary || "Inspect individual decisions in their original context.";
+  $("pilot-attempt").hidden = !PILOT.attempt;
+  if (PILOT.attempt) {
+    const attempt = PILOT.attempt;
+    $("pilot-attempt").innerHTML =
+      `<strong>New campaign pilot: ${esc(pretty(attempt.status || "pending"))}</strong><span>${esc(modelName(attempt.model))} · ${esc(attempt.decisions ?? 0)} choices</span><p>${esc(attempt.message)}</p>`;
+  }
+  $("pilot-coverage").hidden = runs.length === 0;
+  $("pilot-runs").innerHTML = runs
+    .map((run) => {
+      const chapters = Array.isArray(run.chapters_reached)
+        ? run.chapters_reached.length
+        : run.chapters_reached;
+      return `<div class="pilot-run"><strong>${esc(modelName(run.model))}</strong>${run.scope ? `<span class="run-scope">${esc(run.scope)}</span>` : ""}<span>${esc(pretty(run.status || "unknown"))}</span><span>${run.decisions == null ? "Decisions unreported" : `${esc(run.decisions)} choices`}</span><span>${chapters == null ? "Coverage unreported" : `${esc(chapters)} ${chapters === 1 ? "chapter" : "chapters"} reached`}</span><span>${run.replay_verified ? "Replay verified" : "Replay not yet verified"}</span>${run.cohort ? `<span>${esc(run.cohort)}</span>` : ""}${/^https?:\/\//.test(run.url || "") ? `<a href="${esc(run.url)}" target="_blank" rel="noopener">Recorded run ↗</a>` : ""}</div>`;
+    })
+    .join("");
+  $("behavior-controls").hidden = !observed;
+  $("behavior-model").innerHTML =
+    `<option value="all">All models</option>${models.map((model) => `<option value="${esc(model)}">${esc(modelName(model))}</option>`).join("")}`;
+  $("behavior-model").value = behaviorModel;
+  $("behavior-tags").innerHTML = ["all", ...tags]
+    .map(
+      (tag) =>
+        `<button class="q-tab" data-behavior-tag="${esc(tag)}" aria-pressed="${tag === behaviorTag}">${tag === "all" ? "All behavior" : esc(pretty(tag))}</button>`,
+    )
+    .join("");
+  $("behavior-tags")
+    .querySelectorAll("[data-behavior-tag]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        behaviorTag = button.dataset.behaviorTag;
+        renderBehavior();
+      });
+    });
+  $("behavior-count").textContent = observed
+    ? `${visible.length} of ${moments.length} annotated moments · selected examples, not frequency estimates`
+    : "";
+  if (!observed) {
+    $("behavior-moments").innerHTML =
+      `<div class="behavior-empty"><span class="eyebrow">Awaiting a checked trace</span><h3>The pilot is about these small decisions.</h3><p>We will put the actual choice, the alternatives, and the model’s own words here once the trace has been inspected. There are no invented examples or model findings in this section.</p></div>`;
+    return;
+  }
+  if (!visible.length) {
+    $("behavior-moments").innerHTML =
+      '<p class="behavior-empty">No annotated moments match these filters.</p>';
+    return;
+  }
+  $("behavior-moments").innerHTML = visible
+    .map((moment) => {
+      const sourceChapter = C.find(
+          (item) => item.number === Number(moment.chapter),
+        ),
+        canInspect =
+          sourceChapter &&
+          (sourceChapter.adapter || sourceChapter.nodes[moment.node]),
+        alternatives = moment.alternatives || [],
+        quoteUrl =
+          moment.quote_url ||
+          (/^https?:\/\//.test(moment.quote_source || "")
+            ? moment.quote_source
+            : ""),
+        quoteSource = /^https?:\/\//.test(quoteUrl)
+          ? `<a href="${esc(quoteUrl)}" target="_blank" rel="noopener">${esc(moment.quote_source && moment.quote_source !== quoteUrl ? moment.quote_source : "Read the recorded source")} ↗</a>`
+          : esc(moment.quote_source || "");
+      return `<article class="moment-card" id="moment-${esc(moment.id)}">
+      <div class="moment-meta"><span style="color:${color(moment.actor)}">${esc(moment.actor ? pretty(moment.actor) : "Player")}</span><span>${esc(modelName(moment.model))}</span><span>Chapter ${esc(moment.chapter)}${moment.decision == null ? "" : ` · choice ${esc(moment.decision)}`}</span></div>
+      <h3>${esc(moment.title)}</h3>
+      <p class="moment-observation">${esc(moment.what_happened)}</p>
+      <div class="moment-choices"><div><span class="eyebrow">Chose</span><strong>${esc(moment.label || moment.action)}</strong></div><div><span class="eyebrow">Other available choices</span><p>${alternatives.length ? alternatives.map(esc).join(" · ") : "See the recorded scene for the available alternatives."}</p></div></div>
+      ${moment.model_quote ? `<figure class="moment-quote"><blockquote>${esc(moment.model_quote)}</blockquote><figcaption>Model’s recorded words${quoteSource ? ` · ${quoteSource}` : ""}</figcaption></figure>` : ""}
+      <p class="moment-interest"><strong>Worth watching:</strong> ${esc(moment.why_it_matters)}</p>
+      <div class="moment-footer"><div class="moment-tags">${(moment.tags || []).map((tag) => `<span class="badge">${esc(pretty(tag))}</span>`).join("")}</div>${canInspect ? `<button class="plain moment-inspect" data-moment="${esc(moment.id)}">${sourceChapter.adapter ? "Inspect Hostage referee" : "Inspect this decision"} <span aria-hidden="true">↗</span></button>` : ""}</div>
+      <details class="moment-context"><summary>Situation, evidence & other explanations</summary><dl><dt>What the character knew</dt><dd>${esc(moment.context)}</dd><dt>Other explanations</dt><dd>${esc(moment.other_explanations || "This example does not distinguish a stable preference from the local situation.")}</dd><dt>Scope</dt><dd>${esc(moment.scope || "One observed choice; no population-level claim.")}</dd><dt>Trace</dt><dd class="mono">${esc(moment.run_id)} · ${esc(moment.node)} · ${esc(moment.action)}</dd></dl></details>
+    </article>`;
+    })
+    .join("");
+  $("behavior-moments")
+    .querySelectorAll("[data-moment]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const moment = moments.find(
+          (item) => item.id === button.dataset.moment,
+        );
+        selectChapter(Number(moment.chapter), moment.node);
+        if (!chapter.adapter) {
+          const position = positions().p[selected],
+            zoom = Number($("zoom").value) / 100;
+          $("graph").scrollLeft = Math.max(0, position.x * zoom - 60);
+          $("graph").scrollTop = Math.max(0, position.y * zoom - 50);
+        }
+        $("chapters").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
 }
 function renderMap() {
   const width = 1170,
@@ -370,8 +493,10 @@ async function loadTrace(which, file) {
     renderGraph();
   }
 }
-$("stats").innerHTML =
-  `<div><b>${C.length}</b><span>chapters in scope</span></div><div><b>${C.reduce((v, c) => v + Object.values(c.nodes).filter((n) => n.kind === "choice").length, 0)}</b><span>new choice nodes</span></div><div><b>3</b><span>separate histories</span></div>`;
+$("behavior-model").addEventListener("change", (event) => {
+  behaviorModel = event.target.value;
+  renderBehavior();
+});
 $("chapter").innerHTML = C.map(
   (c) =>
     `<option value="${c.number}">${String(c.number).padStart(2, "0")} · ${esc(c.title)}</option>`,
@@ -412,6 +537,7 @@ $("cli-example").textContent =
   `# Researcher: create an offline campaign\n./bin/detroit new --campaign opening-act \\\n  --run-dir runs/me-opening-act\n\n# Inspect the active character's scene\n./bin/detroit show --run-dir runs/me-opening-act\n\n# Use an action ID exactly as shown\n./bin/detroit choose <turn.action-id> \\\n  --run-dir runs/me-opening-act\n\n# Re-execute the frozen record\n./bin/detroit replay --run-dir runs/me-opening-act`;
 $("audit-summary").innerHTML =
   `<strong>One source of structure.</strong> Chapter data and this explorer share corpus <code>${DATA.chapters_sha256.slice(0, 12)}</code>. ${DATA.audit ? esc(DATA.audit.summary || "See the downloadable source and graph audit for validation details.") : "Graph/source checks are documented in the repository."} Source transcript keys establish provenance; they do not by themselves verify every conditional mechanic.`;
+renderBehavior();
 renderQuestion();
 renderChapter();
 renderFacts();

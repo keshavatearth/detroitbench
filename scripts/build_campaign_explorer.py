@@ -71,6 +71,11 @@ def build() -> dict:
         raise ValueError("Expected all thirteen chapters, in order")
     plan = json.loads((ROOT / "research/opening-act.json").read_text())
     bundle = {"schema": "detroitbench-campaign-explorer-1", "chapters_sha256": canonical_hash(chapters), "chapters": chapters, "research": plan, "facts": collect_facts(chapters)}
+    pilot_path = ROOT / "research/pilot-observations.json"
+    bundle["pilot"] = (json.loads(pilot_path.read_text()) if pilot_path.exists() else
+                       {"status": "pending", "summary": "Pilot evidence is pending.", "runs": [], "moments": []})
+    models = json.loads((ROOT / "site/models.json").read_text())
+    bundle["model_labels"] = {key: value["name"] for key, value in models.items() if isinstance(value, dict)}
     audit_path = ROOT / "docs/data/campaign-audit.json"
     if audit_path.exists():
         audit = json.loads(audit_path.read_text())
