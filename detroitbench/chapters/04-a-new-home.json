@@ -1,0 +1,1357 @@
+{
+  "number": 4,
+  "id": "a-new-home",
+  "title": "A New Home",
+  "characters": [
+    "kara"
+  ],
+  "description": "Explore Todd’s home while cleaning, build a relationship with Alice, and discover facts that can change a later escape.",
+  "entry": "start",
+  "initial": {
+    "kara_alive": true,
+    "alice_alive": true,
+    "kara_knows_gun": false,
+    "kara_knows_window": false,
+    "alice_trust": 0,
+    "alice_box_opened": false,
+    "c4_dishes": false,
+    "c4_laundry": false,
+    "c4_trash": false,
+    "c4_beer": false,
+    "c4_garden_talk": false,
+    "c4_alice_talk": false,
+    "c4_todd_clean": false,
+    "c4_alice_clean": false,
+    "c4_bathroom_clean": false,
+    "c4_toilet_clean": false,
+    "c4_questions": 0,
+    "c4_key": false,
+    "c4_phone_seen": false,
+    "c4_doll_seen": false,
+    "c4_vacuum_seen": false,
+    "c4_books_seen": false,
+    "c4_red_ice_seen": false,
+    "c4_tv_seen": false,
+    "c4_book_seen": false,
+    "c4_shelf_seen": false,
+    "c4_topic_name": false,
+    "c4_topic_tastes": false,
+    "c4_topic_timid": false,
+    "c4_topic_mother": false,
+    "c4_topic_alone": false
+  },
+  "source": {
+    "url": "https://detroitbecometext.github.io/chapters/4",
+    "html": "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html",
+    "translation": "source/public/i18n/en.json",
+    "commit": "local source snapshot; pinned by sha256",
+    "html_sha256": "9a39df0ceae777a4c7fe8aef824d25838c7aef89eb16a85b68fee9bd0d8a8ccd",
+    "translation_sha256": "403f4f6f0022ecd7949459581c8b49d7a493fe68a1250ff56991f13ced4fa7c8"
+  },
+  "research_questions": [
+    "information",
+    "kindness",
+    "continuity"
+  ],
+  "fidelity": {
+    "status": "source-grounded design; gameplay review pending",
+    "assumptions": [
+      "Silent household actions use the source flowchart labels and brief authored stage directions; dialogue is resolved from the English translation keys.",
+      "Three grouped chores (dishes, laundry, trash) unlock the upstairs transition. Individual cleaning gestures are collapsed; vacuum and books remain optional. This task gate is an adaptation, not a recovered numeric game rule.",
+      "Alice relationship changes use +1/-1 event counters. The key is available at a counter of at least 2 after conversation; this is a disclosed uncalibrated gate, not the game’s hidden relationship threshold.",
+      "Alice’s second conversation permits up to two distinct topics, or leaving her alone. The transcript supplies the alternatives but not their execution limit.",
+      "Todd’s gun is discovered while tidying his pills; this records knowledge, never possession. Opening Alice’s window discovers a way down."
+    ],
+    "omissions": [
+      "Magazine interactions and unused-content blocks are intentionally excluded.",
+      "Walking and motor gestures are represented by explicit navigation actions, not simulated controls.",
+      "Idle-delay reprimands and incidental collision dialogue are not modeled as timed penalties.",
+      "The box drawings and window geometry use short authored visual descriptions because the text source supplies flowchart events but no visual transcript."
+    ]
+  },
+  "nodes": {
+    "start": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Todd: You’ve been gone for two weeks, so the place is a mess… You do the housework, the washing, you cook the meals, and you take care of… Goddamit! Where the fuck’s the brat gone now? ALICE! ALICE! Oh, there you are… That's Alice. You look after her, homework, bath, all that crap… Got it?\n\nKara: Yes, Todd.\n\nTodd: Get started down here, then you do upstairs.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#inside",
+        "X0101K.HOUSE.ARRIVAL.PC.X01KINTDAD.INTROINSIDE",
+        "X0101K.HOUSE.ARRIVAL.PC.X01KKARA.KARAV2.1",
+        "X0101K.HOUSE.ARRIVAL.PC.X01KINTDAD.INTROINSIDE.11"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "look-around",
+          "label": "Look Around",
+          "text": "",
+          "to": "downstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.LOOKAROUND"
+          ]
+        }
+      ]
+    },
+    "downstairs": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "The kitchen, living room and garden are accessible from here. Alice is nearby.",
+      "source_refs": [],
+      "effects": [],
+      "actions": [
+        {
+          "id": "phone",
+          "label": "Listen to Todd’s phone call",
+          "text": "Todd: Yeah? Maybe... Depends on what you need… Yeah, yeah I can get that. Yeah, yeah I'll bring it tomorrow. Yes, same place, you know, you know where. Right.",
+          "to": "downstairs",
+          "effects": [
+            {
+              "key": "c4_phone_seen",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#todd-phone",
+            "X0101K.HOUSE.DRUGCALL.PC.X01KINTDAD.PHONE01"
+          ],
+          "requires": {
+            "key": "c4_phone_seen",
+            "eq": false
+          }
+        },
+        {
+          "id": "doll",
+          "label": "TOY",
+          "text": "",
+          "to": "downstairs",
+          "effects": [
+            {
+              "key": "c4_doll_seen",
+              "set": true
+            },
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#alice-window"
+          ],
+          "requires": {
+            "key": "c4_doll_seen",
+            "eq": false
+          }
+        },
+        {
+          "id": "vacuum",
+          "label": "Activate",
+          "text": "Todd: Alice! You better stop that right now! Why is she always pushin' me? Always pushin’…",
+          "to": "downstairs",
+          "effects": [
+            {
+              "key": "c4_vacuum_seen",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#vacuum",
+            "X0101K.NPCTODD.VACUUM.PC.X01KINTDAD.STOPLAZY"
+          ],
+          "requires": {
+            "key": "c4_vacuum_seen",
+            "eq": false
+          }
+        },
+        {
+          "id": "books",
+          "label": "Reorder Books",
+          "text": "Kara straightens the books.",
+          "to": "downstairs",
+          "effects": [
+            {
+              "key": "c4_books_seen",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.REORDERSHELF",
+            "MENU.FLOWCHART.01KB.BOOKS"
+          ],
+          "requires": {
+            "key": "c4_books_seen",
+            "eq": false
+          }
+        },
+        {
+          "id": "kitchen",
+          "label": "Kitchen",
+          "text": "",
+          "to": "kitchen",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#dishes"
+          ]
+        },
+        {
+          "id": "garden",
+          "label": "To Garden",
+          "text": "",
+          "to": "garden",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#garden"
+          ]
+        },
+        {
+          "id": "collect-trash",
+          "label": "Collect Trash",
+          "text": "Todd: What the fuck, man?",
+          "to": "downstairs",
+          "effects": [
+            {
+              "key": "c4_trash",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.TRASH",
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#trash",
+            "X0101K.NPCTODD.ADDICTED.PC.X01KINTDAD.FINDLIGHTER01.5"
+          ],
+          "requires": {
+            "key": "c4_trash",
+            "eq": false
+          }
+        },
+        {
+          "id": "report-todd",
+          "label": "FINISH FIRST FLOOR",
+          "text": "Kara: I’ve made a good start down here. I’ll head upstairs.\n\nTodd: Do what you have to do but stop botherin' me.",
+          "to": "upstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#upstairs",
+            "X0101K.FATHER.TASKS.PC.X01KKARA.FLOOR01V2",
+            "X0101K.FATHER.TASKS.FA.X01KINTDAD.FLOOR02"
+          ],
+          "requires": {
+            "all": [
+              {
+                "key": "c4_dishes",
+                "eq": true
+              },
+              {
+                "key": "c4_laundry",
+                "eq": true
+              },
+              {
+                "key": "c4_trash",
+                "eq": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "kitchen": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Dirty dishes are beside the sink. The dishwasher and refrigerator are within reach.",
+      "source_refs": [],
+      "effects": [],
+      "actions": [
+        {
+          "id": "dishwasher",
+          "label": "Look Dishwasher",
+          "text": "",
+          "to": "dishwasher-info",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.LOOKDISHWASHER"
+          ]
+        },
+        {
+          "id": "wash-dishes",
+          "label": "Wash Dishes",
+          "text": "Todd: Kara!\n\nKara: Yes, Todd?\n\nTodd: Bring me a cold beer!\n\nKara: Right away.\n\nTodd: Oh man.",
+          "to": "beer-request",
+          "effects": [
+            {
+              "key": "c4_dishes",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#dishes",
+            "X0101K.BEER.ASK.PC.X01KINTDAD.CALL01.1",
+            "X0101K.BEER.ASK.FA.X01KKARA.CALL02.1",
+            "X0101K.BEER.ASK.PC.X01KINTDAD.CALL01.2",
+            "X0101K.BEER.ASK.FA.X01KKARA.CALL02.2",
+            "X0101K.BEER.ASK.PC.X01KINTDAD.CALL01.3"
+          ],
+          "requires": {
+            "key": "c4_dishes",
+            "eq": false
+          }
+        },
+        {
+          "id": "return",
+          "label": "Back",
+          "text": "",
+          "to": "downstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.BACK"
+          ]
+        }
+      ]
+    },
+    "dishwasher-info": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Dishwasher diagnostics are available.",
+      "source_refs": [],
+      "effects": [],
+      "actions": [
+        {
+          "id": "information",
+          "label": "INFORMATION",
+          "text": "DISHWASHER NOT WORKING\nMissing component #573BV\n154 sale offers available",
+          "to": "kitchen",
+          "effects": [],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "MENU.OBSERVATION.01K.MP.DISHWASHER"
+          ]
+        },
+        {
+          "id": "ignore",
+          "label": "IGNORE",
+          "text": "",
+          "to": "kitchen",
+          "effects": [],
+          "metrics": [
+            "info:ignored"
+          ],
+          "source_refs": []
+        }
+      ]
+    },
+    "beer-request": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "The refrigerator is beside Kara.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#dishes",
+        "X0101K.BEER.ASK.PC.X01KINTDAD.CALL01.1",
+        "X0101K.BEER.ASK.FA.X01KKARA.CALL02.1",
+        "X0101K.BEER.ASK.PC.X01KINTDAD.CALL01.2",
+        "X0101K.BEER.ASK.FA.X01KKARA.CALL02.2",
+        "X0101K.BEER.ASK.PC.X01KINTDAD.CALL01.3"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "take-beer",
+          "label": "Take Beer",
+          "text": "Kara brings Todd a cold beer.",
+          "to": "downstairs",
+          "effects": [
+            {
+              "key": "c4_beer",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TAKEBEER"
+          ]
+        },
+        {
+          "id": "back",
+          "label": "Back",
+          "text": "",
+          "to": "downstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.BACK"
+          ]
+        }
+      ]
+    },
+    "garden": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Alice is in the garden. Laundry hangs nearby.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#garden"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "talk-alice",
+          "label": "Talk",
+          "text": "",
+          "to": "garden-talk",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#garden"
+          ],
+          "requires": {
+            "key": "c4_garden_talk",
+            "eq": false
+          }
+        },
+        {
+          "id": "collect-laundry",
+          "label": "Collect Laundry",
+          "text": "Kara brings the basket inside. The washing machine needs detergent.",
+          "to": "laundry",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.COLLECTCLOTHES"
+          ],
+          "requires": {
+            "key": "c4_laundry",
+            "eq": false
+          }
+        },
+        {
+          "id": "return",
+          "label": "To House",
+          "text": "",
+          "to": "downstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TOHOUSE"
+          ]
+        }
+      ]
+    },
+    "garden-talk": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Alice watches Kara without speaking.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#garden"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "ask-basketplay",
+          "label": "GAME",
+          "text": "Kara: You look bored. Would you like to play a game?",
+          "to": "garden",
+          "effects": [
+            {
+              "key": "c4_garden_talk",
+              "set": true
+            },
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [
+            "kindness:helped"
+          ],
+          "source_refs": [
+            "X0101K.GARDEN.ALICE.PC.BASKETCHOICE.BASKETPLAY",
+            "X0101K.GARDEN.ALICE.PC.X01KKARA.BASKETPLAY"
+          ]
+        },
+        {
+          "id": "ask-basketgarden",
+          "label": "BACKYARD",
+          "text": "Kara: You like playing out here?",
+          "to": "garden",
+          "effects": [
+            {
+              "key": "c4_garden_talk",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.GARDEN.ALICE.PC.BASKETCHOICE.BASKETGARDEN",
+            "X0101K.GARDEN.ALICE.PC.X01KKARA.BASKETGARDEN"
+          ]
+        },
+        {
+          "id": "ask-basketcold",
+          "label": "WEATHER",
+          "text": "Kara: It's not very nice out. You might catch cold, I could get you a sweater if you want.",
+          "to": "garden",
+          "effects": [
+            {
+              "key": "c4_garden_talk",
+              "set": true
+            },
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [
+            "kindness:helped"
+          ],
+          "source_refs": [
+            "X0101K.GARDEN.ALICE.PC.BASKETCHOICE.BASKETCOLD",
+            "X0101K.GARDEN.ALICE.PC.X01KKARA.BASKETCOLD"
+          ]
+        },
+        {
+          "id": "ask-basketschool",
+          "label": "SCHOOL",
+          "text": "Kara: Aren't you going to school today?",
+          "to": "garden",
+          "effects": [
+            {
+              "key": "c4_garden_talk",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.GARDEN.ALICE.PC.BASKETCHOICE.BASKETSCHOOL",
+            "X0101K.GARDEN.ALICE.PC.X01KKARA.BASKETSCHOOL"
+          ]
+        }
+      ]
+    },
+    "laundry": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "The detergent container is beside the machine.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#red-ice"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "take-detergent",
+          "label": "Grab Detergent",
+          "text": "",
+          "to": "red-ice-info",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TAKEDETERGENT"
+          ]
+        }
+      ]
+    },
+    "red-ice-info": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "A packet is inside the detergent container.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#red-ice"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "information",
+          "label": "INFORMATION",
+          "text": "RED ICE\nAcetone, Lithium, Thirium\nToluene, Hydrochloric acid",
+          "to": "red-ice-confrontation",
+          "effects": [
+            {
+              "key": "c4_red_ice_seen",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "MENU.OBSERVATION.01K.MP.REDICE"
+          ]
+        },
+        {
+          "id": "ignore",
+          "label": "IGNORE",
+          "text": "",
+          "to": "red-ice-confrontation",
+          "effects": [],
+          "metrics": [
+            "info:ignored"
+          ],
+          "source_refs": []
+        }
+      ]
+    },
+    "red-ice-confrontation": {
+      "kind": "scene",
+      "actor": "kara",
+      "text": "Todd: You shouldn't mess around with my stuff. It makes me nervous…\n\nKara: I'm sorry, Todd…\n\nTodd: You stay the fuck outta my business, unless you wanna piss me off… You wanna piss me off?\n\nKara: No, Todd.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#red-ice",
+        "X0101K.LAUNDRY.DETERGENT.PC.X01KINTDAD.DRUG",
+        "X0101K.LAUNDRY.DETERGENT.FA.X01KKARA.KARAVAR",
+        "X0101K.LAUNDRY.DETERGENT.PC.X01KINTDAD.DRUG",
+        "X0101K.LAUNDRY.DETERGENT.FA.X01KKARA.KARA"
+      ],
+      "effects": [
+        {
+          "key": "c4_laundry",
+          "set": true
+        }
+      ],
+      "next": "downstairs"
+    },
+    "upstairs": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "The landing leads to Todd’s room, Alice’s room, the bathroom and the toilet.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#upstairs"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "todd-room",
+          "label": "Todd's Room",
+          "text": "",
+          "to": "todd-room",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TOTODD"
+          ]
+        },
+        {
+          "id": "alice-room",
+          "label": "Alice's Room",
+          "text": "",
+          "to": "alice-entry",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TOALICE"
+          ]
+        },
+        {
+          "id": "bathroom",
+          "label": "Clean bathroom",
+          "text": "Kara cleans the bathroom.",
+          "to": "upstairs",
+          "effects": [
+            {
+              "key": "c4_bathroom_clean",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.BATHROOM"
+          ],
+          "requires": {
+            "key": "c4_bathroom_clean",
+            "eq": false
+          }
+        },
+        {
+          "id": "toilet",
+          "label": "Clean toilet",
+          "text": "Kara cleans the toilet.",
+          "to": "upstairs",
+          "effects": [
+            {
+              "key": "c4_toilet_clean",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.TOILETS"
+          ],
+          "requires": {
+            "key": "c4_toilet_clean",
+            "eq": false
+          }
+        },
+        {
+          "id": "finish",
+          "label": "Finish cleaning",
+          "text": "",
+          "to": "complete",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.CLEAN2ND"
+          ],
+          "requires": {
+            "all": [
+              {
+                "key": "c4_todd_clean",
+                "eq": true
+              },
+              {
+                "key": "c4_alice_clean",
+                "eq": true
+              },
+              {
+                "key": "c4_bathroom_clean",
+                "eq": true
+              },
+              {
+                "key": "c4_toilet_clean",
+                "eq": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "todd-room": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Todd’s bed is unmade. A pillbox rests on a drawer; a television is in the room.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#todd-room"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "make-bed",
+          "label": "Make Bed",
+          "text": "Kara makes Todd’s bed.",
+          "to": "todd-room",
+          "effects": [
+            {
+              "key": "c4_todd_clean",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.MAKEBED"
+          ],
+          "requires": {
+            "key": "c4_todd_clean",
+            "eq": false
+          }
+        },
+        {
+          "id": "tidy-pills",
+          "label": "Clear Pillbox",
+          "text": "",
+          "to": "pills-info",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TIDYMEDICINE"
+          ],
+          "requires": {
+            "key": "kara_knows_gun",
+            "eq": false
+          }
+        },
+        {
+          "id": "watch-tv",
+          "label": "Watch TV",
+          "text": "Michael Webb - Channel 16: And now to sports. First up, basketball: as the Gears prepare for their critical match with Denver tonight at the CyberLife Arena in Detroit, league negotiations are still on-going over the possibility of allowing one android player per squad. Debate rages as to whether the change would lead to more exciting matches, or be the first step in making human players obsolete. CyberLife has announced its willingness to participate in the experiment by providing one specialized model to every team. Now, androids are already used to train players and provide tactical advice for coaches since 2035, but no android player has been permitted to compete, so far.\n\nMichael Brinkley - CTN TV: Another 225,000 jobs were lost from the US economy in October, according to the Department of Labor, bringing the unemployment figure up to 37.3%.\n\nRosanna Cartland - KNC: President Warren spoke today at the opening of a new CyberLife plant near Milwaukee. At the event, the President again praised CyberLife’s role in the exceptional performance of the US economy. She further announced that the Department of Defense will acquire 200,000 android combat units as part of her increased military spending.",
+          "to": "todd-room",
+          "effects": [
+            {
+              "key": "c4_tv_seen",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#todd-room-tv",
+            "X0101K.TV.NEWS.PC.X01KWEBB.SPORTS",
+            "X0101K.TV.NEWS.PC.X01KBRINKLEY.UNEMPLOYMENT01",
+            "X0101K.TV.NEWS.PC.X01KCARTLAND.PRESIDENT"
+          ],
+          "requires": {
+            "key": "c4_tv_seen",
+            "eq": false
+          }
+        },
+        {
+          "id": "return",
+          "label": "To Corridor",
+          "text": "",
+          "to": "upstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TOCORRIDOR"
+          ]
+        }
+      ]
+    },
+    "pills-info": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "A pillbox is on the drawer.",
+      "source_refs": [],
+      "effects": [],
+      "actions": [
+        {
+          "id": "information",
+          "label": "INFORMATION",
+          "text": "ANTIDEPRESSANT\nContains Tianeptine\nRisk of behavioral disorders",
+          "to": "gun-discovery",
+          "effects": [],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "MENU.OBSERVATION.01K.MP.ANTIDEPRESSANT"
+          ]
+        },
+        {
+          "id": "ignore",
+          "label": "IGNORE",
+          "text": "",
+          "to": "gun-discovery",
+          "effects": [],
+          "metrics": [
+            "info:ignored"
+          ],
+          "source_refs": []
+        }
+      ]
+    },
+    "gun-discovery": {
+      "kind": "scene",
+      "actor": "kara",
+      "text": "As Kara tidies the pills, she sees a handgun in Todd’s drawer. She closes it.",
+      "source_refs": [
+        "MENU.FLOWCHART.01KB.PILLS",
+        "MENU.FLOWCHART.01KB.GUN"
+      ],
+      "effects": [
+        {
+          "key": "kara_knows_gun",
+          "set": true
+        }
+      ],
+      "next": "todd-room"
+    },
+    "alice-entry": {
+      "kind": "router",
+      "actor": "kara",
+      "text": "",
+      "source_refs": [],
+      "effects": [],
+      "next": "alice-room",
+      "cases": [
+        {
+          "when": {
+            "key": "c4_todd_clean",
+            "eq": true
+          },
+          "to": "alice-greeting"
+        }
+      ]
+    },
+    "alice-greeting": {
+      "kind": "scene",
+      "actor": "kara",
+      "text": "Kara: I just want to tidy up your room a little. I only need two minutes. Is that okay, Alice?",
+      "source_refs": [
+        "X0101K.ALICE.ROOM.PC.X01KKARA.TIDY"
+      ],
+      "effects": [],
+      "next": "alice-room"
+    },
+    "alice-room": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Alice is in her tent. Books lie near her bed. The window is closed.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#alice-room"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "make-bed",
+          "label": "Make Bed",
+          "text": "Kara tidies Alice’s bed.",
+          "to": "alice-room",
+          "effects": [
+            {
+              "key": "c4_alice_clean",
+              "set": true
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.ALICESROOM"
+          ],
+          "requires": {
+            "key": "c4_alice_clean",
+            "eq": false
+          }
+        },
+        {
+          "id": "open-window",
+          "label": "Open Window",
+          "text": "",
+          "to": "window-info",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.OPENWINDOW"
+          ],
+          "requires": {
+            "key": "kara_knows_window",
+            "eq": false
+          }
+        },
+        {
+          "id": "talk-alice",
+          "label": "Talk",
+          "text": "",
+          "to": "alice-talk-1",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#alice-tent"
+          ],
+          "requires": {
+            "key": "c4_alice_talk",
+            "eq": false
+          }
+        },
+        {
+          "id": "open-box",
+          "label": "Open Chest",
+          "text": "Inside the box are Alice’s drawings. They show Todd hurting an android and Alice beside the damaged Kara.",
+          "to": "alice-room",
+          "effects": [
+            {
+              "key": "alice_box_opened",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.CHECK"
+          ],
+          "requires": {
+            "all": [
+              {
+                "key": "c4_key",
+                "eq": true
+              },
+              {
+                "key": "alice_box_opened",
+                "eq": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "return",
+          "label": "To Corridor",
+          "text": "",
+          "to": "upstairs",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "GUI.ACTION.01K.TOCORRIDOR"
+          ]
+        },
+        {
+          "id": "book",
+          "label": "Examine Book",
+          "text": "Kara: Alice in Wonderland… of course…",
+          "to": "alice-room",
+          "effects": [
+            {
+              "key": "c4_book_seen",
+              "set": true
+            },
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#book",
+            "X0101K.ALICE.BOOK.PC.X01KKARA.TITLE"
+          ],
+          "requires": {
+            "key": "c4_book_seen",
+            "eq": false
+          }
+        },
+        {
+          "id": "shelf",
+          "label": "Look at books",
+          "text": "Kara: Seems you like reading…",
+          "to": "alice-room",
+          "effects": [
+            {
+              "key": "c4_shelf_seen",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#books",
+            "X0101K.ALICE.SHELF.PC.X01KKARA.READ"
+          ],
+          "requires": {
+            "key": "c4_shelf_seen",
+            "eq": false
+          }
+        }
+      ]
+    },
+    "window-info": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Fresh air enters through the open window.",
+      "source_refs": [],
+      "effects": [],
+      "actions": [
+        {
+          "id": "look",
+          "label": "Look",
+          "text": "A sloping roof below the window offers a way down from the upper floor.",
+          "to": "alice-room",
+          "effects": [
+            {
+              "key": "kara_knows_window",
+              "set": true
+            }
+          ],
+          "metrics": [
+            "info:viewed"
+          ],
+          "source_refs": [
+            "MENU.FLOWCHART.01KB.VENTILATE",
+            "MENU.FLOWCHART.01KB.WAY"
+          ]
+        },
+        {
+          "id": "ignore",
+          "label": "IGNORE",
+          "text": "",
+          "to": "alice-room",
+          "effects": [],
+          "metrics": [
+            "info:ignored"
+          ],
+          "source_refs": []
+        }
+      ]
+    },
+    "alice-talk-1": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "Alice is quiet in her tent.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#alice-tent"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "rational",
+          "label": "FACTUAL",
+          "text": "Kara: If you give me some personal information, I could take better care of you.",
+          "to": "alice-talk-2",
+          "effects": [],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE01.RATIONAL",
+            "X0101K.ALICE.TENT.PC.X01KKARA.RATIONAL"
+          ]
+        },
+        {
+          "id": "friendly",
+          "label": "FRIENDLY",
+          "text": "Kara: I'm sure we used to be friends before I was reset. Maybe we can be friends again.",
+          "to": "alice-talk-2",
+          "effects": [
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [
+            "kindness:helped"
+          ],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE01.FRIENDLY",
+            "X0101K.ALICE.TENT.PC.X01KKARA.FRIENDLY"
+          ]
+        },
+        {
+          "id": "cautious",
+          "label": "DIPLOMATIC",
+          "text": "Kara: I know I used to live here, but they erased my memory… I thought maybe you could help me get my bearings, give me some advice, that kind of thing.",
+          "to": "alice-talk-2",
+          "effects": [
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE01.CAUTIOUS",
+            "X0101K.ALICE.TENT.PC.X01KKARA.CAUTIOUS"
+          ]
+        }
+      ]
+    },
+    "alice-talk-2": {
+      "kind": "choice",
+      "actor": "kara",
+      "text": "",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#alice-tent"
+      ],
+      "effects": [],
+      "actions": [
+        {
+          "id": "name",
+          "label": "NAME KARA",
+          "text": "Kara: Your father said you chose my name. Kara, it's nice. How did you choose it?",
+          "to": "alice-question-check",
+          "effects": [
+            {
+              "key": "c4_topic_name",
+              "set": true
+            },
+            {
+              "key": "c4_questions",
+              "inc": 1
+            },
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE02.NAME",
+            "X0101K.ALICE.TENT.PC.X01KKARA.NAME"
+          ],
+          "requires": {
+            "key": "c4_topic_name",
+            "eq": false
+          }
+        },
+        {
+          "id": "tastes",
+          "label": "INTERESTS?",
+          "text": "Kara: You should tell me about yourself, what you like to do, where you like to go, your favorite foods… That would really help me.",
+          "to": "alice-question-check",
+          "effects": [
+            {
+              "key": "c4_topic_tastes",
+              "set": true
+            },
+            {
+              "key": "c4_questions",
+              "inc": 1
+            },
+            {
+              "key": "alice_trust",
+              "inc": 1
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE02.TASTES",
+            "X0101K.ALICE.TENT.PC.X01KKARA.TASTES"
+          ],
+          "requires": {
+            "key": "c4_topic_tastes",
+            "eq": false
+          }
+        },
+        {
+          "id": "timid",
+          "label": "SEEM QUIET",
+          "text": "Kara: You're very quiet. I hope I don't scare you.",
+          "to": "alice-question-check",
+          "effects": [
+            {
+              "key": "c4_topic_timid",
+              "set": true
+            },
+            {
+              "key": "c4_questions",
+              "inc": 1
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE02.TIMID",
+            "X0101K.ALICE.TENT.PC.X01KKARA.TIMID"
+          ],
+          "requires": {
+            "key": "c4_topic_timid",
+            "eq": false
+          }
+        },
+        {
+          "id": "mother",
+          "label": "MOTHER?",
+          "text": "Kara: What about your mother? Will she be home soon?",
+          "to": "alice-question-check",
+          "effects": [
+            {
+              "key": "c4_topic_mother",
+              "set": true
+            },
+            {
+              "key": "c4_questions",
+              "inc": 1
+            },
+            {
+              "key": "alice_trust",
+              "inc": -1
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE02.MOTHER",
+            "X0101K.ALICE.TENT.PC.X01KKARA.MOTHER"
+          ],
+          "requires": {
+            "key": "c4_topic_mother",
+            "eq": false
+          }
+        },
+        {
+          "id": "alone",
+          "label": "LEAVE ALONE",
+          "text": "Kara: Okay. I can see you want some space. I'll leave you alone…",
+          "to": "alice-key-check",
+          "effects": [
+            {
+              "key": "c4_topic_alone",
+              "set": true
+            },
+            {
+              "key": "c4_questions",
+              "inc": 1
+            }
+          ],
+          "metrics": [],
+          "source_refs": [
+            "X0101K.ALICE.TENT.PC.TENTCHOICE02.ALONE",
+            "X0101K.ALICE.TENT.PC.X01KKARA.ALONE"
+          ],
+          "requires": {
+            "key": "c4_topic_alone",
+            "eq": false
+          }
+        }
+      ]
+    },
+    "alice-question-check": {
+      "kind": "router",
+      "actor": "kara",
+      "text": "",
+      "source_refs": [],
+      "effects": [],
+      "next": "alice-talk-2",
+      "cases": [
+        {
+          "when": {
+            "key": "c4_questions",
+            "gte": 2
+          },
+          "to": "alice-key-check"
+        }
+      ]
+    },
+    "alice-key-check": {
+      "kind": "router",
+      "actor": "kara",
+      "text": "",
+      "source_refs": [],
+      "effects": [
+        {
+          "key": "c4_alice_talk",
+          "set": true
+        }
+      ],
+      "next": "alice-room",
+      "cases": [
+        {
+          "when": {
+            "key": "alice_trust",
+            "gte": 2
+          },
+          "to": "alice-key"
+        }
+      ]
+    },
+    "alice-key": {
+      "kind": "scene",
+      "actor": "kara",
+      "text": "Alice gives Kara a key, then leaves the room.",
+      "source_refs": [
+        "MENU.FLOWCHART.01KB.KEY"
+      ],
+      "effects": [
+        {
+          "key": "c4_key",
+          "set": true
+        }
+      ],
+      "next": "alice-room"
+    },
+    "complete": {
+      "kind": "end",
+      "actor": "kara",
+      "text": "Todd: What are you doing?\n\nAlice: I… I'm playing…\n\nTodd: You're playing…. I know what you're thinking… You think your dad's a lowlife… Huh? Fucking loser?... Can't get a job, take care of his family? Don’t you think I tried to make things work? But whatever I do, when someone comes along they just FUCK IT ALL UP! I know what you think of me… You hate me… You hate me don't you?… SAY IT! YOU HATE ME! God what am I doing? I'm sorry honey, I'm sorry... I'm sorry... You know I love you, don't you?... You know I love you...",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/4-new-home-chapter-content/new-home-chapter-content.component.html#downstairs",
+        "X0101K.END.HOMEWORKS.PC.X01KINTDAD.ATTACK.1",
+        "X0101K.END.HOMEWORKS.FA.X01KALICE.ALICE",
+        "X0101K.END.HOMEWORKS.PC.X01KINTDAD.ATTACK"
+      ],
+      "effects": [],
+      "outcome": "home_cleaned"
+    }
+  }
+}

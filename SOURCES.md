@@ -1,5 +1,27 @@
 # Source notes
 
+## Opening-act expansion
+
+Chapters 2–13 use the same local English transcript snapshot and the chapter
+component templates under `source/src/app/chapters/components/chapter-contents/`.
+The source is not distributed. Each executable chapter records source keys,
+source paths and adaptation/omission notes. `scripts/audit_campaign.py` checks
+that referenced translation keys resolve; it does not certify gameplay parity.
+
+- [Detroit Become Text source snapshot](https://github.com/detroitbecometext/detroitbecometext.github.io/tree/932160cdbed5e5fa13fdc8168b0c6fd09161fe7d)
+- [On the Run walkthrough and game flowchart screenshots](https://www.powerpyx.com/detroit-become-human-on-the-run-walkthrough-100/)
+
+The On the Run pursuit and squat-investigation screenshots were inspected for
+branch layout and control-flow distinctions on October 30, 2026. The new viewer
+renders the authored CLI graph; it does not claim a pixel-identical or complete
+copy of the original game's flowchart.
+
+The research presentation was informed by
+[Adam Holter's visual analysis portfolio](https://adam.holter.com/portfolio/)
+and [interactive model dashboard](https://github.com/adamholter/ai-aggregator):
+questions, visible assumptions, inspectable values and usable controls.
+No assets, statistics, model rankings or code were copied from them.
+
 ## Complete game flowcharts
 
 - [Reddit index: all 100% flowcharts with global stats](https://www.reddit.com/r/DetroitBecomeHuman/comments/99b65j/all_100_flowcharts_with_global_stats_included/)

@@ -23,6 +23,20 @@ def detroit(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 class CliTests(unittest.TestCase):
+    def setUp(self) -> None:
+        # CLI smoke runs must not replace the user's selected run with a
+        # temporary directory that disappears when the test ends.
+        marker = PROJECT_ROOT / ".detroit-current-run"
+        previous = marker.read_bytes() if marker.exists() else None
+
+        def restore_marker() -> None:
+            if previous is None:
+                marker.unlink(missing_ok=True)
+            else:
+                marker.write_bytes(previous)
+
+        self.addCleanup(restore_marker)
+
     def test_new_choose_reject_and_verified_replay(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             run_dir = Path(temporary) / "run"

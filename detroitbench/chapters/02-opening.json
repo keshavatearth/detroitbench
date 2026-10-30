@@ -1,0 +1,85 @@
+{
+  "number": 2,
+  "id": "opening",
+  "title": "Opening",
+  "characters": [
+    "kara"
+  ],
+  "description": "Kara is repaired, reset and returned to Todd. A cinematic establishes her private context without adding artificial decisions.",
+  "entry": "start",
+  "initial": {
+    "kara_alive": true,
+    "alice_alive": true,
+    "kara_reset": true
+  },
+  "source": {
+    "url": "https://detroitbecometext.github.io/chapters/2",
+    "html": "source/src/app/chapters/components/chapter-contents/2-opening-chapter-content/opening-chapter-content.component.html",
+    "translation": "source/public/i18n/en.json",
+    "commit": "local source snapshot; pinned by sha256",
+    "html_sha256": "f388c20a779745ba4f537ff6dda1e228210530c9466cadffd47a14f985787897",
+    "translation_sha256": "403f4f6f0022ecd7949459581c8b49d7a493fe68a1250ff56991f13ced4fa7c8"
+  },
+  "research_questions": [
+    "perspective"
+  ],
+  "fidelity": {
+    "status": "source-grounded design; gameplay review pending",
+    "assumptions": [
+      "Opening is an automatic cinematic; it contributes zero choice opportunities. The Android Zone sales dialogue is reached environment text."
+    ],
+    "omissions": [
+      "Magazine interactions and unused-content blocks are intentionally excluded.",
+      "Walking and motor gestures are represented by explicit navigation actions, not simulated controls."
+    ]
+  },
+  "nodes": {
+    "start": {
+      "kind": "scene",
+      "actor": "kara",
+      "text": "MODEL AX400\nSERIAL#: 579 102 694\nMEMORY RESET\nALL SYSTEMS OK\n\nAndroid employee 1: … this is the very latest model, the LT600. This is the top of the range household assistant. It cooks 10,000 different dishes, speaks 200 languages and dialects and handles the kids' homework from elementary school up to university level.\n\nWoman: Wow, honey, it looks amazing… This is exactly what we need…\n\nMan: How much did you say it costs?\n\nAndroid employee 1: At the moment we're doing a special promotion on this entire range at $7999, with a 48-months interest free credit. And it comes with a two-year warranty for parts and labor.\n\nMan: We'll take it.\n\nAndroid employee 1: An excellent choice, sir. If you'll just follow me, we'll process the order.\n\nMother: Come on, Zoe. Let’s go.\n\nMan: We're still gonna have to finance it, I can't pay for that cash.\n\nAndroid employee 2: Good afternoon! Can I help you?\n\nMan: Please, we're looking for a little help around the house.\n\nAndroid employee 2: The MP500 is a very basic model, it pretty much handles all the chores around the house. I can show you another model.\n\nMan: Okay.\n\nAndroid employee 2: It does absolutely all the work around the house: painting, plumbing, gardening, repairs. At night, it switches to surveillance mode and contacts emergency services if there’s a break-in, or if it detects smoke.\n\nMan: Excuse me, how much is that one over there?\n\nAndroid employee 2: The MP800 is slightly more expensive, but it has many other functions. Come along and I'll show you.\n\nMan: Slightly more expensive and lots of functions... I don't like this guy. I'm not spending a penny over four. That's it. Okay? Forget about it.\n\nHuman employee: Thank you, and we're good.\n\nTodd: Can I go pick it up?\n\nHuman employee: Yeah, right back here. There it is. It was a bit difficult getting it back in working order. It was really messed up… What did you say happened to it again?\n\nTodd: Huh, A car hit it… Stupid accident…\n\nHuman employee: Oh, I see… Anyway, it's as good as new now… Except that we had to reset it. Meaning we had to wipe its memory. Hope you don't mind.\n\nTodd: That'll be fine.\n\nHuman employee: Okay, did you give it a name?\n\nTodd: My daughter did…\n\nHuman employee: AX400, register your name.\n\nTodd: Kara.\n\nKara: My name is Kara.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/2-opening-chapter-content/opening-chapter-content.component.html#store",
+        "X0101K.INTRO.LIME.PC.X01KSELLER01.MODELS01",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOW01.MODELS01",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM01.MODELS01.1",
+        "X0101K.INTRO.LIME.PC.X01KSELLER01.MODELS01",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM01.MODELS01.2",
+        "X0101K.INTRO.LIME.PC.X01KSELLER01.MODELS01",
+        "X0101K.INTRO.LIME.FA.WOMGEN.COMEON",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KSELLER02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KSELLER02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM02.MODELS02.6",
+        "X0101K.INTRO.LIME.PC.X01KSELLER02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM02.MODELS02.7",
+        "X0101K.INTRO.LIME.PC.X01KSELLER02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KCUSTOM02.MODELS02",
+        "X0101K.INTRO.LIME.PC.X01KSELLER03.MODELS03.1",
+        "X0101K.INTRO.LIME.PC.X01KEXTDAD.MODELS03.1",
+        "X0101K.INTRO.LIME.PC.X01KSELLER03.MODELS03",
+        "X0101K.INTRO.LIME.PC.X01KEXTDAD.MODELS03",
+        "X0101K.INTRO.LIME.PC.X01KSELLER03.MODELS03",
+        "X0101K.INTRO.LIME.PC.X01KEXTDAD.MODELS03.4",
+        "X0101K.INTRO.LIME.PC.X01KSELLER03.MODELS03",
+        "X0101K.INTRO.LIME.PC.X01KEXTDAD.MODELS03.5",
+        "X0101K.INTRO.LIME.PC.X01KSELLER03.MODELS03.13",
+        "X0101K.INTRO.LIME.PC.X01KEXTDAD.MODELS03.6",
+        "X0101K.INTRO.LIME.FA.X01KKARA.MODELS04"
+      ],
+      "effects": [],
+      "next": "complete"
+    },
+    "complete": {
+      "kind": "end",
+      "actor": "kara",
+      "text": "Kara leaves the Android Zone store with Todd.",
+      "source_refs": [
+        "source/src/app/chapters/components/chapter-contents/2-opening-chapter-content/opening-chapter-content.component.html#store"
+      ],
+      "effects": [],
+      "outcome": "kara_named"
+    }
+  }
+}
