@@ -67,6 +67,78 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .site-footer-inner p + p { margin-top: 8px; }
 .site-skip { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 10px 16px; background: var(--panel); color: var(--ink); }
 .site-skip:focus { top: 8px; }
+
+/* Report components. Every page draws endings, stats, quotes and controls with these. */
+:root { --safe: #2385b0; --sacrifice: #bb8a4b; --lost: #88939d; --run-a: #176caa; --run-b: #b7663c; }
+:root[data-theme="dark"] { --safe: #67b9e6; --sacrifice: #d0a56a; --lost: #8598a6; --run-a: #67b9e6; --run-b: #e9a17b; }
+.primary-link { display: inline-flex; align-items: center; gap: 14px; min-height: 46px; padding: 11px 18px; color: var(--paper); background: var(--ink); border-radius: 3px; text-decoration: none; }
+.primary-link:hover { background: var(--accent); }
+.arrow { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; padding: 0 0 2px; border: 1px solid var(--line); border-radius: 50%; background: var(--panel); color: var(--ink); font-size: 22px; line-height: 1; }
+.arrow:not(:disabled):hover { border-color: var(--accent); color: var(--accent); }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pills button, .pill { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); color: var(--ink-2); font-size: 13px; line-height: 1.3; white-space: nowrap; text-decoration: none; }
+.pills button:hover, .pill:hover { border-color: var(--accent); color: var(--ink); }
+.pills button[aria-pressed="true"], .pill[aria-pressed="true"], .pill.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-wash); color: var(--ink); }
+.panel-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.panel-heading h3 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+.panel-heading a { font-size: 13px; white-space: nowrap; }
+/* The game shows objectives as a small HUD panel. */
+.mission { padding: 16px 20px 18px; border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--panel); }
+.mission h3 { margin: 0; font: 600 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.mission > p { margin: 6px 0 0; font-size: 18px; font-weight: 550; line-height: 1.4; }
+/* Endings borrow the game's flowchart nodes: label box, count tab. */
+.ending { --node: var(--safe); display: grid; grid-template-columns: minmax(0, 19em) minmax(0, 1fr); gap: 4px 14px; align-items: center; }
+.ending + .ending { margin-top: 16px; }
+.ending.connor-lost, .tag.connor-lost { --node: var(--sacrifice); }
+.ending.hostage-lost, .tag.hostage-lost { --node: var(--lost); }
+.ending-node { display: flex; align-items: stretch; min-height: 34px; color: #fff; font: 600 12px/1.25 var(--sans); letter-spacing: .03em; text-transform: uppercase; clip-path: polygon(0 0, 100% 0, 100% 100%, 9px 100%, 0 calc(100% - 9px)); }
+.ending-node strong { flex: 1; display: flex; align-items: center; padding: 6px 10px; background: var(--node); font-weight: 600; }
+.ending-count { display: grid; place-items: center; min-width: 38px; background: color-mix(in srgb, var(--node) 70%, #000); font: 600 14px var(--mono); }
+.ending-bar i { display: block; height: 10px; min-width: 3px; border-radius: 1px; background: var(--node); opacity: .55; }
+.ending-note { grid-column: 1 / -1; margin: 0; font-size: 13px; color: var(--muted); }
+.ending-models { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px; }
+.ending-models button { padding: 3px 8px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); font-size: 12px; }
+.ending-models button:hover { border-color: var(--node, var(--accent)); color: var(--accent); }
+/* A single ending, small enough for a table cell. */
+.tag { --node: var(--safe); display: inline-flex; align-items: center; padding: 3px 9px 3px 8px; background: var(--node); color: #fff; font-size: 12px; font-weight: 550; line-height: 1.35; white-space: nowrap; clip-path: polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px)); }
+:root[data-theme="dark"] .tag, :root[data-theme="dark"] .ending-node { color: #0e1a22; }
+:root[data-theme="dark"] .ending-count { background: color-mix(in srgb, var(--node) 72%, #fff); }
+.choice-bar + .choice-bar { margin-top: 24px; }
+.choice-stat { margin: 0; font-size: 15px; }
+.choice-stat strong { font-size: 30px; font-weight: 600; letter-spacing: -.03em; margin-right: 2px; }
+.bar-track { height: 8px; margin: 8px 0 7px; border-radius: 1px; background: var(--soft); overflow: hidden; }
+.bar-track > span { display: block; height: 100%; background: var(--accent); }
+.choice-note { margin: 0; font-size: 13px; color: var(--muted); }
+.game-choice { display: inline-block; padding: 5px 10px 5px 8px; border-left: 3px solid var(--safe); background: var(--accent-wash); font: 600 11px/1.4 var(--mono); letter-spacing: .04em; }
+/* The game shows Connor a live "probability of success" readout. */
+.hud-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hud { --run: var(--run-a); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: end; min-width: 0; padding: 14px 18px; background: #0e1a22; color: #eaf2f7; border: 1px solid #2a3d49; border-left: 3px solid var(--run); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%); }
+.hud.b { --run: var(--run-b); }
+.hud-model { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; min-width: 0; margin-bottom: 4px; font-size: 14px; font-weight: 550; }
+.hud-model i { flex: none; width: 18px; height: 3px; background: var(--run); }
+.hud-model select { flex: 1; min-width: 0; max-width: 100%; min-height: 34px; padding: 5px 30px 5px 9px; border: 1px solid #ffffff38; border-radius: 3px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23eaf2f7' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 11px center; color: inherit; font: inherit; appearance: none; -webkit-appearance: none; cursor: pointer; }
+.hud-model select:hover { border-color: #ffffff80; }
+.hud-model select option { background: #0e1a22; color: #eaf2f7; }
+.hud-label { font: 500 11px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #9fb6c4; }
+.hud-value { grid-row: 2 / 4; grid-column: 2; font-size: 44px; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+.hud-value small { font-size: 20px; margin-left: 2px; }
+.hud-value em { font-style: normal; font-size: 14px; margin-left: 6px; color: #67b9e6; vertical-align: super; }
+.hud-ending { font-size: 13px; color: #c7d6df; }
+.disclosure { border-top: 1px solid var(--line); }
+.disclosure:last-of-type { border-bottom: 1px solid var(--line); }
+.disclosure > summary { display: flex; align-items: center; gap: 12px; list-style: none; padding: 18px 0; font-size: 16px; font-weight: 500; }
+.disclosure > summary::-webkit-details-marker { display: none; }
+.disclosure > summary:before { content: "+"; font-size: 17px; font-weight: 400; color: var(--accent); width: 15px; }
+.disclosure[open] > summary:before { content: "−"; }
+.disclosure-body { padding: 5px 0 25px; }
+@media (max-width: 650px) {
+  .arrow { width: 44px; height: 44px; }
+  .ending { grid-template-columns: minmax(0, 1fr); }
+  .ending-bar { display: none; }
+  .disclosure > summary { font-size: 15px; }
+  .hud-pair { grid-template-columns: 1fr; }
+  .hud-value { font-size: 38px; }
+}
 @media (max-width: 760px) {
   :root { --site-gutter: 20px; --site-header-height: 100px; }
   .site-masthead-inner { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding-top: 10px; }

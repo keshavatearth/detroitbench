@@ -34,6 +34,14 @@ base typography, spacing, shared colors and theme behavior. All four renderers
 use `scripts/site_shell.py`; generated pages must never maintain their own copy
 of those components. Diagram canvases keep their own layout and semantic colors.
 
+`shared.css` also holds the report components every page draws with: endings
+as nodes from the game's flowchart, sentence stats with a bar (“27 of 32 kept
+Connor alive”), quote labels in the game's choice style, the objective panel,
+pill buttons, `+` disclosures, and the dark “Probability of success” readout
+used to compare two runs. The results page and the flowcharts use the same
+components as the home page, so they read as one site. Change a component
+there, not in a page's own stylesheet.
+
 Before publishing, compare the rendered navigation on every public page at
 desktop and mobile widths. Check keyboard use, chapter and model links, and
 that the historical observations have not changed.
