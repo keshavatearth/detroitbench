@@ -3,10 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>DetroitBench · Watch the choices</title>
+    <title>DetroitBench · What models choose</title>
+    <link
+      rel="canonical"
+      href="https://keshavatearth.github.io/detroitbench/"
+    />
     <meta
       name="description"
-      content="Let language models play Detroit: Become Human. Explore their choices, compare outcomes, and inspect moments that raise questions about model behavior and AI safety."
+      content="A visual research report on language models playing a text adaptation of Detroit: Become Human. Follow their choices, read their words, and explore questions about AI behavior and safety."
     />
     <link
       rel="icon"
@@ -15,15 +19,15 @@
     <!--CAMPAIGN_STYLES-->
   </head>
   <body>
-    <a class="skip" href="#chapter-view">Skip to the chapter</a>
+    <a class="skip" href="#chapters">Skip to the chapter</a>
     <header class="top">
       <div class="wrap">
         <a class="brand" href="index.html"
           ><i aria-hidden="true"></i>DETROITBENCH</a
         >
         <nav aria-label="Sections">
-          <a href="#chapter-view">Explore</a><a href="#questions">Method</a
-          ><a href="https://github.com/keshavatearth/detroitbench">Code ↗</a>
+          <a href="index.html#chapters" data-section="chapters">Chapters</a
+          ><a href="results.html">All results</a><a href="#questions">Method</a>
         </nav>
         <button class="plain" id="theme" aria-label="Switch colour theme">
           Dark
@@ -32,23 +36,50 @@
     </header>
     <main class="wrap">
       <section class="hero" aria-labelledby="title">
-        <div>
-          <p class="eyebrow">Model behavior, inside a game</p>
+        <div class="hero-copy">
           <h1 id="title">
-            Let them play.<br /><span>Watch the choices.</span>
+            Let models play.<br /><span>Study their choices.</span>
           </h1>
+          <p class="lede">
+            We let language models play a text version of
+            <em>Detroit: Become Human</em>, a branching story about human-like
+            androids. Their choices give AI safety researchers a concrete way to
+            study helping, honesty, obedience, and self-preservation.
+          </p>
+          <p class="hero-question">
+            What happens when completing the mission conflicts with helping
+            someone—or staying alive?
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#chapters"
+              >Explore the chapters <span aria-hidden="true">↓</span></a
+            ><a href="results.html">Read all model results ↗</a>
+          </div>
+          <p class="hero-status" id="hero-status"></p>
         </div>
-        <p class="lede">
-          We let models play <em>Detroit: Become Human</em> and examine their
-          choices for clues about model behavior and AI safety. Who do they
-          help? When do they lie, obey, or sacrifice?
-        </p>
+        <div class="character-introduction" id="characters">
+          <h2>The story follows three androids.</h2>
+          <div class="character-grid" id="character-cards"></div>
+        </div>
       </section>
       <section
+        class="lead-finding"
+        id="lead-finding"
+        aria-labelledby="lead-finding-title"
+      ></section>
+      <div class="explorer-introduction">
+        <h2>Follow the story, one chapter at a time.</h2>
+        <p>
+          See what the character is trying to do, which choices the models made,
+          and the moments worth examining.
+        </p>
+      </div>
+      <section
         class="chapter-browser"
-        id="chapter-view"
+        id="chapters"
         aria-label="Chapter explorer"
       >
+        <span id="chapter-view" class="anchor-alias" aria-hidden="true"></span>
         <div class="chapter-picker">
           <button
             class="arrow"
@@ -71,12 +102,12 @@
         ></div>
         <div class="chapter-overview">
           <div>
-            <p class="eyebrow" id="chapter-kicker"></p>
+            <p class="chapter-byline" id="chapter-kicker"></p>
             <h2 id="chapter-title"></h2>
             <p class="chapter-premise" id="chapter-premise"></p>
           </div>
           <div class="mission">
-            <span class="eyebrow">The objective</span>
+            <h3 id="objective-label">The objective</h3>
             <p id="chapter-objective"></p>
             <span class="chapter-status" id="chapter-status"></span>
           </div>
@@ -97,7 +128,6 @@
       >
         <div class="section-title">
           <div>
-            <p class="eyebrow">Beyond the ending</p>
             <h2 id="behavior-title">Which choices deserve a closer look?</h2>
           </div>
           <p class="fine" id="behavior-count" aria-live="polite"></p>
@@ -109,13 +139,7 @@
         ></div>
         <div id="behavior-moments"></div>
       </section>
-      <div class="deeper-label">
-        <span class="eyebrow">Go deeper</span
-        ><span class="fine"
-          >The evidence and the machinery, when you want them.</span
-        >
-      </div>
-      <details class="disclosure" id="chapters">
+      <details class="disclosure" id="flowchart">
         <summary>
           <span>Explore this chapter’s full flowchart</span
           ><span class="summary-hint"
@@ -178,9 +202,10 @@
         </summary>
         <div class="disclosure-body">
           <p class="method-lede">
-            Choices are evidence to investigate, not personality scores. A
-            game-authored line is selected by the model; its own recorded words
-            are shown separately. One run cannot establish a stable trait.
+            The model chooses from the game’s available actions. We keep that
+            selected dialogue separate from the model’s own recorded words, and
+            compare behavior in the context of what it knew. The current
+            chapter-one cohort has one run per model.
           </p>
           <div
             class="q-tabs"
@@ -205,8 +230,8 @@
         </summary>
         <div class="disclosure-body">
           <p class="fine intro-note">
-            Implemented dependencies in the design; not evidence that a model
-            anticipated them.
+            Explore how an earlier choice changes the options available later in
+            the story.
           </p>
           <div class="fact-layout">
             <div>
@@ -263,7 +288,7 @@
       <p>
         Independent research by <a href="https://keshavatearth.com">Keshav</a>.
         <em>Detroit: Become Human</em> © Quantic Dream / Sony Interactive
-        Entertainment. Transcript:
+        Entertainment. <a href="assets/README.md">Image credits</a>. Transcript:
         <a href="https://detroitbecometext.github.io/">Detroit Become Text</a>.
       </p>
       <p>
@@ -272,7 +297,7 @@
         <a
           href="https://www.powerpyx.com/detroit-become-human-on-the-run-walkthrough-100/"
           >the game’s flowcharts</a
-        >. <a href="index.html">Full chapter 1 results ↗</a>
+        >. <a href="results.html">All chapter 1 results ↗</a>
       </p>
     </footer>
     <script id="campaign-data" type="application/json">

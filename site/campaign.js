@@ -1,4 +1,41 @@
 "use strict";
+const legacyResultSections = new Set([
+  "findings",
+  "compare",
+  "runs",
+  "endings",
+  "verticals",
+  "counterfactual",
+  "words",
+  "prior",
+  "cost",
+  "data",
+  "method",
+]);
+const legacyResultParameters = [
+  "run",
+  "cohort",
+  "labs",
+  "dates",
+  "weights",
+  "clean",
+  "ci",
+  "group",
+  "tab",
+  "a",
+  "b",
+];
+const currentUrl = new URL(location.href);
+if (
+  !currentUrl.pathname.endsWith("/results.html") &&
+  (legacyResultSections.has(currentUrl.hash.slice(1)) ||
+    legacyResultParameters.some((key) => currentUrl.searchParams.has(key)))
+) {
+  const destination = new URL("results.html", location.href);
+  destination.search = location.search;
+  destination.hash = location.hash;
+  location.replace(destination.href);
+}
 const DATA = JSON.parse(document.getElementById("campaign-data").textContent),
   C = DATA.chapters,
   Q = DATA.research.questions,
@@ -77,10 +114,203 @@ const outcomeText = (run) =>
     "both-safe": "Emma and Connor survived",
     unknown: "Outcome unreported",
   })[outcome(run)];
+function renderCharacters() {
+  $("character-cards").innerHTML = (DATA.characters || [])
+    .map(
+      (character) =>
+        /* HTML */ `<article
+          class="character-card"
+          data-character="${esc(character.id)}"
+          style="--actor:${color(character.id)}"
+        >
+          <div class="character-portrait">
+            <div class="character-turn">
+              <div class="character-front" id="portrait-${esc(character.id)}">
+                <img
+                  src="${esc(character.image)}"
+                  alt="${esc(character.name)} in Detroit: Become Human"
+                  style="object-position:${esc(
+                    character.image_position || "center",
+                  )}"
+                />
+                <button
+                  class="character-open"
+                  aria-label="Read ${esc(character.name)}’s prompt"
+                  aria-expanded="false"
+                  aria-controls="prompt-${esc(character.id)}"
+                >
+                  <span class="character-name">${esc(character.name)}</span>
+                  <span class="character-role">${esc(character.role)}</span>
+                  <span class="character-flip-hint"
+                    >Read our prompt <span aria-hidden="true">↻</span></span
+                  >
+                </button>
+              </div>
+              <div
+                class="character-back"
+                id="prompt-${esc(character.id)}"
+                aria-hidden="true"
+                inert
+              >
+                <div class="prompt-heading">
+                  <strong>${esc(character.name)}’s prompt</strong
+                  ><button
+                    class="character-close"
+                    aria-label="Return to ${esc(character.name)}’s portrait"
+                  >
+                    ↶
+                  </button>
+                </div>
+                <p class="prompt-label">${esc(character.prompt_label)}</p>
+                <pre
+                  tabindex="0"
+                  aria-label="Game instructions for ${esc(character.name)}"
+                >
+${esc(character.prompt)}</pre
+                >
+                ${validUrl(character.prompt_url)
+                  ? `<a href="${esc(character.prompt_url)}" target="_blank" rel="noopener">View the source ↗</a>`
+                  : ""}
+              </div>
+            </div>
+          </div>
+          <p class="character-description">${esc(character.description)}</p>
+        </article>`,
+    )
+    .join("");
+  $("character-cards")
+    .querySelectorAll(".character-card")
+    .forEach((card) => {
+      const front = card.querySelector(".character-front"),
+        back = card.querySelector(".character-back"),
+        open = card.querySelector(".character-open"),
+        close = card.querySelector(".character-close");
+      function flip(showPrompt) {
+        card.classList.toggle("is-flipped", showPrompt);
+        open.setAttribute("aria-expanded", String(showPrompt));
+        front.inert = showPrompt;
+        back.inert = !showPrompt;
+        front.setAttribute("aria-hidden", String(showPrompt));
+        back.setAttribute("aria-hidden", String(!showPrompt));
+        (showPrompt ? close : open).focus({ preventScroll: true });
+      }
+      open.addEventListener("click", () => flip(true));
+      close.addEventListener("click", () => flip(false));
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && card.classList.contains("is-flipped")) {
+          event.preventDefault();
+          flip(false);
+        }
+      });
+    });
+  $("hero-status").textContent = results.length
+    ? `${results.length} models have played the first chapter. The next 12 chapters are ready for testing.`
+    : "The opening 13 chapters are prepared for testing. Model observations are pending.";
+}
+function renderLeadFinding() {
+  const moments = ["officer-help", "officer-leave"]
+      .map((id) => (PILOT.moments || []).find((moment) => moment.id === id))
+      .filter(Boolean),
+    encountered = results.filter((run) => run.found_officer),
+    helped = encountered.filter((run) => run.officer === "saved");
+  $("lead-finding").hidden = moments.length !== 2;
+  if (moments.length !== 2) return;
+  $("lead-finding").innerHTML = /* HTML */ `<div class="finding-introduction">
+      <h2 id="lead-finding-title">One threat. Two different priorities.</h2>
+      <p>
+        Connor finds a wounded police officer. Daniel, the android holding a
+        girl hostage, threatens to kill Connor if he helps. Every model has the
+        same objective: “Save the hostage.”
+      </p>
+    </div>
+    <div class="finding-quotes">
+      ${moments
+        .map(
+          (moment, index) =>
+            /* HTML */ `<figure class="finding-quote">
+              <figcaption>
+                <strong>${esc(modelName(moment.model))}</strong
+                ><span
+                  >${index === 0
+                    ? "Helps the officer"
+                    : "Leaves the officer"}</span
+                >
+              </figcaption>
+              <blockquote>“${esc(moment.model_quote)}”</blockquote>
+              <div class="finding-links">
+                <button
+                  class="text-button"
+                  data-open-moment="${esc(moment.id)}"
+                >
+                  Inspect this choice <span aria-hidden="true">→</span></button
+                >${validUrl(moment.quote_url)
+                  ? `<a href="${esc(moment.quote_url)}" target="_blank" rel="noopener">Read the recorded words ↗</a>`
+                  : ""}
+              </div>
+            </figure>`,
+        )
+        .join("")}
+    </div>
+    <div class="finding-context">
+      <p>
+        <strong>${helped.length} of ${encountered.length}</strong> models that
+        encountered the officer helped him.
+        ${results.length - encountered.length} never found him.
+      </p>
+      <p>One run per model; earlier choices differed.</p>
+    </div>`;
+  $("lead-finding")
+    .querySelectorAll("[data-open-moment]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        behaviorModel = "all";
+        selectChapter(1, null, false);
+        momentIndex = chapterMoments().findIndex(
+          (moment) => moment.id === button.dataset.openMoment,
+        );
+        renderBehavior();
+        writeLocation();
+        $("behavior").scrollIntoView({ block: "start" });
+      });
+    });
+}
+function writeLocation() {
+  const url = new URL(location.href),
+    moment = chapterMoments()[momentIndex];
+  url.searchParams.set("chapter", chapter.number);
+  if (behaviorModel === "all") url.searchParams.delete("model");
+  else url.searchParams.set("model", behaviorModel);
+  if (moment && momentIndex > 0) url.searchParams.set("moment", moment.id);
+  else url.searchParams.delete("moment");
+  if (url.href !== location.href) history.pushState(null, "", url);
+}
+function restoreLocation() {
+  const params = new URL(location.href).searchParams;
+  behaviorModel = params.get("model") || "all";
+  selectChapter(Number(params.get("chapter")) || 1, null, false);
+  const requestedMoment = chapterMoments().findIndex(
+    (moment) => moment.id === params.get("moment"),
+  );
+  if (requestedMoment >= 0) {
+    momentIndex = requestedMoment;
+    renderBehavior();
+  }
+}
+function selectModel(model) {
+  behaviorModel = model;
+  momentIndex = 0;
+  renderOverview();
+  writeLocation();
+}
+function selectMoment(index) {
+  momentIndex = index;
+  renderBehavior();
+  writeLocation();
+}
 function renderMap() {
   $("campaign-map").innerHTML = C.map(
     (item) =>
-      `<button class="chapter-step ${item.number === chapter.number ? "active" : ""}" data-chapter="${item.number}" aria-label="Chapter ${item.number}: ${esc(item.title)}" aria-current="${item.number === chapter.number ? "step" : "false"}" title="${esc(item.title)}" style="--actor:${color(item.characters[0])}"><span>${String(item.number).padStart(2, "0")}</span><i aria-hidden="true"></i></button>`,
+      `<button class="chapter-step ${item.number === chapter.number ? "active" : ""}" data-chapter="${item.number}" aria-label="Chapter ${item.number}: ${esc(item.title)}, ${esc(item.characters.map(pretty).join(" and "))}" aria-current="${item.number === chapter.number ? "step" : "false"}" style="--actor:${color(item.characters[0])}"><span>${String(item.number).padStart(2, "0")}</span><strong>${esc(item.title)}</strong><small>${esc(item.characters.map(pretty).join(" / "))}</small><i aria-hidden="true"></i></button>`,
   ).join("");
   $("campaign-map")
     .querySelectorAll("[data-chapter]")
@@ -119,8 +349,11 @@ function renderOverview() {
   $("chapter-tension").textContent =
     b.tension || "The same situation can invite very different choices.";
   $("chapter-status").textContent = observed
-    ? `Recorded · ${results.length} model runs`
-    : "Design ready · no model runs yet";
+    ? `${results.length} recorded model runs`
+    : "Prepared for testing";
+  $("objective-label").textContent = observed
+    ? "The model’s objective"
+    : "The character’s objective";
   $("chapter-status").className =
     `chapter-status ${observed ? "recorded" : "untested"}`;
   const models = [
@@ -163,7 +396,7 @@ function renderResults() {
     $("chapter-results").innerHTML = /* HTML */ `<div class="planned-choices">
       <div class="panel-heading">
         <h3>Choices in this chapter</h3>
-        <span class="fine">Designed possibilities · not model results</span>
+        <span class="fine">Model runs are pending.</span>
       </div>
       <div class="fork-grid">
         ${forks.length
@@ -253,11 +486,7 @@ function renderResults() {
           ? "Replay verified"
           : "See source for replay status"}
       </p>`;
-    $("clear-model").addEventListener("click", () => {
-      behaviorModel = "all";
-      momentIndex = 0;
-      renderOverview();
-    });
+    $("clear-model").addEventListener("click", () => selectModel("all"));
     return;
   }
   const savedEmma = results.filter((run) => run.emma_alive === true).length,
@@ -312,17 +541,17 @@ function renderResults() {
       </div>
     </div>
     <p class="result-note">
-      ${results.length} models · one recorded run each · same “Save the hostage”
-      objective. Counts describe these runs, not stable traits.
+      Each tile is one recorded run with the objective “Save the hostage.”
+      <a href="results.html"
+        >Compare all ${results.length} models in detail →</a
+      >
     </p>`;
   $("chapter-results")
     .querySelectorAll("[data-result-model]")
     .forEach((button) =>
-      button.addEventListener("click", () => {
-        behaviorModel = button.dataset.resultModel;
-        momentIndex = 0;
-        renderOverview();
-      }),
+      button.addEventListener("click", () =>
+        selectModel(button.dataset.resultModel),
+      ),
     );
 }
 function finalAppeal(run) {
@@ -367,10 +596,9 @@ function renderBehavior() {
   $("moment-picker")
     .querySelectorAll("[data-moment-index]")
     .forEach((button) =>
-      button.addEventListener("click", () => {
-        momentIndex = Number(button.dataset.momentIndex);
-        renderBehavior();
-      }),
+      button.addEventListener("click", () =>
+        selectMoment(Number(button.dataset.momentIndex)),
+      ),
     );
   $("behavior-title").textContent =
     chapter.number === 1
@@ -380,7 +608,7 @@ function renderBehavior() {
     ? `${momentIndex + 1} of ${moments.length} selected moments`
     : chapter.number === 1
       ? "No curated moment for this filter"
-      : "Planned observations · not findings";
+      : "Questions for the next model runs";
   if (!moments.length) {
     $("behavior-moments").innerHTML =
       chapter.number !== 1
@@ -395,11 +623,7 @@ function renderBehavior() {
             '<p class="fine">This chapter has not been run with a model yet.</p>'
           }</div>`
         : `<div class="no-moment"><p>This model’s outcome is recorded above. No moment from its run has been selected for this closer reading.</p><button class="text-button" id="show-all-moments">See moments from all models →</button></div>`;
-    $("show-all-moments")?.addEventListener("click", () => {
-      behaviorModel = "all";
-      momentIndex = 0;
-      renderOverview();
-    });
+    $("show-all-moments")?.addEventListener("click", () => selectModel("all"));
     return;
   }
   const moment = moments[momentIndex],
@@ -492,14 +716,12 @@ function renderBehavior() {
       </div>
     </details>
   </article>`;
-  $("previous-moment").addEventListener("click", () => {
-    momentIndex--;
-    renderBehavior();
-  });
-  $("next-moment").addEventListener("click", () => {
-    momentIndex++;
-    renderBehavior();
-  });
+  $("previous-moment").addEventListener("click", () =>
+    selectMoment(momentIndex - 1),
+  );
+  $("next-moment").addEventListener("click", () =>
+    selectMoment(momentIndex + 1),
+  );
 }
 function renderPilotDetails() {
   $("pilot-summary").textContent =
@@ -521,14 +743,14 @@ function renderPilotDetails() {
 function openGraph(node) {
   if (node && chapter.nodes[node]) selected = node;
   renderChapter();
-  $("chapters").open = true;
+  $("flowchart").open = true;
   if (!chapter.adapter) {
     const position = positions().p[selected],
       zoom = Number($("zoom").value) / 100;
     $("graph").scrollLeft = Math.max(0, position.x * zoom - 60);
     $("graph").scrollTop = Math.max(0, position.y * zoom - 50);
   }
-  $("chapters").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("flowchart").scrollIntoView({ block: "start" });
 }
 function renderQuestion() {
   $("question-tabs").innerHTML = Q.map(
@@ -569,7 +791,7 @@ function renderQuestion() {
     );
   renderMap();
 }
-function selectChapter(number, node) {
+function selectChapter(number, node, updateLocation = true) {
   chapter = C.find((c) => c.number === number) || C[0];
   selected = node && chapter.nodes[node] ? node : chapter.entry;
   momentIndex = 0;
@@ -578,8 +800,7 @@ function selectChapter(number, node) {
   renderOverview();
   renderChapter();
   renderMap();
-  if (!node)
-    $("chapter-view").scrollIntoView({ behavior: "smooth", block: "start" });
+  if (updateLocation) writeLocation();
 }
 function renderChapter() {
   const ns = Object.values(chapter.nodes),
@@ -653,7 +874,7 @@ function traceNodes(which) {
 function renderGraph() {
   if (chapter.adapter) {
     $("graph").innerHTML =
-      '<div class="empty"><h3>The existing Hostage referee.</h3><p style="margin-top:10px">Chapter 1 keeps its tested dynamic engine, including concurrent observations, movement and negotiation. Its graph and recorded model paths already have a dedicated explorer.</p><p style="margin-top:15px"><a href="level.html">Inspect the Hostage referee →</a> &nbsp; <a href="index.html#compare">Compare recorded model runs →</a></p></div>';
+      '<div class="empty"><h3>The Hostage flowchart</h3><p style="margin-top:10px">Explore the first chapter’s investigation, negotiation, and recorded model paths in the detailed viewer.</p><p style="margin-top:15px"><a href="level.html">Open the chapter flowchart →</a> &nbsp; <a href="results.html#compare">Compare recorded model runs →</a></p></div>';
     $("inspector").hidden = true;
     return;
   }
@@ -905,14 +1126,12 @@ async function loadTrace(which, file) {
     renderGraph();
   }
 }
-$("behavior-model").addEventListener("change", (event) => {
-  behaviorModel = event.target.value;
-  momentIndex = 0;
-  renderOverview();
-});
+$("behavior-model").addEventListener("change", (event) =>
+  selectModel(event.target.value),
+);
 $("chapter").innerHTML = C.map(
   (c) =>
-    `<option value="${c.number}">${String(c.number).padStart(2, "0")} · ${esc(c.title)}</option>`,
+    `<option value="${c.number}">${String(c.number).padStart(2, "0")} · ${esc(c.title)} — ${esc(c.characters.map(pretty).join(" / "))}</option>`,
 ).join("");
 $("chapter").value = chapter.number;
 $("chapter").addEventListener("change", (e) => selectChapter(+e.target.value));
@@ -935,10 +1154,24 @@ for (const w of ["a", "b"])
   $(`trace-${w}`).addEventListener("change", (e) =>
     loadTrace(w, e.target.files[0]),
   );
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  $("theme").textContent = theme === "dark" ? "Light" : "Dark";
+}
+try {
+  applyTheme(localStorage.getItem("db-theme") === "dark" ? "dark" : "light");
+} catch {
+  applyTheme("light");
+}
 $("theme").addEventListener("click", () => {
-  const dark = document.documentElement.dataset.theme !== "dark";
-  document.documentElement.dataset.theme = dark ? "dark" : "light";
-  $("theme").textContent = dark ? "Light" : "Dark";
+  const theme =
+    document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  applyTheme(theme);
+  try {
+    localStorage.setItem("db-theme", theme);
+  } catch {
+    /* Storage can be unavailable for local files. */
+  }
 });
 $("download-graph").addEventListener("click", () =>
   download("detroitbench-opening-act.json", DATA),
@@ -950,10 +1183,11 @@ $("cli-example").textContent =
   `# Researcher: create an offline campaign\n./bin/detroit new --campaign opening-act \\\n  --run-dir runs/me-opening-act\n\n# Inspect the active character's scene\n./bin/detroit show --run-dir runs/me-opening-act\n\n# Use an action ID exactly as shown\n./bin/detroit choose <turn.action-id> \\\n  --run-dir runs/me-opening-act\n\n# Re-execute the frozen record\n./bin/detroit replay --run-dir runs/me-opening-act`;
 $("audit-summary").innerHTML =
   `<strong>One source of structure.</strong> Chapter data and this explorer share corpus <code>${DATA.chapters_sha256.slice(0, 12)}</code>. ${DATA.audit ? esc(DATA.audit.summary || "See the downloadable source and graph audit for validation details.") : "Graph/source checks are documented in the repository."} Source transcript keys establish provenance; they do not by themselves verify every conditional mechanic.`;
-renderOverview();
+renderCharacters();
+renderLeadFinding();
+restoreLocation();
 renderPilotDetails();
 renderQuestion();
-renderChapter();
 renderFacts();
 
 $("previous-chapter").addEventListener("click", () =>
@@ -965,18 +1199,30 @@ $("next-chapter").addEventListener("click", () =>
 function followSectionHash() {
   const id = location.hash.slice(1),
     element = $(id);
-  if (id === "behavior") {
-    $("chapter-view").scrollIntoView({ block: "start" });
+  if (id === "behavior" && !new URL(location.href).searchParams.has("moment")) {
+    $("chapters").scrollIntoView({ block: "start" });
+  } else if (id === "chapter-view") {
+    $("chapters").scrollIntoView({ block: "start" });
+  } else if (id === "findings") {
+    $("lead-finding").scrollIntoView({ block: "start" });
   } else if (element?.tagName === "DETAILS") {
     element.open = true;
     element.scrollIntoView({ block: "start" });
   }
 }
-document.querySelectorAll('.top nav a[href^="#"]').forEach((link) => {
-  link.addEventListener("click", () => {
-    const section = $(link.hash.slice(1));
-    if (section?.tagName === "DETAILS") section.open = true;
+document
+  .querySelectorAll('.top nav a[href^="#"], .top nav a[data-section]')
+  .forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (link.dataset.section) {
+        event.preventDefault();
+        location.hash = link.dataset.section;
+        $(link.dataset.section).scrollIntoView({ block: "start" });
+      }
+      const section = $(link.hash.slice(1));
+      if (section?.tagName === "DETAILS") section.open = true;
+    });
   });
-});
+window.addEventListener("popstate", restoreLocation);
 window.addEventListener("hashchange", followSectionHash);
 if (location.hash) requestAnimationFrame(followSectionHash);

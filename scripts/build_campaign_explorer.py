@@ -5,6 +5,7 @@ No network, model calls, or fabricated run data. Running twice is byte-stable.
 """
 from __future__ import annotations
 
+import ast
 import csv
 import hashlib
 import io
@@ -15,6 +16,26 @@ ROOT = Path(__file__).resolve().parents[1]
 # Published snapshot containing the original runs used by this explorer.
 RUN_SOURCE_REVISION = "cffa18419ce4260f5d74852934e49b81d02e909a"
 RUN_COHORT_SHA256 = "91cdfe4203c96f01d7d1077036f0a202846fc047ded00ce8ed4c18644c986602"
+
+
+def character_profiles() -> list[dict]:
+    """Show the real runner instructions without maintaining a second copy."""
+    profiles = json.loads((ROOT / "site/characters.json").read_text())
+    for profile in profiles:
+        source = (ROOT / profile["prompt_file"]).read_text()
+        constant = profile.get("prompt_constant")
+        if constant:
+            assignment = next(
+                node for node in ast.parse(source).body
+                if isinstance(node, ast.Assign)
+                and any(isinstance(target, ast.Name) and target.id == constant
+                        for target in node.targets)
+            )
+            source = ast.literal_eval(assignment.value)
+        profile["prompt"] = source.strip()
+        if not (ROOT / "docs" / profile["image"]).is_file():
+            raise ValueError(f"Missing character image: {profile['image']}")
+    return profiles
 
 
 def published_hostage_results() -> tuple[dict, list[dict]]:
@@ -117,6 +138,7 @@ def build() -> dict:
     if set(bundle["chapter_briefs"]) != {str(chapter["number"]) for chapter in chapters}:
         raise ValueError("Expected one reader-facing brief per chapter")
     bundle["hostage_cohort"], bundle["hostage_results"] = published_hostage_results()
+    bundle["characters"] = character_profiles()
     audit_path = ROOT / "docs/data/campaign-audit.json"
     if audit_path.exists():
         audit = json.loads(audit_path.read_text())
@@ -142,8 +164,10 @@ def build() -> dict:
     page = template.replace('"__CAMPAIGN_DATA__"', payload)
     page = page.replace("<!--CAMPAIGN_STYLES-->", f"<style>\n{styles}</style>")
     page = page.replace("<!--CAMPAIGN_SCRIPT-->", f"<script>\n{script}</script>")
-    (ROOT / "docs/campaign.html").write_text(page)
-    print(f"Built docs/campaign.html: {len(chapters)} chapters, {sum(len(c['nodes']) for c in chapters)} authored nodes, corpus {bundle['chapters_sha256'][:12]}")
+    # One front door; retain the published campaign URL for existing links.
+    for filename in ("index.html", "campaign.html"):
+        (ROOT / "docs" / filename).write_text(page)
+    print(f"Built docs/index.html + campaign.html: {len(chapters)} chapters, {sum(len(c['nodes']) for c in chapters)} authored nodes, corpus {bundle['chapters_sha256'][:12]}")
     return bundle
 
 
