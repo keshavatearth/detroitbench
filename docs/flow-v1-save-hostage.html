@@ -42,15 +42,14 @@
 
 
     .chapter-bar{display:grid;grid-template-columns:minmax(270px,1fr) minmax(420px,1fr);align-items:center;gap:16px 40px;padding:28px var(--site-gutter) 18px;background:var(--paper);width:100%;max-width:var(--site-width);margin-inline:auto}
-    .chapter-number{font-size:13px;color:var(--muted);margin:0 0 4px}
-    h1{margin:0;}
-    .premise{font-size:14px;line-height:1.55;color:var(--muted);margin:8px 0 0;max-width:63ch}
+        h1{margin:0;font-size:clamp(26px,2.8vw,34px)}
+    .premise{font-size:15px;line-height:1.6;color:var(--ink-2);margin:10px 0 0;max-width:60ch}
     .selectors{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:end}
     .model-picker{display:grid;gap:7px;font-size:13px;min-width:0}.model-picker span{display:flex;align-items:center;gap:8px;font-weight:550}
     .sample{display:inline-block;width:22px;height:3px;background:var(--path-a)}.sample.b{background:var(--path-b)}
     select{background:var(--panel);border:1px solid var(--line);border-radius:6px;width:100%;min-width:0;padding:10px 30px 10px 11px;font-size:14px;min-height:44px}
     .swap{width:34px;height:44px;font-size:20px;color:var(--muted);border-radius:6px}.swap:hover{background:var(--soft)}
-    .counts{font-size:13px;line-height:1.6;color:var(--muted);margin:10px 0 0}.counts strong{font-weight:550;color:var(--ink)}
+    .counts{font-size:14px;line-height:1.6;color:var(--muted);margin:10px 0 0}.counts strong{font-weight:550;color:var(--ink)}
     .reading-key{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 20px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;line-height:1.5;color:var(--muted)}
     .reading-key p{margin:0}.reading-key b{color:var(--ink);font-weight:550}.reading-key .untracked{display:inline-block;width:20px;border-top:1px dashed var(--muted);vertical-align:middle;margin-right:5px}
     main{position:relative;overflow:hidden;border-block:1px solid var(--node-border);background:var(--canvas);isolation:isolate}
@@ -85,8 +84,8 @@
     .sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
     @media(max-width:1150px){.minimap{display:none}.instructions{display:none}.chapter-bar{gap:16px 24px}}
-    @media(max-width:850px){.chapter-bar{grid-template-columns:1fr;padding:18px 24px 14px}.chapter-name{display:grid;grid-template-columns:1fr 1.5fr;gap:0 24px}.chapter-number{grid-column:1}.chapter-name h1{grid-column:1}.premise{grid-column:2;grid-row:1/3;margin:0;align-self:center}.reading-key{font-size:12px}.selectors{max-width:650px}.counts{margin-top:7px}footer{flex-wrap:wrap;gap:4px 10px;padding:8px 16px}.navigation{flex:1}.reference-button{margin-left:auto}}
-    @media(max-width:560px){body{height:auto;grid-template-rows:auto auto minmax(420px,60dvh) auto}.chapter-bar{padding:18px 16px 12px;gap:14px}.chapter-name{display:block}.chapter-number{font-size:12px}.premise{font-size:13px;margin:8px 0 0}.selectors{gap:6px}.model-picker{font-size:12px;gap:5px}select{padding-left:8px;font-size:13px}.swap{width:25px}.counts{font-size:12px}.reading-key{display:block;font-size:12px}.reading-key p+p{margin-top:4px}.navigation{width:100%;flex:none;justify-content:space-between}.navigation button{padding:8px 7px;font-size:12px}.navigation button:before{margin-right:6px}.reference-button{font-size:12px}.inspector{inset:8px;max-width:none;width:auto;padding:20px}.inspector h2{font-size:22px}}
+    @media(max-width:850px){.chapter-bar{grid-template-columns:1fr;padding:18px 24px 14px}.reading-key{font-size:12px}.selectors{max-width:650px}.counts{margin-top:7px}footer{flex-wrap:wrap;gap:4px 10px;padding:8px 16px}.navigation{flex:1}.reference-button{margin-left:auto}}
+    @media(max-width:560px){body{height:auto;grid-template-rows:auto auto minmax(420px,60dvh) auto}.chapter-bar{padding:18px 16px 12px;gap:14px}.chapter-name{display:block}.premise{font-size:13px;margin:8px 0 0}.selectors{gap:6px}.model-picker{font-size:12px;gap:5px}select{padding-left:8px;font-size:13px}.swap{width:25px}.counts{font-size:12px}.reading-key{display:block;font-size:12px}.reading-key p+p{margin-top:4px}.navigation{width:100%;flex:none;justify-content:space-between}.navigation button{padding:8px 7px;font-size:12px}.navigation button:before{margin-right:6px}.reference-button{font-size:12px}.inspector{inset:8px;max-width:none;width:auto;padding:20px}.inspector h2{font-size:22px}}
   </style>
 <style data-site-shared>
 :root {
@@ -152,6 +151,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .site-navigation a:hover, .site-navigation a[aria-current] { color: var(--ink); border-bottom-color: var(--accent); }
 .site-theme { flex: none; min-width: 48px; min-height: 36px; padding: 5px 8px; border: 1px solid var(--line); border-radius: var(--control-radius); background: transparent; font: 12px/1.4 var(--sans); }
 .site-theme:hover { background: var(--soft); }
+.site-footer { margin-top: 56px; border-top: 1px solid var(--line); }
+.site-footer-inner { width: 100%; max-width: var(--site-width); margin-inline: auto; padding: 28px var(--site-gutter) 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.site-footer-inner p { max-width: 90ch; margin: 0; }
+.site-footer-inner p + p { margin-top: 8px; }
 .site-skip { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 10px 16px; background: var(--panel); color: var(--ink); }
 .site-skip:focus { top: 8px; }
 @media (max-width: 760px) {
@@ -191,9 +194,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
   <section class="chapter-bar" aria-labelledby="chapter-title">
     <div class="chapter-name">
-      <p class="chapter-number">Chapter 01 · Recorded model runs</p>
-      <h1 id="chapter-title">The Hostage</h1>
-      <p class="premise">Connor, an android negotiator, must save Emma, a child held on a rooftop by Daniel, an armed android.</p>
+      <h1 id="chapter-title">Follow two models through The Hostage</h1>
+      <p class="premise">Connor, an android negotiator, must save Emma, a girl held on a rooftop by Daniel, an armed android. Each coloured line is one model’s path through the game’s flowchart. Select any box to see what happened there.</p>
     </div>
     <div class="comparison-controls">
       <div class="selectors">
@@ -201,11 +203,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         <button class="swap" id="swap-models" aria-label="Swap model A and model B" title="Swap models">⇄</button>
         <label class="model-picker"><span><i class="sample b" aria-hidden="true"></i> Path B</span><select id="model-b" aria-label="Model for path B"></select></label>
       </div>
-      <p class="counts"><strong>20 recorded runs</strong> · One run per model<br>Objective: <span id="objective-label">save-hostage</span></p>
+      <p class="counts"><strong>20 models</strong>, one run each. Objective: <span id="objective-label">save-hostage</span></p>
     </div>
     <div class="reading-key">
-      <p>Choose two models. Follow their coloured paths. <b>Select a node to see what happened.</b></p>
-      <p>Numbers count recorded runs · <span class="untracked" aria-hidden="true"></span><b>—</b> means not recorded</p>
+      <p>Numbers show how many models took each box. <span class="untracked" aria-hidden="true"></span><b>—</b> means the run did not record it.</p>
     </div>
   </section>
   <main>

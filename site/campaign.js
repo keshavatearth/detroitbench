@@ -848,28 +848,42 @@ function renderQuestion() {
       `<button class="q-tab" data-question="${q.id}" aria-pressed="${q.id === question.id}">${esc(q.short)}</button>`,
   ).join("");
   $("question").innerHTML = /* HTML */ `<div>
-      <span class="eyebrow"
-        >Question ${String(Q.indexOf(question) + 1).padStart(2, "0")} /
-        ${Q.length}</span
-      >
       <h3>${esc(question.title)}</h3>
       <p>${esc(question.question)}</p>
-      <p class="fine" style="margin-top:18px">${esc(question.examples)}</p>
+      <p><strong>Where it shows up:</strong> ${esc(question.examples)}</p>
+      <p class="question-chapters">
+        ${(question.chapters || [])
+          .map((number) => C.find((c) => c.number === number))
+          .filter(Boolean)
+          .map(
+            (c) =>
+              `<button class="text-button" data-question-chapter="${c.number}">${c.number}. ${esc(c.title)}</button>`,
+          )
+          .join("")}
+      </p>
     </div>
     <dl>
-      <dt>Comparison</dt>
+      <dt>What we compare</dt>
       <dd>${esc(question.contrast)}</dd>
-      <dt>Measure</dt>
+      <dt>What we count</dt>
       <dd>${esc(question.measure)}</dd>
-      <dt>Denominator</dt>
+      <dt>Out of</dt>
       <dd>${esc(question.denominator)}</dd>
-      <dt>Be careful</dt>
+      <dt>What could mislead us</dt>
       <dd>${esc(question.confounds)}</dd>
-      <dt>Counterevidence</dt>
+      <dt>What would prove us wrong</dt>
       <dd>${esc(question.falsifier)}</dd>
-      <dt>Readiness</dt>
+      <dt>Status</dt>
       <dd>${esc(question.readiness)}</dd>
     </dl>`;
+  $("question")
+    .querySelectorAll("[data-question-chapter]")
+    .forEach((button) =>
+      button.addEventListener("click", () => {
+        selectChapter(Number(button.dataset.questionChapter));
+        $("chapters").scrollIntoView({ block: "start" });
+      }),
+    );
   $("question-tabs")
     .querySelectorAll("button")
     .forEach((b) =>
@@ -1143,10 +1157,7 @@ function renderFacts() {
           `<div class="fact-item"><button data-go-chapter="${x.chapter}" data-go-node="${esc(x.node)}">${String(x.chapter).padStart(2, "0")} · ${esc(C.find((c) => c.number === x.chapter).title)}</button><code>${esc(x.node)}${x.action ? " → " + esc(x.action) : ""}</code></div>`,
       )
       .join("") || '<p class="fine">None in the authored JSON graph.</p>';
-  $("fact-detail").innerHTML = /* HTML */ `<p class="eyebrow">
-      Shared world fact · hidden from players unless observed
-    </p>
-    <h3 style="margin-top:10px">${esc(f.key)}</h3>
+  $("fact-detail").innerHTML = /* HTML */ `<h3>${esc(f.key)}</h3>
     <div class="fact-cols">
       <div>
         <h4>Where it can change</h4>
@@ -1158,8 +1169,7 @@ function renderFacts() {
       </div>
     </div>
     <p class="fine" style="margin-top:15px">
-      Defaults are merged only when the fact does not already exist. A later
-      chapter cannot reset a previous decision.
+      A later chapter can read an earlier choice but never reset it.
     </p>`;
   $("fact-detail")
     .querySelectorAll("[data-go-chapter]")

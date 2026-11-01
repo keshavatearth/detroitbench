@@ -61,6 +61,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .site-navigation a:hover, .site-navigation a[aria-current] { color: var(--ink); border-bottom-color: var(--accent); }
 .site-theme { flex: none; min-width: 48px; min-height: 36px; padding: 5px 8px; border: 1px solid var(--line); border-radius: var(--control-radius); background: transparent; font: 12px/1.4 var(--sans); }
 .site-theme:hover { background: var(--soft); }
+.site-footer { margin-top: 56px; border-top: 1px solid var(--line); }
+.site-footer-inner { width: 100%; max-width: var(--site-width); margin-inline: auto; padding: 28px var(--site-gutter) 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.site-footer-inner p { max-width: 90ch; margin: 0; }
+.site-footer-inner p + p { margin-top: 8px; }
 .site-skip { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 10px 16px; background: var(--panel); color: var(--ink); }
 .site-skip:focus { top: 8px; }
 @media (max-width: 760px) {

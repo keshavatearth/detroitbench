@@ -96,6 +96,7 @@ def check_site(docs: Path, site: Path) -> list[str]:
             "style": (site / "shared.css").read_text().strip(),
             "script": (site / "shared.js").read_text().strip(),
         }
+        expected_footer = (site / "shared.footer.html").read_text()
     except OSError as error:
         return [f"Cannot read shared shell sources: {error}"]
     if len(expected_header) != 1:
@@ -124,6 +125,11 @@ def check_site(docs: Path, site: Path) -> list[str]:
             elif "".join(blocks[0].text).strip() != expected:
                 extension = "css" if tag == "style" else "js"
                 errors.append(f"{name}:{blocks[0].line}: embedded shared {extension.upper()} differs from site/shared.{extension}")
+        footers = source.count('class="site-footer"')
+        if name not in FLOW_PAGES and footers != 1:
+            errors.append(f"{name}: expected the shared footer; found {footers}")
+        elif footers and expected_footer not in source:
+            errors.append(f"{name}: footer differs from site/shared.footer.html")
         if page.ids["site-theme"] != 1:
             errors.append(f"{name}: expected one #site-theme; found {page.ids['site-theme']}")
         if page.ids["theme"]:

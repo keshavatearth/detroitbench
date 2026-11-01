@@ -20,4 +20,8 @@ def render_shell(page: str, *, section: str, skip_target: str) -> str:
         if page.count(marker) != 1:
             raise ValueError(f"Expected exactly one shared site marker: {marker}")
         page = page.replace(marker, value)
-    return page
+    # Full-screen flowcharts end with their own toolbar, so the footer is opt-in.
+    footer_marker = "<!--SITE_FOOTER-->"
+    if page.count(footer_marker) > 1:
+        raise ValueError(f"Expected at most one shared site marker: {footer_marker}")
+    return page.replace(footer_marker, (SITE / "shared.footer.html").read_text())
