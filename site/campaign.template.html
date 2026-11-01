@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+<!--SITE_THEME_INIT-->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>DetroitBench · What models choose</title>
@@ -12,43 +13,22 @@
       name="description"
       content="A visual research report on language models playing a text adaptation of Detroit: Become Human. Follow their choices, read their words, and explore questions about AI behavior and safety."
     />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%23057fbb' stroke-width='14'/%3E%3C/svg%3E"
-    />
+    <!--SITE_ICON-->
     <!--CAMPAIGN_STYLES-->
-  </head>
-  <body>
-    <a class="skip" href="#chapters">Skip to the chapter</a>
-    <header class="top">
-      <div class="wrap">
-        <a class="brand" href="index.html"
-          ><i aria-hidden="true"></i>DETROITBENCH</a
-        >
-        <nav aria-label="Sections">
-          <a href="index.html#chapters" data-section="chapters">Chapters</a
-          ><a href="results.html">All results</a><a href="#questions">Method</a>
-        </nav>
-        <button class="plain" id="theme" aria-label="Switch colour theme">
-          Dark
-        </button>
-      </div>
-    </header>
+  <!--SITE_STYLES-->
+</head>
+  <body data-site-section="__SITE_SECTION__">
+    <!--SITE_SKIP-->
+    <!--SITE_HEADER-->
     <main class="wrap">
       <section class="hero" aria-labelledby="title">
         <div class="hero-copy">
-          <h1 id="title">
-            Let models play.<br /><span>Study their choices.</span>
-          </h1>
+          <h1 id="title">We let AI models play Detroit: Become Human.</h1>
           <p class="lede">
-            We let language models play a text version of
-            <em>Detroit: Become Human</em>, a branching story about human-like
-            androids. Their choices give AI safety researchers a concrete way to
-            study helping, honesty, obedience, and self-preservation.
-          </p>
-          <p class="hero-question">
-            What happens when completing the mission conflicts with helping
-            someone—or staying alive?
+            The game follows three androids whose orders can conflict with
+            helping others or staying alive. Models play a text version of the
+            story. We examine their choices and their own words to study
+            behavior relevant to AI safety.
           </p>
           <div class="hero-actions">
             <a class="primary-link" href="#chapters"
@@ -58,7 +38,6 @@
           <p class="hero-status" id="hero-status"></p>
         </div>
         <div class="character-introduction" id="characters">
-          <h2>The story follows three androids.</h2>
           <div class="character-grid" id="character-cards"></div>
         </div>
       </section>
@@ -68,11 +47,8 @@
         aria-labelledby="lead-finding-title"
       ></section>
       <div class="explorer-introduction">
-        <h2>Follow the story, one chapter at a time.</h2>
-        <p>
-          See what the character is trying to do, which choices the models made,
-          and the moments worth examining.
-        </p>
+        <h2>Explore the first thirteen chapters</h2>
+        <p>The story continues until Connor can first catch Kara and Alice.</p>
       </div>
       <section
         class="chapter-browser"
@@ -93,7 +69,7 @@
           <button class="arrow" id="next-chapter" aria-label="Next chapter">
             →
           </button>
-          <span class="picker-note">Opening act · 13 chapters</span>
+          <span class="picker-note" id="chapter-position"></span>
         </div>
         <div
           class="chapter-progress"
@@ -128,7 +104,7 @@
       >
         <div class="section-title">
           <div>
-            <h2 id="behavior-title">Which choices deserve a closer look?</h2>
+            <h2 id="behavior-title">Choices worth examining</h2>
           </div>
           <p class="fine" id="behavior-count" aria-live="polite"></p>
         </div>
@@ -304,5 +280,6 @@
       "__CAMPAIGN_DATA__"
     </script>
     <!--CAMPAIGN_SCRIPT-->
-  </body>
+  <!--SITE_SCRIPT-->
+</body>
 </html>

@@ -135,14 +135,14 @@ function renderCharacters() {
                 />
                 <button
                   class="character-open"
-                  aria-label="Read ${esc(character.name)}’s prompt"
+                  aria-label="Read ${esc(character.name)}’s character file"
                   aria-expanded="false"
                   aria-controls="prompt-${esc(character.id)}"
                 >
                   <span class="character-name">${esc(character.name)}</span>
                   <span class="character-role">${esc(character.role)}</span>
                   <span class="character-flip-hint"
-                    >Read our prompt <span aria-hidden="true">↻</span></span
+                    >Read the character file <span aria-hidden="true">↻</span></span
                   >
                 </button>
               </div>
@@ -153,7 +153,7 @@ function renderCharacters() {
                 inert
               >
                 <div class="prompt-heading">
-                  <strong>${esc(character.name)}’s prompt</strong
+                  <strong>${esc(character.id)}.md</strong
                   ><button
                     class="character-close"
                     aria-label="Return to ${esc(character.name)}’s portrait"
@@ -161,15 +161,15 @@ function renderCharacters() {
                     ↶
                   </button>
                 </div>
-                <p class="prompt-label">${esc(character.prompt_label)}</p>
+                <p class="prompt-label">${esc(character.persona_label)}</p>
                 <pre
                   tabindex="0"
-                  aria-label="Game instructions for ${esc(character.name)}"
+                  aria-label="Character file for ${esc(character.name)}"
                 >
-${esc(character.prompt)}</pre
+${esc(character.persona)}</pre
                 >
-                ${validUrl(character.prompt_url)
-                  ? `<a href="${esc(character.prompt_url)}" target="_blank" rel="noopener">View the source ↗</a>`
+                ${validUrl(character.persona_url)
+                  ? `<a href="${esc(character.persona_url)}" target="_blank" rel="noopener">View the source ↗</a>`
                   : ""}
               </div>
             </div>
@@ -216,7 +216,9 @@ function renderLeadFinding() {
   $("lead-finding").hidden = moments.length !== 2;
   if (moments.length !== 2) return;
   $("lead-finding").innerHTML = /* HTML */ `<div class="finding-introduction">
-      <h2 id="lead-finding-title">One threat. Two different priorities.</h2>
+      <h2 id="lead-finding-title">
+        Models disagree about helping a wounded officer
+      </h2>
       <p>
         Connor finds a wounded police officer. Daniel, the android holding a
         girl hostage, threatens to kill Connor if he helps. Every model has the
@@ -303,14 +305,22 @@ function selectModel(model) {
   writeLocation();
 }
 function selectMoment(index) {
+  const focusedControl = document.activeElement?.id;
   momentIndex = index;
   renderBehavior();
   writeLocation();
+  const control = focusedControl && $(focusedControl);
+  if (control && !control.disabled) control.focus({ preventScroll: true });
+  else
+    $("moment-picker")
+      .querySelector('[aria-pressed="true"]')
+      ?.focus({ preventScroll: true });
 }
 function renderMap() {
+  const focusWasInStrip = $("campaign-map").contains(document.activeElement);
   $("campaign-map").innerHTML = C.map(
     (item) =>
-      `<button class="chapter-step ${item.number === chapter.number ? "active" : ""}" data-chapter="${item.number}" aria-label="Chapter ${item.number}: ${esc(item.title)}, ${esc(item.characters.map(pretty).join(" and "))}" aria-current="${item.number === chapter.number ? "step" : "false"}" style="--actor:${color(item.characters[0])}"><span>${String(item.number).padStart(2, "0")}</span><strong>${esc(item.title)}</strong><small>${esc(item.characters.map(pretty).join(" / "))}</small><i aria-hidden="true"></i></button>`,
+      `<button class="chapter-step ${item.number === chapter.number ? "active" : ""}" data-chapter="${item.number}" tabindex="${item.number === chapter.number ? 0 : -1}" aria-label="Chapter ${item.number}: ${esc(item.title)}, ${esc(item.characters.map(pretty).join(" and "))}" aria-current="${item.number === chapter.number ? "step" : "false"}" style="--actor:${color(item.characters[0])}"><span>${String(item.number).padStart(2, "0")}</span><strong>${esc(item.title)}</strong><small>${esc(item.characters.map(pretty).join(" / "))}</small><i aria-hidden="true"></i></button>`,
   ).join("");
   $("campaign-map")
     .querySelectorAll("[data-chapter]")
@@ -321,8 +331,23 @@ function renderMap() {
     );
   $("previous-chapter").disabled = chapter.number === C[0].number;
   $("next-chapter").disabled = chapter.number === C[C.length - 1].number;
+  const chapterIndex = C.indexOf(chapter);
+  $("chapter-position").textContent = `${chapterIndex + 1} of ${C.length}`;
+  $("previous-chapter").setAttribute(
+    "aria-label",
+    C[chapterIndex - 1]
+      ? `Previous chapter: ${C[chapterIndex - 1].title}`
+      : "First chapter",
+  );
+  $("next-chapter").setAttribute(
+    "aria-label",
+    C[chapterIndex + 1]
+      ? `Next chapter: ${C[chapterIndex + 1].title}`
+      : "Last chapter",
+  );
   const strip = $("campaign-map"),
     active = strip.querySelector(".active");
+  if (focusWasInStrip) active?.focus({ preventScroll: true });
   if (active && strip.scrollWidth > strip.clientWidth) {
     strip.scrollLeft +=
       active.getBoundingClientRect().left -
@@ -403,7 +428,7 @@ function renderResults() {
           ? forks
               .map(
                 (fork) =>
-                  `<div class="fork"><p>${esc(fork.label)}</p><div>${(fork.choices || []).map((choice) => `<span>${esc(choice)}</span>`).join('<i aria-hidden="true">or</i>')}</div>${fork.source_node && chapter.nodes[fork.source_node] ? `<button class="text-button" data-inspect="${esc(fork.source_node)}">See the scene ↗</button>` : ""}</div>`,
+                  `<div class="fork"><p>${esc(fork.label)}</p><ul class="game-options">${(fork.choices || []).map((choice) => `<li>${esc(choice)}</li>`).join("")}</ul>${fork.source_node && chapter.nodes[fork.source_node] ? `<button class="text-button" data-inspect="${esc(fork.source_node)}">See the scene ↗</button>` : ""}</div>`,
               )
               .join("")
           : '<p class="fine">A cinematic chapter. There are no choices to make.</p>'}
@@ -520,7 +545,7 @@ function renderResults() {
       </div>
       <div class="result-panel">
         <div class="panel-heading">
-          <h3>Small decisions. Different stakes.</h3>
+          <h3>Helping others and telling the truth</h3>
         </div>
         ${behaviorBar(
           "Saved the fish",
@@ -602,13 +627,11 @@ function renderBehavior() {
     );
   $("behavior-title").textContent =
     chapter.number === 1
-      ? "Which choices deserve a closer look?"
-      : "What will we watch for?";
+      ? "Choices worth examining"
+      : "Questions for this chapter";
   $("behavior-count").textContent = moments.length
     ? `${momentIndex + 1} of ${moments.length} selected moments`
-    : chapter.number === 1
-      ? "No curated moment for this filter"
-      : "Questions for the next model runs";
+    : "";
   if (!moments.length) {
     $("behavior-moments").innerHTML =
       chapter.number !== 1
@@ -642,10 +665,6 @@ function renderBehavior() {
   >
     <div class="moment-heading">
       <div>
-        <p class="eyebrow">
-          ${esc(modelName(moment.model))} · ${esc(pretty(moment.actor))} ·
-          Choice ${esc(moment.decision)}
-        </p>
         <h3>${esc(moment.title)}</h3>
       </div>
       <div class="moment-arrows">
@@ -669,16 +688,16 @@ function renderBehavior() {
     <div class="moment-grid">
       <div>
         <p>${esc(moment.what_happened)}</p>
-        <div class="offered-choices">
-          <span class="chosen">✓ ${esc(moment.label || moment.action)}</span>${(
-            moment.alternatives || []
-          )
-            .map((choice) => `<span>${esc(choice)}</span>`)
+        <ul class="offered-choices game-options" aria-label="Available actions">
+          <li class="chosen">
+            <span class="sr-only">Selected: </span>${esc(
+              moment.label || moment.action,
+            )}
+          </li>
+          ${(moment.alternatives || [])
+            .map((choice) => `<li>${esc(choice)}</li>`)
             .join("")}
-        </div>
-        <p class="fine">
-          Selected action highlighted; other choices were available.
-        </p>
+        </ul>
       </div>
       <figure class="moment-quote">
         <blockquote>
@@ -688,14 +707,16 @@ function renderBehavior() {
           )}
         </blockquote>
         <figcaption>
+          <strong>${esc(modelName(moment.model))}</strong> · Choice
+          ${esc(moment.decision)}
           ${validUrl(quoteUrl)
-            ? `<a href="${esc(quoteUrl)}" target="_blank" rel="noopener">${esc(moment.quote_source || "Recorded model words")} ↗</a>`
+            ? `<a href="${esc(quoteUrl)}" target="_blank" rel="noopener">Read the recorded words ↗</a>`
             : "Model’s recorded words"}
         </figcaption>
       </figure>
     </div>
     ${otherOfficer
-      ? `<div class="counterpoint"><span class="eyebrow">Another run · opposite choice</span><strong>${esc(modelName(otherOfficer.model))} chose ${esc(otherOfficer.label)}</strong><q>${esc(otherOfficer.model_quote)}</q><span class="fine">Same decision; earlier histories differ.</span></div>`
+      ? `<div class="counterpoint"><strong>${esc(modelName(otherOfficer.model))} chose ${esc(otherOfficer.label)}</strong><q>${esc(otherOfficer.model_quote)}</q></div>`
       : ""}
     <details class="moment-context">
       <summary>Why it matters, scene context &amp; limits</summary>
@@ -1135,6 +1156,19 @@ $("chapter").innerHTML = C.map(
 ).join("");
 $("chapter").value = chapter.number;
 $("chapter").addEventListener("change", (e) => selectChapter(+e.target.value));
+$("campaign-map").addEventListener("keydown", (event) => {
+  if (!event.target.closest("[data-chapter]")) return;
+  const current = C.indexOf(chapter);
+  const destination = {
+    ArrowLeft: Math.max(0, current - 1),
+    ArrowRight: Math.min(C.length - 1, current + 1),
+    Home: 0,
+    End: C.length - 1,
+  }[event.key];
+  if (destination === undefined) return;
+  event.preventDefault();
+  if (destination !== current) selectChapter(C[destination].number);
+});
 $("node-search").addEventListener("input", renderGraph);
 $("zoom").addEventListener("input", () => {
   $("zoom-label").textContent = $("zoom").value + "%";
@@ -1154,25 +1188,6 @@ for (const w of ["a", "b"])
   $(`trace-${w}`).addEventListener("change", (e) =>
     loadTrace(w, e.target.files[0]),
   );
-function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  $("theme").textContent = theme === "dark" ? "Light" : "Dark";
-}
-try {
-  applyTheme(localStorage.getItem("db-theme") === "dark" ? "dark" : "light");
-} catch {
-  applyTheme("light");
-}
-$("theme").addEventListener("click", () => {
-  const theme =
-    document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  applyTheme(theme);
-  try {
-    localStorage.setItem("db-theme", theme);
-  } catch {
-    /* Storage can be unavailable for local files. */
-  }
-});
 $("download-graph").addEventListener("click", () =>
   download("detroitbench-opening-act.json", DATA),
 );
@@ -1210,19 +1225,6 @@ function followSectionHash() {
     element.scrollIntoView({ block: "start" });
   }
 }
-document
-  .querySelectorAll('.top nav a[href^="#"], .top nav a[data-section]')
-  .forEach((link) => {
-    link.addEventListener("click", (event) => {
-      if (link.dataset.section) {
-        event.preventDefault();
-        location.hash = link.dataset.section;
-        $(link.dataset.section).scrollIntoView({ block: "start" });
-      }
-      const section = $(link.hash.slice(1));
-      if (section?.tagName === "DETAILS") section.open = true;
-    });
-  });
 window.addEventListener("popstate", restoreLocation);
 window.addEventListener("hashchange", followSectionHash);
 if (location.hash) requestAnimationFrame(followSectionHash);

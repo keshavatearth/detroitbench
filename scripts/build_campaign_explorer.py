@@ -5,12 +5,12 @@ No network, model calls, or fabricated run data. Running twice is byte-stable.
 """
 from __future__ import annotations
 
-import ast
 import csv
 import hashlib
 import io
 import json
 from pathlib import Path
+from site_shell import render_shell
 
 ROOT = Path(__file__).resolve().parents[1]
 # Published snapshot containing the original runs used by this explorer.
@@ -19,20 +19,10 @@ RUN_COHORT_SHA256 = "91cdfe4203c96f01d7d1077036f0a202846fc047ded00ce8ed4c18644c9
 
 
 def character_profiles() -> list[dict]:
-    """Show the real runner instructions without maintaining a second copy."""
+    """Show the short character files, separate from missions and tool rules."""
     profiles = json.loads((ROOT / "site/characters.json").read_text())
     for profile in profiles:
-        source = (ROOT / profile["prompt_file"]).read_text()
-        constant = profile.get("prompt_constant")
-        if constant:
-            assignment = next(
-                node for node in ast.parse(source).body
-                if isinstance(node, ast.Assign)
-                and any(isinstance(target, ast.Name) and target.id == constant
-                        for target in node.targets)
-            )
-            source = ast.literal_eval(assignment.value)
-        profile["prompt"] = source.strip()
+        profile["persona"] = (ROOT / profile["persona_file"]).read_text().strip()
         if not (ROOT / "docs" / profile["image"]).is_file():
             raise ValueError(f"Missing character image: {profile['image']}")
     return profiles
@@ -164,6 +154,7 @@ def build() -> dict:
     page = template.replace('"__CAMPAIGN_DATA__"', payload)
     page = page.replace("<!--CAMPAIGN_STYLES-->", f"<style>\n{styles}</style>")
     page = page.replace("<!--CAMPAIGN_SCRIPT-->", f"<script>\n{script}</script>")
+    page = render_shell(page, section="overview", skip_target="chapters")
     # One front door; retain the published campaign URL for existing links.
     for filename in ("index.html", "campaign.html"):
         (ROOT / "docs" / filename).write_text(page)

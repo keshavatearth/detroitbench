@@ -23,6 +23,7 @@ import csv
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+from site_shell import render_shell
 import subprocess
 import sys
 
@@ -233,6 +234,7 @@ def render_results(bundle: dict, out: Path) -> str:
         .replace("__REPO__", bundle["repo"])
     )
     assert page.startswith("<!doctype html>")
+    page = render_shell(page, section="results", skip_target="findings")
     (out / "results.html").write_text(page)
     return page
 

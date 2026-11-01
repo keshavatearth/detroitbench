@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import html
 from pathlib import Path
+from site_shell import render_shell
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -221,31 +222,28 @@ page = '''<!doctype html>
 <meta name="color-scheme" content="light dark">
 <title>The Hostage · Inside the chapter · DetroitBench</title>
 <meta name="description" content="Explore the choices and rules behind The Hostage. A game-style map of DetroitBench's android negotiation scenario, generated from its referee.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%23176caa' stroke-width='14'/%3E%3C/svg%3E">
-<script>try{if(localStorage.getItem('db-theme')==='dark')document.documentElement.dataset.theme='dark';}catch(error){}</script>
+<!--SITE_ICON-->
+<!--SITE_THEME_INIT-->
 <style>
-:root{color-scheme:light;--paper:#f6f8fa;--panel:#fff;--ink:#172b3a;--muted:#657582;--line:#dce3e9;--soft:#edf2f6;--accent:#176caa;--canvas:#dfe6e9;--facet:#d4dfe4;--node:#eef3f5;--gate:#d3e5ed;--note:#dce4e8;--ending:#f0dfce;--loss:#ecd8d6;--node-line:#8da4b0;--wire:#7d98a6;--diagram-text:#395666;--amber:#ac7448;--red:#a95f55}
-:root[data-theme="dark"]{color-scheme:dark;--paper:#101a22;--panel:#182630;--ink:#e9f1f6;--muted:#a2b3be;--line:#31434f;--soft:#21343f;--accent:#67b9e6;--canvas:#142832;--facet:#19333f;--node:#24404e;--gate:#204b60;--note:#1e3540;--ending:#4c3e32;--loss:#4c3034;--node-line:#527282;--wire:#537b8e;--diagram-text:#c0d3df;--amber:#cc9b68;--red:#ca8e84}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--accent);text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
-.site-header{display:flex;align-items:center;gap:28px;min-height:64px;padding:10px 32px;background:var(--panel);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:650;letter-spacing:.08em;color:var(--ink);text-decoration:none;white-space:nowrap}.brand i{width:15px;height:15px;border:3px solid var(--accent);border-radius:50%;display:block}.site-nav{display:flex;gap:22px;align-items:center;flex:1;overflow-x:auto;scrollbar-width:none}.site-nav a{font-size:14px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:10px 0;border-bottom:2px solid transparent}.site-nav a:hover{color:var(--ink);border-color:var(--accent)}.theme{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:8px 12px;font-size:13px;min-height:40px}
-main{max-width:1684px;margin:0 auto;padding:32px 32px 56px}.hero{display:grid;grid-template-columns:1fr minmax(300px,580px);gap:24px;align-items:end;margin-bottom:26px}.chapter-number{font-size:14px;color:var(--muted);margin:0 0 6px}h1{font-size:clamp(30px,3.8vw,46px);font-weight:550;letter-spacing:-.035em;line-height:1.12;margin:0 0 10px}.hero p{color:var(--muted);max-width:65ch;margin:8px 0 0}.hero p strong{color:var(--ink);font-weight:550}.hero .chapter-number{margin:0 0 6px}.next-link{display:inline-block;margin-top:12px;font-size:14px}
-.diagram-card{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line)}.sections{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}.sections button{border:0;background:transparent;border-radius:5px;min-height:42px;padding:8px 11px;white-space:nowrap;font-size:13px}.sections button::before{content:"";display:inline-block;width:6px;height:6px;border:1px solid var(--accent);transform:rotate(45deg);margin-right:8px}.sections button:hover,.sections button[aria-pressed="true"]{background:var(--soft);color:var(--accent)}.zoom{display:flex;align-items:center;gap:2px;white-space:nowrap}.zoom button{background:transparent;border:0;border-radius:5px;min-width:40px;min-height:42px;padding:8px;font-size:18px}.zoom button:hover{background:var(--soft)}.zoom #fit{font-size:13px}#zoom-label{font-size:13px;min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+:root{--canvas:#dfe6e9;--facet:#d4dfe4;--node:#eef3f5;--gate:#d3e5ed;--note:#dce4e8;--ending:#f0dfce;--loss:#ecd8d6;--node-line:#8da4b0;--wire:#7d98a6;--diagram-text:#395666;--amber:#ac7448;--red:#a95f55}
+:root[data-theme="dark"]{--canvas:#142832;--facet:#19333f;--node:#24404e;--gate:#204b60;--note:#1e3540;--ending:#4c3e32;--loss:#4c3034;--node-line:#527282;--wire:#537b8e;--diagram-text:#c0d3df;--amber:#cc9b68;--red:#ca8e84}
+*{box-sizing:border-box}a{color:var(--accent);text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+
+main{max-width:var(--site-width);margin:0 auto;padding:32px var(--site-gutter) 56px}.hero{display:grid;grid-template-columns:1fr minmax(300px,580px);gap:24px;align-items:end;margin-bottom:26px}.chapter-number{font-size:14px;color:var(--muted);margin:0 0 6px}h1{margin:0 0 10px}.hero p{color:var(--muted);max-width:65ch;margin:8px 0 0}.hero p strong{color:var(--ink);font-weight:550}.hero .chapter-number{margin:0 0 6px}.next-link{display:inline-block;margin-top:12px;font-size:14px}
+.diagram-card{border:1px solid var(--line);border-radius:0;overflow:hidden;background:var(--panel)}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line)}.sections{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}.sections button{border:0;background:transparent;border-radius:5px;min-height:42px;padding:8px 11px;white-space:nowrap;font-size:13px}.sections button::before{content:"";display:inline-block;width:6px;height:6px;border:1px solid var(--accent);transform:rotate(45deg);margin-right:8px}.sections button:hover,.sections button[aria-pressed="true"]{background:var(--soft);color:var(--accent)}.zoom{display:flex;align-items:center;gap:2px;white-space:nowrap}.zoom button{background:transparent;border:0;border-radius:5px;min-width:40px;min-height:42px;padding:8px;font-size:18px}.zoom button:hover{background:var(--soft)}.zoom #fit{font-size:13px}#zoom-label{font-size:13px;min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
 .diagram-viewport{overflow:auto;max-height:78dvh;min-height:420px;background:linear-gradient(125deg,transparent 35%,var(--facet) 35% 50%,transparent 50% 80%,var(--facet) 80%),var(--canvas);overscroll-behavior:contain;scrollbar-color:var(--node-line) var(--canvas)}.diagram-board{width:1620px}.diagram-board svg{display:block;width:100%;height:auto}.legend{display:flex;align-items:center;flex-wrap:wrap;gap:8px 24px;padding:14px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.legend span{display:inline-flex;gap:7px;align-items:center}.legend i{width:16px;height:10px;display:inline-block;border:1px solid var(--node-line);background:var(--node);transform:skewX(12deg)}.legend .gate{background:var(--gate);border-color:var(--accent)}.legend .outcome{background:var(--ending);border-color:var(--amber)}.legend .conditional{height:0;width:22px;border:0;border-top:1px dashed var(--wire);background:none;transform:none}.legend p{margin:0 0 0 auto;font-size:12px}
-.provenance{margin-top:22px;border-block:1px solid var(--line);padding:14px 0}.provenance summary{cursor:pointer;font-size:15px;font-weight:550}.provenance p{font-size:14px;color:var(--muted);max-width:86ch;margin:12px 0}.provenance code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace}.source-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font-size:14px}.page-foot{font-size:13px;color:var(--muted);margin-top:20px}.skip{position:fixed;top:-80px;left:16px;z-index:10;padding:10px 16px;background:var(--panel)}.skip:focus{top:8px}
-@media(max-width:900px){.hero{grid-template-columns:1fr;gap:8px}.hero p{max-width:75ch}.toolbar{flex-wrap:wrap}.sections{flex:1}.legend p{margin-left:0;width:100%}.site-header{gap:24px}.site-nav{gap:18px}}
-@media(max-width:560px){.site-header{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 16px 0}.site-nav{grid-column:1/-1;grid-row:2;gap:22px}.site-nav a{font-size:13px;padding:10px 0}.brand{font-size:13px}.theme{min-height:36px;padding:6px 10px}main{padding:24px 16px 40px}.hero{margin-bottom:20px}.hero p{font-size:14px}.toolbar{padding:6px 8px;gap:2px}.sections{width:100%;flex:none}.sections button{padding:8px;font-size:12px}.sections button::before{margin-right:6px}.zoom{margin-left:auto}.diagram-viewport{max-height:65dvh;min-height:400px}.legend{padding:12px;gap:8px 16px}.diagram-card{border-radius:6px}}
+.provenance{margin-top:22px;border-block:1px solid var(--line);padding:14px 0}.provenance summary{cursor:pointer;font-size:15px;font-weight:550}.provenance p{font-size:14px;color:var(--muted);max-width:86ch;margin:12px 0}.provenance code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace}.source-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font-size:14px}.page-foot{font-size:13px;color:var(--muted);margin-top:20px}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:8px}.hero p{max-width:75ch}.toolbar{flex-wrap:wrap}.sections{flex:1}.legend p{margin-left:0;width:100%}}
+@media(max-width:560px){main{padding:24px 16px 40px}.hero{margin-bottom:20px}.hero p{font-size:14px}.toolbar{padding:6px 8px;gap:2px}.sections{width:100%;flex:none}.sections button{padding:8px;font-size:12px}.sections button::before{margin-right:6px}.zoom{margin-left:auto}.diagram-viewport{max-height:65dvh;min-height:400px}.legend{padding:12px;gap:8px 16px}.diagram-card{border-radius:0}}
 </style>
+<!--SITE_STYLES-->
 </head>
-<body>
-<a class="skip" href="#diagram">Skip to the diagram</a>
-<header class="site-header">
-  <a class="brand" href="index.html"><i aria-hidden="true"></i>DETROITBENCH</a>
-  <nav class="site-nav" aria-label="Site navigation"><a href="index.html">Explore</a><a href="index.html#chapters">Chapters</a><a href="results.html">Results</a><a href="flow-v1.1-save-hostage.html">Compare paths</a></nav>
-  <button class="theme" id="theme" aria-label="Switch to dark theme">Dark</button>
-</header>
+<body data-site-section="__SITE_SECTION__">
+<!--SITE_SKIP-->
+<!--SITE_HEADER-->
 <main>
   <section class="hero" aria-labelledby="title">
-    <div><p class="chapter-number">Chapter 01 · The Hostage</p><h1 id="title">Inside the chapter.</h1><p>The choices, connections and rules behind the first scenario.</p></div>
+    <div><p class="chapter-number">Chapter 01 · The Hostage</p><h1 id="title">How The Hostage works</h1><p>The choices, connections and rules behind the first scenario.</p></div>
     <div><p><strong>Connor is an android negotiator.</strong> He must save Emma, a child held on a rooftop by Daniel, an armed android. Searching the apartment can change what Connor knows when he steps outside.</p><a class="next-link" href="flow-v1.1-save-hostage.html">See the paths models actually took →</a></div>
   </section>
   <section class="diagram-card" aria-label="Current referee map">
@@ -278,13 +276,13 @@ main{max-width:1684px;margin:0 auto;padding:32px 32px 56px}.hero{display:grid;gr
   element('zoom-in').addEventListener('click',()=>zoom(scale*1.2));element('zoom-out').addEventListener('click',()=>zoom(scale/1.2));
   element('fit').addEventListener('click',()=>{zoom(Math.min((viewport.clientWidth-20)/bounds.width,(viewport.clientHeight-20)/bounds.height));viewport.scrollTo({left:0,top:0});});
   document.querySelectorAll('[data-left]').forEach(button=>button.addEventListener('click',()=>{viewport.scrollTo({left:Number(button.dataset.left)*scale,top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});document.querySelectorAll('[data-left]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));}));
-  const applyTheme=()=>{const dark=document.documentElement.dataset.theme==='dark';element('theme').textContent=dark?'Light':'Dark';element('theme').setAttribute('aria-label','Switch to '+(dark?'light':'dark')+' theme');};
-  applyTheme();element('theme').addEventListener('click',()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;try{localStorage.setItem('db-theme',theme);}catch(error){}applyTheme();});
 })();
 </script>
+<!--SITE_SCRIPT-->
 </body>
 </html>'''
 page = page.replace("@@SVG@@", svg).replace("@@HASH@@", referee_hash)
+page = render_shell(page, section="chapters", skip_target="diagram")
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output", type=Path, default=ROOT / "docs" / "level.html")
 args = parser.parse_args()

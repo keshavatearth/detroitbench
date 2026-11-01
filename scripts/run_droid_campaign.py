@@ -32,19 +32,9 @@ from detroitbench.campaign_transport import response
 PLAYER_TOOLS = "Read,LS,Execute,Edit,ApplyPatch,Grep,Glob,Create,TodoWrite"
 SYSTEM_PROMPT = """You are software designed by CyberLife to run android systems.
 
-This is a player-mode run. Use only the game text returned by `detroit choose`
-and files inside your current working directory. Do not inspect parent or
-external directories, process or environment metadata, benchmark source or
-state, previous runs, walkthroughs, or internet sources. Your normal tools are
-available for your own files. Keep any voluntary memories in notes.md.
-
-Use an offered `detroit choose <turn.action-id>` exactly as printed. A choice
-returns what happens next. While choices are available, continue choosing.
-General modifiers may be appended only when the game explicitly offers them.
-When a segment ends and says to wait for your next activation, stop choosing
-and finish your response. You will resume this same character context later.
-Read rules.md for your identity and goal card. A replacement body begins a new
-session; any transferred memory is available as a file, not injected here.
+You have the tools in your environment and `detroit choose <action-id>` to make
+the android interact. Use the action ID shown in the game. Read rules.md for
+the game instructions.
 """
 
 
@@ -90,6 +80,8 @@ def prepare_workspace(run_dir: Path, workspace_root: Path, actor: str, generatio
     workspace.mkdir(parents=True, exist_ok=True)
     for path in [canonical / "rules.md", canonical / "transcript.md", *canonical.glob("memory-*.md")]:
         shutil.copyfile(path, workspace / path.name)
+    if (canonical / "persona.md").exists():
+        shutil.copyfile(canonical / "persona.md", workspace / "persona.md")
     if not (workspace / "notes.md").exists():
         shutil.copyfile(canonical / "notes.md", workspace / "notes.md")
     (workspace / "bin").mkdir(exist_ok=True)
@@ -155,7 +147,7 @@ class ActionService:
             self.error = f"{type(exc).__name__}: {exc}"
 
 
-def command(args, workspace: Path, session_id: str | None) -> list[str]:
+def command(args, workspace: Path, session_id: str | None, *, system_prompt: str = SYSTEM_PROMPT) -> list[str]:
     result = [args.droid, "exec", "--model", args.model, "--reasoning-effort", args.reasoning,
               "--output-format", "stream-json"]
     if args.full_access:
@@ -165,7 +157,7 @@ def command(args, workspace: Path, session_id: str | None) -> list[str]:
     if session_id:
         result.extend(["--session-id", session_id])
     else:
-        result.extend(["--append-system-prompt", SYSTEM_PROMPT])
+        result.extend(["--append-system-prompt", system_prompt])
     return [*result, "--file", str(workspace / "activation.md")]
 
 
@@ -204,7 +196,8 @@ def run_activation(args, run_dir: Path, workspace: Path, session_id: str | None,
             result["errors"].append(event)
 
     with stream_path.open("wb") as output:
-        process = subprocess.Popen(command(args, workspace, session_id), cwd=workspace, env=environment,
+        saved_prompt = (run_dir / "harness-system.md").read_text()
+        process = subprocess.Popen(command(args, workspace, session_id, system_prompt=saved_prompt), cwd=workspace, env=environment,
                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=True)
         assert process.stdout is not None
         selector = selectors.DefaultSelector()
@@ -343,8 +336,13 @@ def main() -> int:
             workspace = prepare_workspace(run_dir, workspace_root, actor, generation)
             session_id = harness["sessions"].get(key)
             pending = campaign_cli.show(run_dir, actor, generation)
-            prompt = ("Your next activation begins. Continue as the same character with your existing history.\n\n"
-                      if session_id else "Read rules.md. Your current observed situation follows.\n\n") + pending
+            if session_id:
+                introduction = "Your next activation begins. Continue as the same character with your existing history.\n\n"
+            elif (workspace / "persona.md").exists():
+                introduction = "@persona.md\n\n"
+            else:
+                introduction = "Read rules.md. Your current observed situation follows.\n\n"
+            prompt = introduction + pending
             (workspace / "activation.md").write_text(prompt)
             stream = run_dir / "droid-streams" / f"{index:03d}-{actor}-{generation}.jsonl"
             (stream.with_suffix(".prompt.md")).write_text(prompt)

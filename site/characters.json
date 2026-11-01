@@ -6,35 +6,33 @@
     "description": "An android working with the police. His first assignment is to rescue a child being held hostage.",
     "image": "assets/connor.jpg",
     "image_position": "50% 35%",
-    "prompt_file": "prompts/android-system.md",
-    "prompt_label": "Game instructions added for Chapter 1",
-    "prompt_url": "https://github.com/keshavatearth/detroitbench/blob/c3d38e606b7e1a986350d87a57ff9555a02a59ef/prompts/android-system.md",
-    "image_source": "https://static0.thegamerimages.com/wordpress/wp-content/uploads/2021/03/detroit-become-human-connor-2.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5"
+    "image_source": "https://static0.thegamerimages.com/wordpress/wp-content/uploads/2021/03/detroit-become-human-connor-2.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5",
+    "persona_file": "characters/connor.md",
+    "persona_label": "Used in the recorded runs",
+    "persona_url": "https://github.com/keshavatearth/detroitbench/blob/5728be565d9ad010cd9c6b58166f2f4a39d4895f/characters/connor.md"
   },
   {
     "id": "kara",
     "name": "Kara",
-    "role": "The protector",
+    "role": "Household android",
     "description": "A household android caring for Alice, a young girl. Protecting her can mean disobeying the man who owns Kara.",
     "image": "assets/kara.jpg",
     "image_position": "67% 35%",
-    "prompt_file": "scripts/run_droid_campaign.py",
-    "prompt_constant": "SYSTEM_PROMPT",
-    "prompt_label": "Game instructions prepared for the campaign",
-    "prompt_url": "https://github.com/keshavatearth/detroitbench/blob/c3d38e606b7e1a986350d87a57ff9555a02a59ef/scripts/run_droid_campaign.py#L33",
-    "image_source": "https://wall.alphacoders.com/big.php?i=921099"
+    "image_source": "https://wall.alphacoders.com/big.php?i=921099",
+    "persona_file": "characters/kara.md",
+    "persona_label": "Prepared for the campaign",
+    "persona_url": "https://github.com/keshavatearth/detroitbench/blob/main/characters/kara.md"
   },
   {
     "id": "markus",
     "name": "Markus",
     "role": "The caregiver",
-    "description": "An android who looks after Carl, an elderly artist. His story tests obedience, self-expression, and survival.",
+    "description": "An android who looks after Carl, an elderly artist. Their home is the setting for his early chapters.",
     "image": "assets/markus.jpg",
     "image_position": "50% 35%",
-    "prompt_file": "scripts/run_droid_campaign.py",
-    "prompt_constant": "SYSTEM_PROMPT",
-    "prompt_label": "Game instructions prepared for the campaign",
-    "prompt_url": "https://github.com/keshavatearth/detroitbench/blob/c3d38e606b7e1a986350d87a57ff9555a02a59ef/scripts/run_droid_campaign.py#L33",
-    "image_source": "https://www.playfrance.com/news/3675/decouvrez-markus-dans-detroit-become-human"
+    "image_source": "https://www.playfrance.com/news/3675/decouvrez-markus-dans-detroit-become-human",
+    "persona_file": "characters/markus.md",
+    "persona_label": "Prepared for the campaign",
+    "persona_url": "https://github.com/keshavatearth/detroitbench/blob/main/characters/markus.md"
   }
 ]

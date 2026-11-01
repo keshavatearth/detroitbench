@@ -1,34 +1,34 @@
 :root {
-  color-scheme: light;
-  --paper: #f6f8fa;
-  --panel: #fff;
-  --ink: #172b3a;
-  --muted: #657582;
-  --line: #dce3e9;
-  --soft: #edf2f6;
-  --blue: #176caa;
+
+
+
+
+
+
+
+
   --kara: #b7663c;
   --markus: #4b806a;
-  --highlight: #e9f3fa;
-  --white: #fff;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+
+
   --safe: #2385b0;
   --sacrifice: #bb8a4b;
   --lost: #88939d;
 }
 :root[data-theme="dark"] {
-  color-scheme: dark;
-  --paper: #101a22;
-  --panel: #182630;
-  --ink: #e9f1f6;
-  --muted: #9eafbb;
-  --line: #31434f;
-  --soft: #21343f;
-  --blue: #67b9e6;
+
+
+
+
+
+
+
+
   --kara: #e9a17b;
   --markus: #8fc7ae;
-  --highlight: #203c4c;
-  --white: #20333e;
+
+
   --safe: #67b9e6;
   --sacrifice: #d0a56a;
   --lost: #8598a6;
@@ -41,18 +41,9 @@
 }
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+
 }
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font:
-    15px/1.55 -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-}
+
 button,
 input,
 select {
@@ -101,20 +92,11 @@ figure {
 }
 h1,
 h2,
-h3 {
-  font-weight: 550;
-  letter-spacing: -0.035em;
-}
-h2 {
-  font-size: 30px;
-  line-height: 1.2;
-}
-h3 {
-  font-size: 17px;
-  line-height: 1.35;
-}
+
+
+
 h4 {
-  font-size: 12px;
+
   margin: 0 0 5px;
 }
 p + p {
@@ -124,11 +106,6 @@ button,
 select,
 input[type="file"] {
   max-width: 100%;
-}
-.wrap {
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 32px;
 }
 .eyebrow {
   font-size: 12px;
@@ -153,45 +130,6 @@ pre {
   font-size: 12px;
   line-height: 1.65;
   margin: 0;
-}
-.top {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
-}
-.top .wrap {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  min-height: 58px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--ink);
-  text-decoration: none;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  white-space: nowrap;
-}
-.brand i {
-  height: 13px;
-  width: 13px;
-  border: 3px solid var(--blue);
-  border-radius: 50%;
-}
-.top nav {
-  display: flex;
-  gap: 22px;
-  flex: 1;
-  font-size: 12px;
-}
-.top nav a {
-  text-decoration: none;
-  color: var(--muted);
 }
 .plain {
   background: transparent;
@@ -222,25 +160,12 @@ pre {
   align-items: center;
   padding: 54px 0 48px;
 }
-.hero h1 {
-  font-size: clamp(40px, 4.5vw, 58px);
-  line-height: 1.03;
-  letter-spacing: -0.05em;
-}
-.hero h1 span {
-  color: var(--blue);
-}
+
 .lede {
   font-size: 16px;
   color: var(--muted);
   max-width: 48ch;
   margin-top: 22px;
-}
-.hero-question {
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 42ch;
-  margin-top: 15px;
 }
 .hero-actions {
   display: flex;
@@ -262,7 +187,7 @@ pre {
   padding: 11px 15px;
   color: var(--panel);
   background: var(--ink);
-  border-radius: 7px;
+  border-radius: 2px;
 }
 .hero-status {
   max-width: 47ch;
@@ -312,10 +237,9 @@ pre {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: 13px;
+  border-radius: 3px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  box-shadow: 0 10px 24px #142f4314;
 }
 .character-front {
   background: #1b2d38;
@@ -374,12 +298,6 @@ pre {
   line-height: 1.6;
   color: var(--muted);
 }
-.character-caption {
-  margin-top: 17px;
-  font-size: 11px;
-  color: var(--muted);
-  max-width: 75ch;
-}
 .character-back {
   display: flex;
   flex-direction: column;
@@ -427,10 +345,9 @@ pre {
   scrollbar-width: thin;
 }
 .lead-finding {
-  padding: 30px 32px 22px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--panel);
+  padding: 32px 0 28px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 .finding-introduction {
   display: grid;
@@ -440,7 +357,7 @@ pre {
 }
 .finding-introduction h2 {
   font-size: 28px;
-  max-width: 17ch;
+  max-width: 24ch;
 }
 .finding-introduction > p {
   font-size: 14px;
@@ -471,6 +388,11 @@ pre {
 .finding-quote figcaption > span {
   color: var(--muted);
   font-size: 12px;
+  border-left: 2px solid var(--blue);
+  padding-left: 8px;
+}
+.finding-quote + .finding-quote figcaption > span {
+  border-left-color: var(--kara);
 }
 .finding-quote blockquote {
   margin-top: 13px;
@@ -490,8 +412,7 @@ pre {
   display: flex;
   justify-content: space-between;
   gap: 30px;
-  padding-top: 17px;
-  border-top: 1px solid var(--line);
+  padding-top: 4px;
   margin-top: 24px;
   font-size: 12px;
   color: var(--muted);
@@ -524,10 +445,8 @@ pre {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 15px 18px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 12px 12px 0 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
 }
 .chapter-picker select {
   border: 0;
@@ -546,10 +465,7 @@ pre {
 }
 .chapter-progress {
   display: flex;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-top: 0;
-  border-radius: 0 0 12px 12px;
+  border-bottom: 1px solid var(--line);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
@@ -597,6 +513,7 @@ pre {
   background: var(--highlight);
   color: var(--ink);
   font-weight: 700;
+  box-shadow: inset 0 -2px var(--blue);
 }
 .chapter-step.active i {
   width: 25px;
@@ -682,19 +599,17 @@ pre {
   max-width: 240px;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 2px;
   font-size: 12px;
 }
 .results-grid {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
-  gap: 15px;
+  gap: 32px;
 }
 .result-panel {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  padding: 18px;
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
   min-width: 0;
 }
 .panel-heading {
@@ -729,7 +644,7 @@ pre {
   display: block;
   height: 14px;
   width: 14px;
-  border-radius: 4px;
+  border-radius: 1px;
   margin: 0 auto 4px;
   background: var(--lost);
   transition: transform 0.15s;
@@ -805,7 +720,7 @@ pre {
 }
 .bar-track {
   height: 5px;
-  border-radius: 4px;
+  border-radius: 0;
   background: var(--soft);
   overflow: hidden;
   margin: 5px 0;
@@ -814,7 +729,6 @@ pre {
   display: block;
   background: var(--blue);
   height: 100%;
-  border-radius: 4px;
 }
 .choice-bar p {
   font-size: 10px;
@@ -861,10 +775,8 @@ pre {
   text-align: right;
 }
 .planned-choices {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  padding: 20px;
+  border-top: 1px solid var(--line);
+  padding: 20px 0;
 }
 .fork-grid {
   display: grid;
@@ -884,22 +796,28 @@ pre {
   font-weight: 500;
   margin-bottom: 12px;
 }
-.fork > div {
+.game-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.game-options > li {
   display: flex;
-  gap: 5px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.fork > div span {
-  background: var(--soft);
-  border-radius: 5px;
-  padding: 5px 8px;
-  font-size: 11px;
-}
-.fork > div i {
-  font-size: 10px;
-  font-style: normal;
+  gap: 9px;
+  align-items: baseline;
+  padding: 8px 10px;
+  border-left: 2px solid var(--line);
   color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.game-options > li + li {
+  margin-top: 4px;
+}
+.game-options > li::before {
+  content: "◇";
+  color: var(--muted);
+  flex-shrink: 0;
 }
 .fork .text-button {
   margin-top: 14px;
@@ -923,18 +841,21 @@ pre {
 .moment-picker {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 7px;
-  margin-bottom: 13px;
+  gap: 0 14px;
+  margin-bottom: 23px;
 }
 .moment-picker button {
   display: flex;
   align-items: center;
   gap: 9px;
   text-align: left;
-  border: 1px solid var(--line);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
   background: transparent;
-  padding: 8px 10px;
-  font-size: 11px;
+  padding: 10px 0;
+  font-size: 12px;
+  min-height: 44px;
 }
 .moment-picker button > span {
   font: 9px var(--mono);
@@ -942,14 +863,11 @@ pre {
 }
 .moment-picker button[aria-pressed="true"] {
   border-color: var(--blue);
-  background: var(--highlight);
   color: var(--blue);
+  box-shadow: inset 0 -1px var(--blue);
 }
 .moment-focus {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 23px;
+  padding: 0 0 12px;
 }
 .moment-heading {
   display: flex;
@@ -958,12 +876,8 @@ pre {
   align-items: start;
   margin-bottom: 20px;
 }
-.moment-heading .eyebrow {
-  font-size: 9px;
-}
 .moment-heading h3 {
   font-size: 23px;
-  margin-top: 7px;
   font-weight: 500;
   max-width: 55ch;
   line-height: 1.25;
@@ -974,8 +888,8 @@ pre {
   flex-shrink: 0;
 }
 .moment-arrows .arrow {
-  width: 29px;
-  height: 29px;
+  width: 36px;
+  height: 36px;
   font-size: 15px;
 }
 .moment-grid {
@@ -999,31 +913,27 @@ pre {
   white-space: pre-wrap;
 }
 .moment-quote figcaption {
-  font: 10px/1.5 var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
   color: var(--muted);
   margin-top: 12px;
   overflow-wrap: anywhere;
 }
 .moment-quote figcaption a {
+  display: block;
   color: var(--muted);
 }
 .offered-choices {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
   margin: 14px 0 6px;
-}
-.offered-choices span {
-  font: 9px/1.4 var(--mono);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 6px 8px;
-  color: var(--muted);
 }
 .offered-choices .chosen {
   border-color: var(--blue);
   color: var(--blue);
   background: var(--highlight);
+}
+.offered-choices .chosen::before {
+  content: "◆";
+  color: var(--blue);
 }
 .moment-grid .fine {
   font-size: 10px;
@@ -1032,13 +942,9 @@ pre {
   display: grid;
   grid-template-columns: 1fr 1.6fr;
   gap: 6px 25px;
-  background: var(--soft);
-  border-radius: 7px;
-  padding: 15px;
+  border-top: 1px solid var(--line);
+  padding: 18px 0 0;
   margin-top: 20px;
-}
-.counterpoint .eyebrow {
-  grid-column: 1;
 }
 .counterpoint strong {
   grid-column: 1;
@@ -1047,7 +953,6 @@ pre {
 }
 .counterpoint q {
   grid-column: 2;
-  grid-row: 1 / 3;
   font-size: 14px;
 }
 .counterpoint > .fine {
@@ -1095,23 +1000,12 @@ pre {
   color: var(--muted);
 }
 .no-moment {
-  padding: 22px;
-  background: var(--soft);
-  border-radius: 8px;
+  padding: 12px 0;
   font-size: 13px;
   color: var(--muted);
 }
 .no-moment button {
   margin-top: 10px;
-}
-.deeper-label {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  margin: 8px 0 12px;
-}
-.deeper-label .fine {
-  font-size: 11px;
 }
 .disclosure {
   border-top: 1px solid var(--line);
@@ -1163,13 +1057,14 @@ pre {
   margin-bottom: 16px;
 }
 .q-tab {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  font-size: 11px;
-  padding: 6px 9px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 12px;
+  padding: 8px 9px;
 }
 .q-tab[aria-pressed="true"] {
-  background: var(--highlight);
   border-color: var(--blue);
   color: var(--blue);
 }
@@ -1177,10 +1072,7 @@ pre {
   display: grid;
   grid-template-columns: 0.9fr 1.4fr;
   gap: 35px;
-  background: var(--panel);
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 20px 0;
 }
 .question h3 {
   font-size: 20px;
@@ -1611,9 +1503,6 @@ footer p + p {
   overflow-wrap: anywhere;
 }
 @media (max-width: 900px) {
-  .wrap {
-    padding: 0 22px;
-  }
   .hero {
     grid-template-columns: 1fr;
     gap: 34px;
@@ -1622,14 +1511,9 @@ footer p + p {
   .hero-copy {
     max-width: 640px;
   }
-  .hero h1 {
-    font-size: 52px;
-  }
+
   .lede {
     max-width: 60ch;
-  }
-  .hero-question {
-    max-width: 54ch;
   }
   .character-grid {
     gap: 18px;
@@ -1656,8 +1540,8 @@ footer p + p {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .moment-picker button {
-    font-size: 10px;
-    padding: 7px;
+    font-size: 12px;
+    padding: 8px 0;
   }
   .question,
   .inspector,
@@ -1686,39 +1570,15 @@ footer p + p {
   }
 }
 @media (max-width: 650px) {
-  .wrap {
-    padding: 0 16px;
-  }
-  .top .wrap {
-    gap: 16px;
-    min-height: 52px;
-  }
-  .brand {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-  }
-  .top nav {
-    gap: 12px;
-    font-size: 11px;
-  }
-  .top .plain {
-    padding: 5px 7px;
-    font-size: 10px;
-  }
   .hero {
     display: block;
     padding: 26px 0;
   }
-  .hero h1 {
-    font-size: 43px;
-  }
+
   .lede {
     font-size: 15px;
     max-width: 50ch;
     margin-top: 17px;
-  }
-  .hero-question {
-    font-size: 14px;
   }
   .hero-actions {
     margin-top: 20px;
@@ -1762,10 +1622,6 @@ footer p + p {
   .character-flip-hint {
     font-size: 12px;
   }
-  .character-caption {
-    font-size: 12px;
-    margin-top: 10px;
-  }
   .character-back {
     padding: 10px 14px 16px;
   }
@@ -1781,7 +1637,7 @@ footer p + p {
     font-size: 12px;
   }
   .lead-finding {
-    padding: 23px 20px 20px;
+    padding: 23px 0 20px;
   }
   .finding-introduction {
     display: block;
@@ -1822,7 +1678,7 @@ footer p + p {
     font-size: 14px;
   }
   .chapter-picker {
-    padding: 10px;
+    padding: 10px 0;
     gap: 7px;
   }
   .chapter-picker select {
@@ -1906,7 +1762,7 @@ footer p + p {
     grid-template-columns: 1fr;
   }
   .result-panel {
-    padding: 16px;
+    padding: 16px 0;
   }
   .model-dots {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1954,12 +1810,12 @@ footer p + p {
     gap: 6px;
   }
   .moment-picker button {
-    font-size: 11px;
-    padding: 7px 9px;
+    font-size: 12px;
+    padding: 8px 0;
     min-height: 44px;
   }
   .moment-focus {
-    padding: 17px;
+    padding: 0 0 12px;
   }
   .moment-heading {
     gap: 10px;
@@ -1967,9 +1823,6 @@ footer p + p {
   }
   .moment-heading h3 {
     font-size: 21px;
-  }
-  .moment-heading .eyebrow {
-    font-size: 12px;
   }
   .moment-arrows {
     gap: 4px;
@@ -2011,7 +1864,7 @@ footer p + p {
     margin-bottom: 8px;
   }
   .planned-choices {
-    padding: 17px;
+    padding: 17px 0;
   }
   .planned-choices .panel-heading {
     display: block;
@@ -2025,13 +1878,6 @@ footer p + p {
     grid-template-columns: 1fr;
     gap: 4px;
   }
-  .deeper-label {
-    gap: 10px;
-    align-items: start;
-  }
-  .deeper-label .fine {
-    font-size: 10px;
-  }
   .summary-hint {
     display: none;
   }
@@ -2039,7 +1885,7 @@ footer p + p {
     font-size: 12px;
   }
   .question {
-    padding: 16px;
+    padding: 16px 0;
   }
   .question dl {
     grid-template-columns: 1fr;
@@ -2083,7 +1929,6 @@ footer p + p {
   }
   .eyebrow,
   .chapter-status,
-  .moment-heading .eyebrow,
   .moment-picker button > span,
   .outcome-legend,
   .tap-hint,
@@ -2093,9 +1938,7 @@ footer p + p {
   .moment-quote figcaption,
   .counterpoint > .fine,
   .planned-choices .panel-heading .fine,
-  .deeper-label .fine,
   .graph-meta .fine,
-  .offered-choices span,
   footer.wrap {
     font-size: 11px;
   }

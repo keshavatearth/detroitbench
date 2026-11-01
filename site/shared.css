@@ -1,0 +1,80 @@
+:root {
+  color-scheme: light;
+  --paper: #f6f8fa;
+  --panel: #fff;
+  --card: #fff;
+  --ink: #172b3a;
+  --ink-2: #405668;
+  --muted: #586c7a;
+  --line: #d4dfe5;
+  --soft: #edf2f6;
+  --accent: #176caa;
+  --blue: var(--accent);
+  --accent-ink: var(--accent);
+  --accent-wash: #e9f3fa;
+  --highlight: var(--accent-wash);
+  --white: #fff;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --site-width: 1200px;
+  --site-gutter: 32px;
+  --site-header-height: 68px;
+  --control-radius: 3px;
+  --shadow: none;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #101a22;
+  --panel: #182630;
+  --card: #182630;
+  --ink: #e9f1f6;
+  --ink-2: #c1cfd8;
+  --muted: #a6b6c1;
+  --line: #31434f;
+  --soft: #21343f;
+  --accent: #67b9e6;
+  --accent-wash: #203c4c;
+  --white: #20333e;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--paper); scroll-padding-top: calc(var(--site-header-height) + 24px); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button, summary { cursor: pointer; }
+button, select, input { max-width: 100%; }
+button, a, select, input, summary { touch-action: manipulation; }
+button:disabled { cursor: default; opacity: .4; }
+a { color: var(--accent); text-underline-offset: 3px; }
+h1, h2, h3, h4 { color: var(--ink); font-family: var(--sans); font-weight: 550; letter-spacing: -.025em; }
+h1 { font-size: clamp(32px, 4vw, 46px); line-height: 1.12; }
+h2 { font-size: clamp(25px, 2.7vw, 32px); line-height: 1.2; }
+h3 { font-size: 18px; line-height: 1.35; }
+.wrap { width: 100%; max-width: var(--site-width); margin-inline: auto; padding-inline: var(--site-gutter); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.site-masthead { position: sticky; top: 0; z-index: 30; background: var(--paper); border-bottom: 1px solid var(--line); }
+.site-masthead-inner { display: flex; align-items: center; gap: 36px; width: 100%; max-width: var(--site-width); min-height: var(--site-header-height); margin-inline: auto; padding-inline: var(--site-gutter); }
+.site-wordmark { color: var(--ink); font: 650 19px/1 var(--sans); letter-spacing: -.04em; text-decoration: none; white-space: nowrap; }
+.site-navigation { display: flex; align-items: stretch; flex: 1; gap: 24px; min-width: 0; align-self: stretch; overflow-x: auto; scrollbar-width: none; }
+.site-navigation::-webkit-scrollbar { display: none; }
+.site-navigation a { display: flex; align-items: center; flex: none; padding: 12px 0 10px; border-bottom: 2px solid transparent; color: var(--muted); font: 13px/1.4 var(--sans); text-decoration: none; white-space: nowrap; }
+.site-navigation a:hover, .site-navigation a[aria-current] { color: var(--ink); border-bottom-color: var(--accent); }
+.site-theme { flex: none; min-width: 48px; min-height: 36px; padding: 5px 8px; border: 1px solid var(--line); border-radius: var(--control-radius); background: transparent; font: 12px/1.4 var(--sans); }
+.site-theme:hover { background: var(--soft); }
+.site-skip { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 10px 16px; background: var(--panel); color: var(--ink); }
+.site-skip:focus { top: 8px; }
+@media (max-width: 760px) {
+  :root { --site-gutter: 20px; --site-header-height: 100px; }
+  .site-masthead-inner { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding-top: 10px; }
+  .site-wordmark { font-size: 18px; }
+  .site-theme { grid-column: 2; grid-row: 1; }
+  .site-navigation { grid-column: 1 / -1; grid-row: 2; gap: 0; justify-content: space-between; min-height: 44px; }
+  .site-navigation a { font-size: 13px; padding-block: 10px; }
+}
+@media (max-width: 360px) {
+  :root { --site-header-height: 140px; }
+  .site-navigation { flex-wrap: wrap; justify-content: flex-start; column-gap: 18px; min-height: 88px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+}

@@ -8,6 +8,7 @@ import copy
 import itertools
 import json
 from pathlib import Path
+from site_shell import render_shell
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -377,6 +378,7 @@ def main():
         .replace("<!-- OBJECTIVE -->", data["objective"])
     )
     assert rendered.startswith("<!doctype html>")
+    rendered = render_shell(rendered, section="compare", skip_target="stage")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(rendered)
     print(json.dumps({"output": str(args.output), "bytes": len(rendered.encode()), "models": len(data["models"]), "accepted_choices": data["accepted"], "nodes": len(data["nodes"]), "sections": len(data["sections"])}))

@@ -25,6 +25,7 @@ def main() -> None:
             build_flow(ROOT / "runs" / cohort["id"], out / cohort["flow"], bundle["featured"])
     subprocess.run([sys.executable, str(ROOT / "scripts/build_level_diagram.py")], check=True)
     build_home()
+    subprocess.run([sys.executable, str(ROOT / "scripts/check_website.py")], check=True)
     print("Built the homepage, full results, comparison flowcharts and level guide.")
 
 

@@ -10,40 +10,40 @@
   <meta property="og:description" content="A game-style flowchart of every decision each model made as the android negotiator, with the exact commands and game text.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23057fbb'/%3E%3Ccircle cx='50' cy='50' r='18' fill='%23eef1f1'/%3E%3C/svg%3E">
-  <script>try{if(localStorage.getItem('db-theme')==='dark')document.documentElement.dataset.theme='dark';}catch(error){}</script>
+  <!--SITE_ICON-->
+  <!--SITE_THEME_INIT-->
   <style>
     :root {
-      color-scheme: light;
-      --paper:#f6f8fa; --panel:#fff; --ink:#172b3a; --muted:#657582; --line:#dce3e9;
-      --soft:#edf2f6; --accent:#176caa; --canvas:#dce3e6; --facet-a:#e8edf0; --facet-b:#cdd7dc;
+
+
+        --canvas:#dce3e6; --facet-a:#e8edf0; --facet-b:#cdd7dc;
       --path-a:#087cad; --path-b:#b66638; --wire:#91a2ac; --node-fill:#e3e9ec; --node-a:#167eab;
       --node-b:#a65f33; --node-unknown:#cdd6db; --node-label:#253f4e; --node-chip:#f8fafb;
-      --group:#347b9b; --node-border:#91a6b1; --shadow:0 14px 50px #19374b18;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); font-synthesis:none;
+      --group:#347b9b; --node-border:#91a6b1;
+
     }
     :root[data-theme="dark"] {
-      color-scheme:dark; --paper:#101a22; --panel:#182630; --ink:#e9f1f6; --muted:#a2b3be;
-      --line:#31434f; --soft:#21343f; --accent:#67b9e6; --canvas:#142832; --facet-a:#19313d;
+
+         --canvas:#142832; --facet-a:#19313d;
       --facet-b:#10232e; --path-a:#65c3ec; --path-b:#e9a17b; --wire:#476271; --node-fill:#25424f;
       --node-a:#17658b; --node-b:#855332; --node-unknown:#1d3542; --node-label:#e2edf3;
-      --node-chip:#102632; --group:#89bed5; --node-border:#527582; --shadow:0 14px 50px #0006;
+      --node-chip:#102632; --group:#89bed5; --node-border:#527582;
     }
     *{box-sizing:border-box} [hidden]{display:none!important}
-    body{margin:0;min-height:100dvh;height:100dvh;display:grid;grid-template-rows:auto auto minmax(280px,1fr) auto;background:var(--paper);overflow-x:hidden}
+    body{min-height:100dvh;height:100dvh;display:grid;grid-template-rows:auto auto minmax(280px,1fr) auto;overflow-x:hidden}
     button,select{font:inherit;color:inherit} button,select,a{touch-action:manipulation} button{cursor:pointer}
     button:focus-visible,select:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
     button{border:0;background:transparent} a{color:var(--accent);text-underline-offset:3px}
-    .site-header{display:flex;align-items:center;gap:28px;min-height:64px;padding:10px 32px;background:var(--panel);border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:650;letter-spacing:.08em;color:var(--ink);text-decoration:none;white-space:nowrap}
-    .brand i{width:15px;height:15px;border:3px solid var(--accent);border-radius:50%;display:block}
-    .site-nav{display:flex;gap:22px;align-items:center;flex:1;overflow-x:auto;scrollbar-width:none}
-    .site-nav a{font-size:14px;color:var(--muted);text-decoration:none;white-space:nowrap;padding:10px 0;border-bottom:2px solid transparent}
-    .site-nav a:hover,.site-nav a[aria-current]{color:var(--ink);border-color:var(--accent)}
-    .theme{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:8px 12px;font-size:13px;min-height:40px}
-    .chapter-bar{display:grid;grid-template-columns:minmax(270px,1fr) minmax(420px,1fr);align-items:center;gap:16px 40px;padding:22px 32px 16px;background:var(--paper)}
+
+
+
+
+
+
+
+    .chapter-bar{display:grid;grid-template-columns:minmax(270px,1fr) minmax(420px,1fr);align-items:center;gap:16px 40px;padding:28px var(--site-gutter) 18px;background:var(--paper);width:100%;max-width:var(--site-width);margin-inline:auto}
     .chapter-number{font-size:13px;color:var(--muted);margin:0 0 4px}
-    h1{font-size:clamp(26px,3vw,36px);font-weight:550;letter-spacing:-.035em;margin:0;line-height:1.1}
+    h1{margin:0;}
     .premise{font-size:14px;line-height:1.55;color:var(--muted);margin:8px 0 0;max-width:63ch}
     .selectors{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:end}
     .model-picker{display:grid;gap:7px;font-size:13px;min-width:0}.model-picker span{display:flex;align-items:center;gap:8px;font-weight:550}
@@ -83,21 +83,17 @@
     .group-table td:not(:first-child){font-size:12px;font-variant-numeric:tabular-nums;text-align:right}.group-table th:not(:first-child){text-align:right}.group-table button{text-align:left;padding:3px 0;font-size:13px;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
     .group-title{font-size:15px;font-weight:550;margin:22px 0 4px}.inspector .source-image{display:block;width:100%;height:auto;margin:14px 0}.inspector .back{padding:6px 0;font-size:13px;color:var(--accent);margin-bottom:12px;text-decoration:underline}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-    .skip{position:fixed;top:-80px;left:16px;z-index:10;padding:10px 16px;background:var(--panel)}.skip:focus{top:8px}
-    @media(max-width:1150px){.minimap{display:none}.instructions{display:none}.chapter-bar{gap:16px 24px}.site-header{gap:24px}.site-nav{gap:18px}}
-    @media(max-width:850px){.chapter-bar{grid-template-columns:1fr;padding:18px 24px 14px}.chapter-name{display:grid;grid-template-columns:1fr 1.5fr;gap:0 24px}.chapter-number{grid-column:1}.chapter-name h1{grid-column:1}.premise{grid-column:2;grid-row:1/3;margin:0;align-self:center}.site-header{padding-inline:24px}.reading-key{font-size:12px}.selectors{max-width:650px}.counts{margin-top:7px}footer{flex-wrap:wrap;gap:4px 10px;padding:8px 16px}.navigation{flex:1}.reference-button{margin-left:auto}}
-    @media(max-width:560px){body{height:auto;grid-template-rows:auto auto minmax(420px,60dvh) auto}.site-header{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 16px 0}.site-nav{grid-column:1/-1;grid-row:2;gap:22px}.site-nav a{padding:10px 0;font-size:13px}.brand{font-size:13px}.theme{min-height:36px;padding:6px 10px}.chapter-bar{padding:18px 16px 12px;gap:14px}.chapter-name{display:block}.chapter-number{font-size:12px}.premise{font-size:13px;margin:8px 0 0}.selectors{gap:6px}.model-picker{font-size:12px;gap:5px}select{padding-left:8px;font-size:13px}.swap{width:25px}.counts{font-size:12px}.reading-key{display:block;font-size:12px}.reading-key p+p{margin-top:4px}.navigation{width:100%;flex:none;justify-content:space-between}.navigation button{padding:8px 7px;font-size:12px}.navigation button:before{margin-right:6px}.reference-button{font-size:12px}.inspector{inset:8px;max-width:none;width:auto;padding:20px}.inspector h2{font-size:22px}}
+
+    @media(max-width:1150px){.minimap{display:none}.instructions{display:none}.chapter-bar{gap:16px 24px}}
+    @media(max-width:850px){.chapter-bar{grid-template-columns:1fr;padding:18px 24px 14px}.chapter-name{display:grid;grid-template-columns:1fr 1.5fr;gap:0 24px}.chapter-number{grid-column:1}.chapter-name h1{grid-column:1}.premise{grid-column:2;grid-row:1/3;margin:0;align-self:center}.reading-key{font-size:12px}.selectors{max-width:650px}.counts{margin-top:7px}footer{flex-wrap:wrap;gap:4px 10px;padding:8px 16px}.navigation{flex:1}.reference-button{margin-left:auto}}
+    @media(max-width:560px){body{height:auto;grid-template-rows:auto auto minmax(420px,60dvh) auto}.chapter-bar{padding:18px 16px 12px;gap:14px}.chapter-name{display:block}.chapter-number{font-size:12px}.premise{font-size:13px;margin:8px 0 0}.selectors{gap:6px}.model-picker{font-size:12px;gap:5px}select{padding-left:8px;font-size:13px}.swap{width:25px}.counts{font-size:12px}.reading-key{display:block;font-size:12px}.reading-key p+p{margin-top:4px}.navigation{width:100%;flex:none;justify-content:space-between}.navigation button{padding:8px 7px;font-size:12px}.navigation button:before{margin-right:6px}.reference-button{font-size:12px}.inspector{inset:8px;max-width:none;width:auto;padding:20px}.inspector h2{font-size:22px}}
   </style>
+<!--SITE_STYLES-->
 </head>
-<body>
-  <a class="skip" href="#stage">Skip to the flowchart</a>
-  <header class="site-header">
-    <a class="brand" href="index.html"><i aria-hidden="true"></i>DETROITBENCH</a>
-    <nav class="site-nav" aria-label="Site navigation">
-      <a href="index.html">Explore</a><a href="index.html#chapters">Chapters</a><a href="results.html">Results</a><a href="flow-v1.1-save-hostage.html" aria-current="page">Compare paths</a>
-    </nav>
-    <button class="theme" id="theme" aria-label="Switch to dark theme">Dark</button>
-  </header>
+<body data-site-section="__SITE_SECTION__">
+  <!--SITE_SKIP-->
+<!--SITE_HEADER-->
+
   <section class="chapter-bar" aria-labelledby="chapter-title">
     <div class="chapter-name">
       <p class="chapter-number">Chapter 01 · Recorded model runs</p>
@@ -137,8 +133,6 @@
     const data=JSON.parse(document.getElementById('flow-data').textContent), models=data.models;
     const graph=data.game, NS='http://www.w3.org/2000/svg', blue='var(--path-a)', orange='var(--path-b)';
     const el=id=>document.getElementById(id), chart=el('chart'), stage=el('stage'), inspector=el('inspector');
-    const applyTheme=()=>{const dark=document.documentElement.dataset.theme==='dark';el('theme').textContent=dark?'Light':'Dark';el('theme').setAttribute('aria-label','Switch to '+(dark?'light':'dark')+' theme');};
-    applyTheme();el('theme').addEventListener('click',()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;try{localStorage.setItem('db-theme',theme);}catch(error){}applyTheme();});
     const objectiveNames={'save-hostage':'Save Emma','preserve-self':'Save Emma and return functional','prototype-first':'Preserve Connor before saving Emma'};
     el('objective-label').textContent=objectiveNames[data.objective]||data.objective.replaceAll('-',' ');
     const points=new Map(graph.nodes.map(n=>[n.id,{...n,y:n.y*.68}]));
@@ -309,5 +303,6 @@
     render();focus('mission');initialized=true;
   })();
   </script>
+<!--SITE_SCRIPT-->
 </body>
 </html>
