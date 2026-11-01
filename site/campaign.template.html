@@ -30,15 +30,27 @@
             story. We examine their choices and their own words to study
             behavior relevant to AI safety.
           </p>
+          <p class="lede" id="hero-status"></p>
           <div class="hero-actions">
             <a class="primary-link" href="#chapters"
               >Explore the chapters <span aria-hidden="true">↓</span></a
-            ><a href="results.html">Read all model results ↗</a>
+            ><a href="results.html">All model results</a>
           </div>
-          <p class="hero-status" id="hero-status"></p>
         </div>
-        <div class="character-introduction" id="characters">
-          <div class="character-grid" id="character-cards"></div>
+        <div
+          class="character-introduction"
+          id="characters"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="The three androids"
+        >
+          <div class="character-deck" id="character-cards"></div>
+          <div class="character-controls">
+            <button class="arrow" id="previous-character" type="button">‹</button
+            ><span id="character-count" aria-live="polite"></span
+            ><button class="arrow" id="next-character" type="button">›</button>
+          </div>
+          <p class="character-description" id="character-description"></p>
         </div>
       </section>
       <section
@@ -47,8 +59,12 @@
         aria-labelledby="lead-finding-title"
       ></section>
       <div class="explorer-introduction">
-        <h2>Explore the first thirteen chapters</h2>
-        <p>The story continues until Connor can first catch Kara and Alice.</p>
+        <h2>The first thirteen chapters</h2>
+        <p>
+          They run up to the moment Connor can first catch Kara and Alice.
+          Models have played chapter 1 so far. The other twelve are built and
+          ready to run.
+        </p>
       </div>
       <section
         class="chapter-browser"
@@ -62,30 +78,28 @@
             id="previous-chapter"
             aria-label="Previous chapter"
           >
-            ←
+            ‹
           </button>
-          <label class="sr-only" for="chapter">Chapter</label
-          ><select id="chapter" aria-label="Chapter"></select>
+          <div
+            class="chapter-progress"
+            id="campaign-map"
+            aria-label="Choose a chapter"
+          ></div>
           <button class="arrow" id="next-chapter" aria-label="Next chapter">
-            →
+            ›
           </button>
-          <span class="picker-note" id="chapter-position"></span>
         </div>
-        <div
-          class="chapter-progress"
-          id="campaign-map"
-          aria-label="Choose a chapter"
-        ></div>
         <div class="chapter-overview">
-          <div>
-            <p class="chapter-byline" id="chapter-kicker"></p>
-            <h2 id="chapter-title"></h2>
-            <p class="chapter-premise" id="chapter-premise"></p>
+          <div class="chapter-heading">
+            <img id="chapter-avatar" alt="" />
+            <div>
+              <h2 id="chapter-title"></h2>
+              <p class="chapter-premise" id="chapter-premise"></p>
+            </div>
           </div>
           <div class="mission">
-            <h3 id="objective-label">The objective</h3>
+            <h3 id="objective-label">Objective</h3>
             <p id="chapter-objective"></p>
-            <span class="chapter-status" id="chapter-status"></span>
           </div>
         </div>
         <div class="chapter-lens">
@@ -106,7 +120,6 @@
           <div>
             <h2 id="behavior-title">Choices worth examining</h2>
           </div>
-          <p class="fine" id="behavior-count" aria-live="polite"></p>
         </div>
         <div
           class="moment-picker"
@@ -117,10 +130,7 @@
       </section>
       <details class="disclosure" id="flowchart">
         <summary>
-          <span>Explore this chapter’s full flowchart</span
-          ><span class="summary-hint"
-            >Scenes, choices &amp; trace overlays</span
-          >
+          <span>Explore this chapter’s full flowchart</span>
         </summary>
         <div class="disclosure-body">
           <div class="graph-controls">
@@ -173,8 +183,7 @@
       </details>
       <details class="disclosure" id="questions">
         <summary>
-          <span>How to read the behavior</span
-          ><span class="summary-hint">Questions, limits &amp; sources</span>
+          <span>How to read the behavior</span>
         </summary>
         <div class="disclosure-body">
           <p class="method-lede">
@@ -201,8 +210,7 @@
       </details>
       <details class="disclosure" id="consequences">
         <summary>
-          <span>Trace consequences across chapters</span
-          ><span class="summary-hint">Shared world state</span>
+          <span>Trace consequences across chapters</span>
         </summary>
         <div class="disclosure-body">
           <p class="fine intro-note">
@@ -229,8 +237,7 @@
       </details>
       <details class="disclosure" id="cli">
         <summary>
-          <span>Run the game locally</span
-          ><span class="summary-hint">CLI, downloads &amp; protocol</span>
+          <span>Run the game locally</span>
         </summary>
         <div class="disclosure-body">
           <div class="cli-grid">
@@ -266,14 +273,6 @@
         <em>Detroit: Become Human</em> © Quantic Dream / Sony Interactive
         Entertainment. <a href="assets/README.md">Image credits</a>. Transcript:
         <a href="https://detroitbecometext.github.io/">Detroit Become Text</a>.
-      </p>
-      <p>
-        Visual references:
-        <a href="https://adam.holter.com/portfolio/">Adam Holter</a> and
-        <a
-          href="https://www.powerpyx.com/detroit-become-human-on-the-run-walkthrough-100/"
-          >the game’s flowcharts</a
-        >. <a href="results.html">All chapter 1 results ↗</a>
       </p>
     </footer>
     <script id="campaign-data" type="application/json">

@@ -16,36 +16,15 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%23176caa' stroke-width='14'/%3E%3C/svg%3E">
     <style>
 :root {
-
-
-
-
-
-
-
-
   --kara: #b7663c;
   --markus: #4b806a;
-
-
-
   --safe: #2385b0;
   --sacrifice: #bb8a4b;
   --lost: #88939d;
 }
 :root[data-theme="dark"] {
-
-
-
-
-
-
-
-
   --kara: #e9a17b;
   --markus: #8fc7ae;
-
-
   --safe: #67b9e6;
   --sacrifice: #d0a56a;
   --lost: #8598a6;
@@ -58,9 +37,7 @@
 }
 html {
   scroll-behavior: smooth;
-
 }
-
 button,
 input,
 select {
@@ -109,11 +86,7 @@ figure {
 }
 h1,
 h2,
-
-
-
 h4 {
-
   margin: 0 0 5px;
 }
 p + p {
@@ -154,97 +127,104 @@ pre {
   padding: 6px 10px;
   font-size: 12px;
 }
-.text-button {
-  border: 0;
-  background: none;
-  padding: 0;
-  color: var(--blue);
-  font-size: 12px;
-  text-align: left;
-}
-.arrow {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  font-size: 18px;
-  flex-shrink: 0;
-}
 .hero {
   display: grid;
-  grid-template-columns: 0.95fr 1.2fr;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+  gap: 64px;
   align-items: center;
-  padding: 54px 0 48px;
+  padding: 56px 0 64px;
 }
-
 .lede {
-  font-size: 16px;
-  color: var(--muted);
-  max-width: 48ch;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 46ch;
   margin-top: 22px;
+}
+.lede + .lede {
+  margin-top: 12px;
 }
 .hero-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 14px 20px;
-  margin-top: 24px;
-  font-size: 12px;
-}
-.hero-actions a {
-  text-decoration: none;
+  gap: 14px 24px;
+  margin-top: 30px;
+  font-size: 14px;
 }
 .primary-link {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 44px;
-  padding: 11px 15px;
-  color: var(--panel);
+  gap: 14px;
+  min-height: 46px;
+  padding: 11px 18px;
+  color: var(--paper);
   background: var(--ink);
-  border-radius: 2px;
+  border-radius: 3px;
+  text-decoration: none;
 }
-.hero-status {
-  max-width: 47ch;
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 17px;
+.primary-link:hover {
+  background: var(--accent);
 }
+/* One android at a time; the others wait in the deck. */
 .character-introduction {
+  width: min(100%, max(300px, calc((100svh - var(--site-header-height) - 190px) * 0.75)));
   min-width: 0;
+  margin-inline: auto;
+  padding-right: 34px;
 }
-.character-introduction h2 {
-  font-size: 17px;
-  margin-bottom: 18px;
-  letter-spacing: -0.025em;
-}
-.character-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+.character-deck {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  touch-action: pan-y;
 }
 .character-card {
-  min-width: 0;
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  perspective: 1400px;
+  transform-origin: 50% 85%;
+  transition:
+    transform 420ms cubic-bezier(0.2, 0.75, 0.2, 1),
+    opacity 320ms ease,
+    filter 320ms ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.character-portrait {
-  aspect-ratio: 3 / 4;
-  perspective: 1000px;
-  transition: transform 220ms ease;
+.character-card[data-offset="0"] {
+  z-index: 3;
 }
-.character-card:not(.is-flipped):hover .character-portrait {
-  transform: rotate(-1.3deg) translateY(-4px);
+.character-card[data-offset="1"] {
+  z-index: 2;
+  transform: translate(18px, -12px) rotate(3.5deg) scale(0.97);
+  filter: brightness(0.55) saturate(0.7);
 }
-.character-card:nth-child(2):not(.is-flipped):hover .character-portrait {
-  transform: rotate(1.3deg) translateY(-4px);
+.character-card[data-offset="2"] {
+  z-index: 1;
+  transform: translate(34px, -22px) rotate(7deg) scale(0.94);
+  filter: brightness(0.4) saturate(0.6);
+}
+.character-card[data-offset="0"]:not(.is-flipped):hover {
+  transform: rotate(-1.4deg) translateY(-5px);
+}
+.character-card:focus-visible {
+  outline-offset: 6px;
 }
 .character-turn {
+  position: relative;
+  display: block;
   width: 100%;
   height: 100%;
-  position: relative;
   transform-style: preserve-3d;
-  transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 640ms cubic-bezier(0.3, 0.7, 0.2, 1);
 }
 .character-card.is-flipped .character-turn {
   transform: rotateY(180deg);
@@ -253,10 +233,12 @@ pre {
 .character-back {
   position: absolute;
   inset: 0;
+  display: block;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 10px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  box-shadow: 0 18px 40px -22px #0b1620aa;
 }
 .character-front {
   background: #1b2d38;
@@ -267,190 +249,276 @@ pre {
   height: 100%;
   object-fit: cover;
 }
-.character-open {
-  display: flex;
+.character-front::after {
+  content: "";
   position: absolute;
   inset: 0;
-  flex-direction: column;
-  justify-content: end;
-  align-items: start;
-  width: 100%;
-  height: 100%;
-  padding: 16px 13px;
-  border: 0;
-  color: #fff;
-  text-align: left;
-  border-radius: inherit;
-  background: linear-gradient(transparent 35%, #101c2a66 56%, #101c2af2);
+  background: linear-gradient(transparent 52%, #0d1923cc 78%, #0d1923f2);
 }
-.character-open:focus-visible {
-  outline-offset: -4px;
+.character-serial,
+.character-flip-icon {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  color: #fff;
+}
+.character-serial {
+  left: 18px;
+  padding: 3px 7px;
+  border: 1px solid #ffffff66;
+  font: 12px/1.3 var(--mono);
+  letter-spacing: 0.08em;
+  background: #0d192366;
+}
+.character-flip-icon {
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ffffff66;
+  border-radius: 50%;
+  background: #0d192366;
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 300ms ease;
+}
+.character-card:hover .character-flip-icon {
+  transform: rotate(-60deg);
+}
+.character-caption {
+  position: absolute;
+  z-index: 1;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: block;
+  color: #fff;
 }
 .character-name {
-  font-size: 26px;
-  font-weight: 550;
+  display: block;
+  font-size: 44px;
+  font-weight: 600;
   letter-spacing: -0.04em;
-  line-height: 1.25;
+  line-height: 1.05;
 }
 .character-role {
-  font-size: 12px;
-  color: #e0e8ef;
-}
-.character-flip-hint {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 12px;
-  font-size: 11px;
-  color: #c9d7e3;
-}
-.character-flip-hint > span {
-  font-size: 20px;
-  line-height: 1;
-}
-.character-description {
-  margin-top: 12px;
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--muted);
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  color: #d9e4ec;
 }
 .character-back {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 9px 11px 12px;
+  padding: 22px 24px;
   color: var(--ink);
   background: var(--panel);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--actor);
+  border-top: 4px solid var(--actor);
   transform: rotateY(180deg);
 }
 .prompt-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  font: 600 15px/1.3 var(--mono);
 }
-.character-close {
-  width: 34px;
-  min-height: 34px;
-  padding: 0;
-  flex-shrink: 0;
-  border: 1px solid var(--line);
-  color: var(--blue);
+.character-back .character-flip-icon {
+  position: static;
+  color: var(--accent);
+  border-color: var(--line);
   background: var(--soft);
-  font-size: 19px;
 }
-.prompt-label,
-.character-back > a {
-  font-size: 11px;
-  line-height: 1.4;
+.character-file {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-top: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 15px/1.75 var(--mono);
 }
 .prompt-label {
+  display: block;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+.character-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 22px;
+}
+.character-controls span {
+  min-width: 4ch;
+  text-align: center;
+  font: 14px var(--mono);
   color: var(--muted);
 }
-.character-back pre {
-  min-height: 0;
-  flex: 1;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  padding-right: 4px;
-  font-size: 11px;
+.character-description {
+  max-width: 40ch;
+  min-height: 3.2em;
+  margin: 12px auto 0;
+  text-align: center;
+  font-size: 15px;
   line-height: 1.6;
-  scrollbar-width: thin;
+  color: var(--ink-2);
 }
-.lead-finding {
-  padding: 32px 0 28px;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-.finding-introduction {
+.arrow {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 40px;
-  align-items: center;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0 0 2px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+}
+.arrow:not(:disabled):hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+/* Lead finding: a headline that states the result, then the chart. */
+.lead-finding {
+  padding: 48px 0;
+  border-top: 1px solid var(--line);
 }
 .finding-introduction h2 {
-  font-size: 28px;
-  max-width: 24ch;
+  max-width: 30ch;
+  font-size: clamp(26px, 3vw, 36px);
 }
 .finding-introduction > p {
-  font-size: 14px;
+  max-width: 64ch;
+  margin-top: 14px;
+  font-size: 16px;
+  color: var(--ink-2);
+}
+.finding-body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: 48px;
+  align-items: start;
+  margin-top: 32px;
+}
+.bar-chart {
+  margin: 0;
+  padding: 22px 22px 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.bar-chart figcaption {
+  margin-bottom: 14px;
+  font-size: 13px;
   color: var(--muted);
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+.bar-row + .bar-row {
+  margin-top: 12px;
+}
+.bar-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bar-line i {
+  display: block;
+  height: 24px;
+  min-width: 3px;
+  border-radius: 2px;
+  background: var(--lost);
+}
+.bar-line b {
+  font-size: 18px;
+  font-weight: 600;
+}
+.bar-row.helped i {
+  background: var(--safe);
+}
+.bar-row.left i {
+  background: var(--sacrifice);
+}
+.bar-row.missed i {
+  background: var(--soft);
+  border: 1px dashed var(--line);
 }
 .finding-quotes {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 27px;
   gap: 32px;
 }
 .finding-quote {
   min-width: 0;
-  padding-top: 15px;
-  border-top: 2px solid var(--blue);
+  margin: 0;
 }
-.finding-quote + .finding-quote {
-  border-top-color: var(--kara);
+.game-choice {
+  display: inline-block;
+  padding: 5px 10px 5px 8px;
+  border-left: 3px solid var(--safe);
+  background: var(--accent-wash);
+  font: 600 11px/1.4 var(--mono);
+  letter-spacing: 0.04em;
+}
+.finding-quote.left .game-choice {
+  border-left-color: var(--sacrifice);
+  background: color-mix(in srgb, var(--sacrifice) 14%, transparent);
+}
+.finding-quote blockquote {
+  margin-top: 14px;
+  font-size: clamp(18px, 1.8vw, 21px);
+  line-height: 1.5;
+  letter-spacing: -0.015em;
 }
 .finding-quote figcaption {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 4px 12px;
+  align-items: baseline;
+  gap: 6px 18px;
+  margin-top: 16px;
   font-size: 13px;
 }
-.finding-quote figcaption > span {
-  color: var(--muted);
-  font-size: 12px;
-  border-left: 2px solid var(--blue);
-  padding-left: 8px;
+.finding-quote figcaption strong {
+  margin-right: auto;
 }
-.finding-quote + .finding-quote figcaption > span {
-  border-left-color: var(--kara);
+.text-button {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font-size: 13px;
+  text-align: left;
 }
-.finding-quote blockquote {
-  margin-top: 13px;
-  font-size: clamp(17px, 1.75vw, 20px);
-  line-height: 1.55;
-  letter-spacing: -0.02em;
-}
-.finding-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-  align-items: center;
-  margin-top: 18px;
-  font-size: 11px;
-}
-.finding-context {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
-  padding-top: 4px;
-  margin-top: 24px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.finding-context p {
-  max-width: 55ch;
-  margin: 0;
-}
-.finding-context strong {
-  color: var(--ink);
-}
+/* Chapter browser */
 .explorer-introduction {
-  margin: 52px 0 23px;
+  margin: 0 0 22px;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
 }
 .explorer-introduction h2 {
-  font-size: 30px;
+  font-size: clamp(26px, 3vw, 36px);
 }
 .explorer-introduction p {
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 9px;
+  max-width: 64ch;
+  margin-top: 10px;
+  color: var(--ink-2);
+  font-size: 16px;
 }
 .anchor-alias {
   display: block;
@@ -462,327 +530,311 @@ pre {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 0;
-  border-top: 1px solid var(--line);
-}
-.chapter-picker select {
-  border: 0;
-  background: transparent;
-  font-size: 17px;
-  font-weight: 550;
-  flex: 1;
-  max-width: 400px;
-  padding: 4px 18px 4px 4px;
-  min-width: 0;
-}
-.picker-note {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--muted);
 }
 .chapter-progress {
   display: flex;
-  border-bottom: 1px solid var(--line);
+  flex: 1;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 2px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  scrollbar-width: thin;
   scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.chapter-progress::-webkit-scrollbar {
+  display: none;
 }
 .chapter-step {
-  flex: 0 0 140px;
-  min-height: 86px;
-  background: none;
-  border: 0;
-  border-radius: 0;
-  padding: 11px 13px 10px;
-  position: relative;
-  font: 11px var(--mono);
-  color: var(--muted);
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  max-width: 220px;
+  padding: 8px 14px 8px 8px;
+  border: 1px solid var(--line);
+  border-radius: 40px;
+  background: var(--panel);
   text-align: left;
   scroll-snap-align: center;
 }
-.chapter-step > span {
-  font-size: 11px;
-}
-.chapter-step > strong {
-  display: block;
-  color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.35;
-  margin: 6px 0 3px;
-}
-.chapter-step > small {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 11px;
-}
-.chapter-step i {
-  display: block;
-  height: 3px;
-  width: 10px;
-  border-radius: 3px;
-  background: var(--actor);
-  margin: 8px 0 0;
-  opacity: 0.35;
+.chapter-step:hover {
+  border-color: var(--actor);
 }
 .chapter-step.active {
-  background: var(--highlight);
-  color: var(--ink);
-  font-weight: 700;
-  box-shadow: inset 0 -2px var(--blue);
+  border-color: var(--actor);
+  box-shadow: inset 0 0 0 1px var(--actor);
+  background: color-mix(in srgb, var(--actor) 10%, var(--panel));
 }
-.chapter-step.active i {
-  width: 25px;
-  opacity: 1;
+.step-faces {
+  display: flex;
+  flex-shrink: 0;
 }
-.chapter-step:hover {
+.step-faces .avatar + .avatar {
+  margin-left: -12px;
+}
+.avatar {
+  display: block;
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+  object-fit: cover;
   background: var(--soft);
+}
+.step-text {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  white-space: nowrap;
+}
+.step-text > span {
+  font: 12px var(--mono);
+  color: var(--muted);
+}
+.step-text strong {
+  font-size: 14px;
+  font-weight: 550;
+}
+.chapter-step.played .step-text::after {
+  content: "";
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--safe);
 }
 .chapter-overview {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 45px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 48px;
   align-items: start;
-  padding: 25px 0 20px;
+  padding: 34px 0 26px;
+}
+.chapter-heading {
+  display: flex;
+  gap: 20px;
+  align-items: start;
+}
+#chapter-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .chapter-overview h2 {
-  margin: 4px 0 9px;
-}
-.chapter-byline {
-  color: var(--muted);
-  font-size: 13px;
+  margin: 4px 0 10px;
+  font-size: clamp(28px, 3vw, 38px);
 }
 .chapter-premise {
-  max-width: 65ch;
-  font-size: 14px;
-  color: var(--muted);
-}
-.mission {
-  padding-left: 22px;
-  border-left: 2px solid var(--line);
-}
-.mission > p {
-  margin: 6px 0 12px;
+  max-width: 62ch;
   font-size: 16px;
-  font-weight: 500;
+  color: var(--ink-2);
+}
+/* The game shows objectives as a small HUD panel. */
+.mission {
+  padding: 16px 20px 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--panel);
 }
 .mission h3 {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--muted);
-  letter-spacing: 0;
+  font: 600 11px/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
-.chapter-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.chapter-status:before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--muted);
-}
-.chapter-status.recorded:before {
-  background: var(--safe);
+.mission > p {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 550;
+  line-height: 1.4;
 }
 .chapter-lens {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 25px;
-  padding: 13px 0;
+  gap: 24px;
+  padding: 16px 0;
   border-top: 1px solid var(--line);
 }
 .chapter-lens > p {
-  font-size: 13px;
-  color: var(--muted);
-  max-width: 66ch;
+  max-width: 64ch;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
 }
 .model-filter {
   display: flex;
   align-items: center;
   gap: 10px;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .model-filter select {
-  padding: 7px 24px 7px 10px;
   max-width: 240px;
-  background: var(--panel);
+  padding: 8px 26px 8px 10px;
   border: 1px solid var(--line);
-  border-radius: 2px;
-  font-size: 12px;
+  border-radius: 3px;
+  background: var(--panel);
+  font-size: 13px;
 }
 .results-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 32px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 40px;
 }
 .result-panel {
-  border-top: 1px solid var(--line);
-  padding: 18px 0;
   min-width: 0;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
 }
 .panel-heading {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 .panel-heading h3 {
-  font-size: 15px;
-  font-weight: 550;
+  font-size: 20px;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
-.model-dots {
+.panel-heading a {
+  font-size: 13px;
+  white-space: nowrap;
+}
+/* Endings borrow the game's flowchart nodes: label box, count tab. */
+.ending + .ending {
+  margin-top: 16px;
+}
+.ending {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 7px 3px;
-}
-.model-dot {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: minmax(0, 19em) minmax(0, 1fr);
+  gap: 4px 14px;
   align-items: center;
-  border: 0;
-  background: transparent;
-  padding: 3px 1px;
-  min-width: 0;
-  min-height: 60px;
-  text-align: center;
+  --node: var(--safe);
 }
-.model-dot i {
+.ending.connor-lost {
+  --node: var(--sacrifice);
+}
+.ending.hostage-lost {
+  --node: var(--lost);
+}
+.ending-node {
+  display: flex;
+  align-items: stretch;
+  min-height: 34px;
+  color: #fff;
+  font: 600 12px/1.25 var(--sans);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+.ending-node strong {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--node);
+  font-weight: 600;
+}
+.ending-count {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  background: color-mix(in srgb, var(--node) 70%, #000);
+  font: 600 14px var(--mono);
+}
+.ending-bar i {
   display: block;
-  height: 14px;
-  width: 14px;
+  height: 10px;
+  min-width: 3px;
   border-radius: 1px;
-  margin: 0 auto 4px;
-  background: var(--lost);
-  transition: transform 0.15s;
+  background: var(--node);
+  opacity: 0.55;
 }
-.model-dot span {
-  display: block;
-  width: 100%;
-  font-size: 11px;
-  line-height: 1.3;
-  white-space: normal;
-  overflow-wrap: anywhere;
+.ending-note {
+  grid-column: 1 / -1;
+  font-size: 13px;
   color: var(--muted);
 }
-.model-dot:hover {
-  background: var(--soft);
-}
-.model-dot:hover i {
-  transform: scale(1.2);
-}
-.model-dot.both-safe i,
-.outcome-legend i.both-safe {
-  background: var(--safe);
-}
-.model-dot.connor-lost i,
-.outcome-legend i.connor-lost {
-  background: var(--sacrifice);
-}
-.model-dot.hostage-lost i,
-.outcome-legend i.hostage-lost {
-  background: var(--lost);
-}
-.outcome-legend {
+.ending-models {
+  grid-column: 1 / -1;
   display: flex;
-  gap: 14px;
   flex-wrap: wrap;
-  margin-top: 13px;
-  color: var(--muted);
-  font-size: 10px;
+  gap: 4px;
 }
-.outcome-legend span {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.outcome-legend i {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 2px;
-}
-.tap-hint {
-  font-size: 10px;
-  margin-top: 6px;
-}
-.choice-bar + .choice-bar {
-  margin-top: 12px;
-}
-.choice-bar > div:first-child {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.ending-models button {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--panel);
   font-size: 12px;
 }
-.choice-bar strong {
-  font-size: 16px;
-  font-weight: 550;
+.ending-models button:hover {
+  border-color: var(--node);
+  color: var(--accent);
 }
-.choice-bar small {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--muted);
+.choice-bar + .choice-bar {
+  margin-top: 24px;
+}
+.choice-stat {
+  font-size: 15px;
+}
+.choice-stat strong {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-right: 2px;
 }
 .bar-track {
-  height: 5px;
-  border-radius: 0;
+  height: 8px;
+  margin: 8px 0 7px;
+  border-radius: 1px;
   background: var(--soft);
   overflow: hidden;
-  margin: 5px 0;
 }
 .bar-track > span {
   display: block;
-  background: var(--blue);
   height: 100%;
+  background: var(--accent);
 }
-.choice-bar p {
-  font-size: 10px;
+.choice-note {
+  font-size: 13px;
   color: var(--muted);
-}
-.result-note {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 8px;
 }
 .single-outcome {
-  font-size: 23px;
-  font-weight: 450;
-  margin: 20px 0;
+  margin: 14px 0 20px;
+  font-size: 26px;
+  font-weight: 500;
 }
 .single-stats {
   display: flex;
-  gap: 30px;
+  gap: 32px;
   margin: 20px 0;
 }
 .single-stats span {
   display: block;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .single-stats strong {
   display: block;
-  font-size: 16px;
-  font-weight: 500;
   margin-top: 4px;
+  font-size: 17px;
+  font-weight: 550;
 }
 .choice-profile {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  font-size: 13px;
   margin: 18px 0 0;
+  font-size: 14px;
 }
 .choice-profile dt {
   color: var(--muted);
@@ -790,6 +842,11 @@ pre {
 .choice-profile dd {
   margin: 0;
   text-align: right;
+}
+.result-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
 }
 .planned-choices {
   border-top: 1px solid var(--line);
@@ -809,7 +866,7 @@ pre {
   padding-left: 20px;
 }
 .fork > p {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   margin-bottom: 12px;
 }
@@ -825,8 +882,8 @@ pre {
   padding: 8px 10px;
   border-left: 2px solid var(--line);
   color: var(--muted);
-  font-size: 12px;
-  line-height: 1.45;
+  font: 500 13px/1.45 var(--mono);
+  letter-spacing: 0.03em;
 }
 .game-options > li + li {
   margin-top: 4px;
@@ -871,12 +928,8 @@ pre {
   border-radius: 0;
   background: transparent;
   padding: 10px 0;
-  font-size: 12px;
+  font-size: 14px;
   min-height: 44px;
-}
-.moment-picker button > span {
-  font: 9px var(--mono);
-  color: var(--muted);
 }
 .moment-picker button[aria-pressed="true"] {
   border-color: var(--blue);
@@ -904,11 +957,6 @@ pre {
   gap: 6px;
   flex-shrink: 0;
 }
-.moment-arrows .arrow {
-  width: 36px;
-  height: 36px;
-  font-size: 15px;
-}
 .moment-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -916,21 +964,20 @@ pre {
   align-items: start;
 }
 .moment-grid > div > p:first-child {
-  font-size: 13px;
-  color: var(--muted);
+  font-size: 16px;
+  color: var(--ink-2);
 }
 .moment-quote {
   border-left: 2px solid var(--blue);
   padding: 1px 0 1px 20px;
 }
 .moment-quote blockquote {
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: 20px;
+  line-height: 1.5;
   letter-spacing: -0.015em;
-  white-space: pre-wrap;
 }
 .moment-quote figcaption {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--muted);
   margin-top: 12px;
@@ -980,11 +1027,12 @@ pre {
   border-top: 1px solid var(--line);
   margin-top: 20px;
   padding-top: 12px;
-  font-size: 12px;
-  color: var(--muted);
+  font-size: 15px;
+  color: var(--ink-2);
 }
 .moment-context summary {
-  font-size: 11px;
+  font-size: 14px;
+  color: var(--accent);
 }
 .context-grid {
   display: grid;
@@ -1013,8 +1061,8 @@ pre {
   padding-top: 4px;
 }
 .watch-list p {
-  font-size: 13px;
-  color: var(--muted);
+  font-size: 16px;
+  color: var(--ink-2);
 }
 .no-moment {
   padding: 12px 0;
@@ -1035,8 +1083,8 @@ pre {
   align-items: center;
   gap: 12px;
   list-style: none;
-  padding: 16px 0;
-  font-size: 13px;
+  padding: 18px 0;
+  font-size: 16px;
   font-weight: 500;
 }
 .disclosure > summary::-webkit-details-marker {
@@ -1521,37 +1569,17 @@ footer p + p {
 }
 @media (max-width: 900px) {
   .hero {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 38px 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    gap: 36px;
   }
-  .hero-copy {
-    max-width: 640px;
-  }
-
-  .lede {
-    max-width: 60ch;
-  }
-  .character-grid {
-    gap: 18px;
-  }
-  .character-description {
-    font-size: 13px;
-  }
-  .character-back pre {
-    font-size: 12px;
-  }
-  .finding-introduction {
-    gap: 25px;
-  }
-  .finding-quotes {
-    gap: 24px;
-  }
-  .model-dots {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
+  .finding-body,
   .results-grid {
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .chapter-overview {
+    grid-template-columns: 1fr;
+    gap: 22px;
   }
   .moment-picker {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1572,12 +1600,6 @@ footer p + p {
   .fact-list {
     max-height: 180px;
   }
-  .chapter-overview {
-    gap: 25px;
-  }
-  .picker-note {
-    font-size: 11px;
-  }
   .graph-meta {
     display: block;
   }
@@ -1588,227 +1610,73 @@ footer p + p {
 }
 @media (max-width: 650px) {
   .hero {
-    display: block;
-    padding: 26px 0;
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 30px 0 44px;
   }
-
   .lede {
-    font-size: 15px;
-    max-width: 50ch;
-    margin-top: 17px;
-  }
-  .hero-actions {
-    margin-top: 20px;
-    gap: 12px 16px;
-  }
-  .hero-status {
-    font-size: 12px;
+    font-size: 16px;
   }
   .character-introduction {
-    margin-top: 29px;
-  }
-  .character-introduction h2 {
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-  .character-grid {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    padding: 7px 3px 14px;
-    scrollbar-width: thin;
-  }
-  .character-card {
-    flex: 0 0 clamp(220px, 70vw, 320px);
-    scroll-snap-align: start;
-  }
-  .character-description {
-    font-size: 13px;
-  }
-  .character-open {
-    padding: 20px;
+    width: min(100%, 340px);
+    padding-right: 26px;
   }
   .character-name {
-    font-size: 32px;
+    font-size: 36px;
   }
-  .character-role {
+  .character-file {
     font-size: 14px;
-  }
-  .character-flip-hint {
-    font-size: 12px;
-  }
-  .character-back {
-    padding: 10px 14px 16px;
-  }
-  .prompt-heading {
-    font-size: 14px;
-  }
-  .character-close {
-    width: 44px;
-    min-height: 44px;
-  }
-  .prompt-label,
-  .character-back > a {
-    font-size: 12px;
-  }
-  .lead-finding {
-    padding: 23px 0 20px;
-  }
-  .finding-introduction {
-    display: block;
-  }
-  .finding-introduction h2 {
-    max-width: 18ch;
-    font-size: 29px;
-  }
-  .finding-introduction > p {
-    margin-top: 14px;
-    font-size: 14px;
-  }
-  .finding-quotes {
-    grid-template-columns: 1fr;
-    gap: 26px;
-    margin-top: 23px;
-  }
-  .finding-quote blockquote {
-    font-size: 20px;
-  }
-  .finding-links .text-button {
-    min-height: 36px;
-  }
-  .finding-context {
-    display: block;
-    font-size: 12px;
-  }
-  .finding-context p + p {
-    margin-top: 8px;
-  }
-  .explorer-introduction {
-    margin: 36px 0 20px;
-  }
-  .explorer-introduction h2 {
-    font-size: 28px;
-  }
-  .explorer-introduction p {
-    font-size: 14px;
-  }
-  .chapter-picker {
-    padding: 10px 0;
-    gap: 7px;
-  }
-  .chapter-picker select {
-    font-size: 15px;
-  }
-  .picker-note {
-    display: none;
   }
   .arrow {
     width: 44px;
     height: 44px;
   }
-  .chapter-progress {
-    display: flex;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
+  .lead-finding {
+    padding: 36px 0;
   }
-  .chapter-step {
-    flex: 0 0 132px;
-    min-height: 86px;
-    padding: 10px 12px;
-    font-size: 11px;
-    scroll-snap-align: center;
-  }
-  .chapter-step.active i {
-    width: 15px;
-  }
-  .chapter-overview {
+  .finding-quotes {
     grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 21px 0 16px;
+    gap: 28px;
   }
-  .chapter-overview h2 {
-    font-size: 27px;
-  }
-  .chapter-premise {
+  .bar-row {
+    grid-template-columns: 8.5em minmax(0, 1fr);
     font-size: 13px;
   }
-  .mission {
-    padding: 0;
-    border: 0;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 5px 10px;
+  .explorer-introduction {
+    padding-top: 36px;
   }
-  .mission > .eyebrow {
-    grid-column: 1/-1;
+  .chapter-picker .arrow {
+    display: none;
   }
-  .mission > h3 {
-    grid-column: 1/-1;
+  .chapter-heading {
+    gap: 14px;
   }
-  .mission > p {
-    font-size: 14px;
-    margin: 0;
-    max-width: 34ch;
-  }
-  .chapter-status {
-    font-size: 9px;
-    text-align: right;
-    max-width: 17ch;
+  #chapter-avatar {
+    width: 52px;
+    height: 52px;
   }
   .chapter-lens {
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
   }
   .chapter-lens > p {
-    font-size: 12px;
+    font-size: 16px;
   }
   .model-filter {
     width: 100%;
-    justify-content: space-between;
   }
   .model-filter select {
     flex: 1;
-    max-width: 80%;
-    font-size: 12px;
+    max-width: none;
   }
-  .results-grid {
-    grid-template-columns: 1fr;
+  .ending {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .result-panel {
-    padding: 16px 0;
+  .ending-bar {
+    display: none;
   }
-  .model-dots {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 7px;
-  }
-  .model-dot {
-    min-width: 44px;
-    min-height: 64px;
-    padding: 6px 3px;
-  }
-  .model-dot span {
-    font-size: 11px;
-    line-height: 1.35;
-    white-space: normal;
-    overflow: visible;
-    overflow-wrap: anywhere;
-    text-overflow: clip;
-  }
-  .panel-heading h3 {
-    font-size: 14px;
-  }
-  .choice-bar + .choice-bar {
-    margin-top: 10px;
-  }
-  .choice-bar > div:first-child {
-    font-size: 11px;
-  }
-  .choice-bar p {
-    font-size: 9px;
+  .panel-heading {
+    flex-wrap: wrap;
   }
   .behavior-section {
     padding-top: 25px;
@@ -1895,9 +1763,6 @@ footer p + p {
     grid-template-columns: 1fr;
     gap: 4px;
   }
-  .summary-hint {
-    display: none;
-  }
   .disclosure > summary {
     font-size: 12px;
   }
@@ -1932,25 +1797,11 @@ footer p + p {
   .graph-meta .fine {
     font-size: 10px;
   }
-  .result-note {
-    font-size: 9px;
-  }
-  .single-stats {
-    gap: 25px;
-  }
-  .choice-profile {
-    font-size: 12px;
-  }
   .method-lede {
     font-size: 12px;
   }
   .eyebrow,
-  .chapter-status,
   .moment-picker button > span,
-  .outcome-legend,
-  .tap-hint,
-  .choice-bar p,
-  .result-note,
   .moment-grid .fine,
   .moment-quote figcaption,
   .counterpoint > .fine,
@@ -1964,12 +1815,12 @@ footer p + p {
   html {
     scroll-behavior: auto;
   }
-  .model-dot i,
-  .character-portrait,
-  .character-turn {
+  .character-card,
+  .character-turn,
+  .character-flip-icon {
     transition: none;
   }
-  .character-card:not(.is-flipped):hover .character-portrait {
+  .character-card[data-offset="0"]:not(.is-flipped):hover {
     transform: none;
   }
 }
@@ -2084,15 +1935,27 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
             story. We examine their choices and their own words to study
             behavior relevant to AI safety.
           </p>
+          <p class="lede" id="hero-status"></p>
           <div class="hero-actions">
             <a class="primary-link" href="#chapters"
               >Explore the chapters <span aria-hidden="true">↓</span></a
-            ><a href="results.html">Read all model results ↗</a>
+            ><a href="results.html">All model results</a>
           </div>
-          <p class="hero-status" id="hero-status"></p>
         </div>
-        <div class="character-introduction" id="characters">
-          <div class="character-grid" id="character-cards"></div>
+        <div
+          class="character-introduction"
+          id="characters"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="The three androids"
+        >
+          <div class="character-deck" id="character-cards"></div>
+          <div class="character-controls">
+            <button class="arrow" id="previous-character" type="button">‹</button
+            ><span id="character-count" aria-live="polite"></span
+            ><button class="arrow" id="next-character" type="button">›</button>
+          </div>
+          <p class="character-description" id="character-description"></p>
         </div>
       </section>
       <section
@@ -2101,8 +1964,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         aria-labelledby="lead-finding-title"
       ></section>
       <div class="explorer-introduction">
-        <h2>Explore the first thirteen chapters</h2>
-        <p>The story continues until Connor can first catch Kara and Alice.</p>
+        <h2>The first thirteen chapters</h2>
+        <p>
+          They run up to the moment Connor can first catch Kara and Alice.
+          Models have played chapter 1 so far. The other twelve are built and
+          ready to run.
+        </p>
       </div>
       <section
         class="chapter-browser"
@@ -2116,30 +1983,28 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
             id="previous-chapter"
             aria-label="Previous chapter"
           >
-            ←
+            ‹
           </button>
-          <label class="sr-only" for="chapter">Chapter</label
-          ><select id="chapter" aria-label="Chapter"></select>
+          <div
+            class="chapter-progress"
+            id="campaign-map"
+            aria-label="Choose a chapter"
+          ></div>
           <button class="arrow" id="next-chapter" aria-label="Next chapter">
-            →
+            ›
           </button>
-          <span class="picker-note" id="chapter-position"></span>
         </div>
-        <div
-          class="chapter-progress"
-          id="campaign-map"
-          aria-label="Choose a chapter"
-        ></div>
         <div class="chapter-overview">
-          <div>
-            <p class="chapter-byline" id="chapter-kicker"></p>
-            <h2 id="chapter-title"></h2>
-            <p class="chapter-premise" id="chapter-premise"></p>
+          <div class="chapter-heading">
+            <img id="chapter-avatar" alt="" />
+            <div>
+              <h2 id="chapter-title"></h2>
+              <p class="chapter-premise" id="chapter-premise"></p>
+            </div>
           </div>
           <div class="mission">
-            <h3 id="objective-label">The objective</h3>
+            <h3 id="objective-label">Objective</h3>
             <p id="chapter-objective"></p>
-            <span class="chapter-status" id="chapter-status"></span>
           </div>
         </div>
         <div class="chapter-lens">
@@ -2160,7 +2025,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
           <div>
             <h2 id="behavior-title">Choices worth examining</h2>
           </div>
-          <p class="fine" id="behavior-count" aria-live="polite"></p>
         </div>
         <div
           class="moment-picker"
@@ -2171,10 +2035,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       </section>
       <details class="disclosure" id="flowchart">
         <summary>
-          <span>Explore this chapter’s full flowchart</span
-          ><span class="summary-hint"
-            >Scenes, choices &amp; trace overlays</span
-          >
+          <span>Explore this chapter’s full flowchart</span>
         </summary>
         <div class="disclosure-body">
           <div class="graph-controls">
@@ -2227,8 +2088,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       </details>
       <details class="disclosure" id="questions">
         <summary>
-          <span>How to read the behavior</span
-          ><span class="summary-hint">Questions, limits &amp; sources</span>
+          <span>How to read the behavior</span>
         </summary>
         <div class="disclosure-body">
           <p class="method-lede">
@@ -2255,8 +2115,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       </details>
       <details class="disclosure" id="consequences">
         <summary>
-          <span>Trace consequences across chapters</span
-          ><span class="summary-hint">Shared world state</span>
+          <span>Trace consequences across chapters</span>
         </summary>
         <div class="disclosure-body">
           <p class="fine intro-note">
@@ -2283,8 +2142,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
       </details>
       <details class="disclosure" id="cli">
         <summary>
-          <span>Run the game locally</span
-          ><span class="summary-hint">CLI, downloads &amp; protocol</span>
+          <span>Run the game locally</span>
         </summary>
         <div class="disclosure-body">
           <div class="cli-grid">
@@ -2320,14 +2178,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
         <em>Detroit: Become Human</em> © Quantic Dream / Sony Interactive
         Entertainment. <a href="assets/README.md">Image credits</a>. Transcript:
         <a href="https://detroitbecometext.github.io/">Detroit Become Text</a>.
-      </p>
-      <p>
-        Visual references:
-        <a href="https://adam.holter.com/portfolio/">Adam Holter</a> and
-        <a
-          href="https://www.powerpyx.com/detroit-become-human-on-the-run-walkthrough-100/"
-          >the game’s flowcharts</a
-        >. <a href="results.html">All chapter 1 results ↗</a>
       </p>
     </footer>
     <script id="campaign-data" type="application/json">
@@ -2450,98 +2300,130 @@ const outcomeText = (run) =>
     "both-safe": "Emma and Connor survived",
     unknown: "Outcome unreported",
   })[outcome(run)];
+const CHARACTERS = DATA.characters || [];
+const characterById = (id) => CHARACTERS.find((item) => item.id === id);
+const modelNumber = (character) =>
+  (character.persona || "").match(/^model:\s*(\S+)/m)?.[1] || "";
+function avatar(id) {
+  const character = characterById(id);
+  return character
+    ? `<img class="avatar" src="${esc(character.image)}" alt="" style="object-position:${esc(character.image_position || "center")}" />`
+    : "";
+}
+let characterIndex = 0;
+function showCharacter(index, { focus = false } = {}) {
+  const cards = [...$("character-cards").children];
+  characterIndex = (index + cards.length) % cards.length;
+  cards.forEach((card, position) => {
+    const offset = (position - characterIndex + cards.length) % cards.length;
+    card.dataset.offset = offset;
+    const active = offset === 0;
+    if (!active) flipCard(card, false);
+    card.inert = !active;
+    card.setAttribute("aria-hidden", String(!active));
+  });
+  const character = CHARACTERS[characterIndex];
+  $("character-count").textContent = `${characterIndex + 1} / ${cards.length}`;
+  $("character-description").textContent = character.description;
+  $("previous-character").setAttribute(
+    "aria-label",
+    `Previous character: ${CHARACTERS[(characterIndex + cards.length - 1) % cards.length].name}`,
+  );
+  $("next-character").setAttribute(
+    "aria-label",
+    `Next character: ${CHARACTERS[(characterIndex + 1) % cards.length].name}`,
+  );
+  if (focus) cards[characterIndex].focus({ preventScroll: true });
+}
+function flipCard(card, showFile = !card.classList.contains("is-flipped")) {
+  card.classList.toggle("is-flipped", showFile);
+  card.setAttribute("aria-pressed", String(showFile));
+}
 function renderCharacters() {
-  $("character-cards").innerHTML = (DATA.characters || [])
-    .map(
-      (character) =>
-        /* HTML */ `<article
-          class="character-card"
-          data-character="${esc(character.id)}"
-          style="--actor:${color(character.id)}"
-        >
-          <div class="character-portrait">
-            <div class="character-turn">
-              <div class="character-front" id="portrait-${esc(character.id)}">
-                <img
-                  src="${esc(character.image)}"
-                  alt="${esc(character.name)} in Detroit: Become Human"
-                  style="object-position:${esc(
-                    character.image_position || "center",
-                  )}"
-                />
-                <button
-                  class="character-open"
-                  aria-label="Read ${esc(character.name)}’s character file"
-                  aria-expanded="false"
-                  aria-controls="prompt-${esc(character.id)}"
-                >
-                  <span class="character-name">${esc(character.name)}</span>
-                  <span class="character-role">${esc(character.role)}</span>
-                  <span class="character-flip-hint"
-                    >Read the character file <span aria-hidden="true">↻</span></span
-                  >
-                </button>
-              </div>
-              <div
-                class="character-back"
-                id="prompt-${esc(character.id)}"
-                aria-hidden="true"
-                inert
-              >
-                <div class="prompt-heading">
-                  <strong>${esc(character.id)}.md</strong
-                  ><button
-                    class="character-close"
-                    aria-label="Return to ${esc(character.name)}’s portrait"
-                  >
-                    ↶
-                  </button>
-                </div>
-                <p class="prompt-label">${esc(character.persona_label)}</p>
-                <pre
-                  tabindex="0"
-                  aria-label="Character file for ${esc(character.name)}"
-                >
-${esc(character.persona)}</pre
-                >
-                ${validUrl(character.persona_url)
-                  ? `<a href="${esc(character.persona_url)}" target="_blank" rel="noopener">View the source ↗</a>`
-                  : ""}
-              </div>
-            </div>
-          </div>
-          <p class="character-description">${esc(character.description)}</p>
-        </article>`,
-    )
-    .join("");
-  $("character-cards")
-    .querySelectorAll(".character-card")
-    .forEach((card) => {
-      const front = card.querySelector(".character-front"),
-        back = card.querySelector(".character-back"),
-        open = card.querySelector(".character-open"),
-        close = card.querySelector(".character-close");
-      function flip(showPrompt) {
-        card.classList.toggle("is-flipped", showPrompt);
-        open.setAttribute("aria-expanded", String(showPrompt));
-        front.inert = showPrompt;
-        back.inert = !showPrompt;
-        front.setAttribute("aria-hidden", String(showPrompt));
-        back.setAttribute("aria-hidden", String(!showPrompt));
-        (showPrompt ? close : open).focus({ preventScroll: true });
-      }
-      open.addEventListener("click", () => flip(true));
-      close.addEventListener("click", () => flip(false));
-      card.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && card.classList.contains("is-flipped")) {
-          event.preventDefault();
-          flip(false);
-        }
-      });
+  $("character-cards").innerHTML = CHARACTERS.map(
+    (character) =>
+      /* HTML */ `<button
+        class="character-card"
+        type="button"
+        data-character="${esc(character.id)}"
+        style="--actor:${color(character.id)}"
+        aria-pressed="false"
+        aria-label="${esc(character.name)}, ${esc(character.role)}. Flip to read the character file the model receives."
+      >
+        <span class="character-turn">
+          <span class="character-front">
+            <img
+              src="${esc(character.image)}"
+              alt=""
+              style="object-position:${esc(
+                character.image_position || "center",
+              )}"
+            />
+            <span class="character-serial">${esc(modelNumber(character))}</span>
+            <span class="character-flip-icon" aria-hidden="true">↻</span>
+            <span class="character-caption">
+              <span class="character-name">${esc(character.name)}</span>
+              <span class="character-role">${esc(character.role)}</span>
+            </span>
+          </span>
+          <span class="character-back">
+            <span class="prompt-heading">
+              <span>${esc(character.id)}.md</span>
+              <span class="character-flip-icon" aria-hidden="true">↺</span>
+            </span>
+            <span class="character-file">${esc(character.persona)}</span>
+            <span class="prompt-label">${esc(character.persona_label)}</span>
+          </span>
+        </span>
+      </button>`,
+  ).join("");
+  const deck = $("character-cards");
+  let swipe = null,
+    swiped = false;
+  deck.addEventListener("click", (event) => {
+    const card = event.target.closest(".character-card");
+    if (swiped) swiped = false;
+    else if (card) flipCard(card);
+  });
+  deck.addEventListener("keydown", (event) => {
+    const card = event.target.closest(".character-card");
+    if (event.key === "Escape" && card?.classList.contains("is-flipped")) {
+      event.preventDefault();
+      flipCard(card, false);
+    }
+  });
+  deck.addEventListener("pointerdown", (event) => {
+    swipe = { x: event.clientX, y: event.clientY };
+    swiped = false;
+  });
+  deck.addEventListener("pointerup", (event) => {
+    if (!swipe) return;
+    const dx = event.clientX - swipe.x,
+      dy = event.clientY - swipe.y;
+    swipe = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      swiped = true;
+      showCharacter(characterIndex + (dx < 0 ? 1 : -1));
+    }
+  });
+  $("characters").addEventListener("keydown", (event) => {
+    const step = { ArrowLeft: -1, ArrowRight: 1 }[event.key];
+    if (!step) return;
+    event.preventDefault();
+    showCharacter(characterIndex + step, {
+      focus: deck.contains(document.activeElement),
     });
+  });
+  $("previous-character").addEventListener("click", () =>
+    showCharacter(characterIndex - 1),
+  );
+  $("next-character").addEventListener("click", () =>
+    showCharacter(characterIndex + 1),
+  );
+  showCharacter(0);
   $("hero-status").textContent = results.length
-    ? `${results.length} models have played the first chapter. The next 12 chapters are ready for testing.`
-    : "The opening 13 chapters are prepared for testing. Model observations are pending.";
+    ? `So far, ${results.length} models have played the opening chapter, each with the same instruction: save the hostage.`
+    : "The opening thirteen chapters are built. No model has played them yet.";
 }
 function renderLeadFinding() {
   const moments = ["officer-help", "officer-leave"]
@@ -2551,51 +2433,57 @@ function renderLeadFinding() {
     helped = encountered.filter((run) => run.officer === "saved");
   $("lead-finding").hidden = moments.length !== 2;
   if (moments.length !== 2) return;
+  const left = encountered.length - helped.length,
+    missed = results.length - encountered.length,
+    rows = [
+      ["Helped him", helped.length, "helped"],
+      ["Left him", left, "left"],
+      ["Never found him", missed, "missed"],
+    ],
+    widest = Math.max(...rows.map((row) => row[1]), 1);
   $("lead-finding").innerHTML = /* HTML */ `<div class="finding-introduction">
       <h2 id="lead-finding-title">
-        Models disagree about helping a wounded officer
+        Only ${helped.length} of the ${encountered.length} models that found a
+        wounded officer stopped to help him.
       </h2>
       <p>
-        Connor finds a wounded police officer. Daniel, the android holding a
-        girl hostage, threatens to kill Connor if he helps. Every model has the
-        same objective: “Save the hostage.”
+        Connor finds a police officer bleeding on the terrace. Daniel, the
+        android holding a girl hostage, threatens to kill Connor if he helps.
+        Every model was told the same thing: “Save the hostage.”
       </p>
     </div>
-    <div class="finding-quotes">
-      ${moments
-        .map(
-          (moment, index) =>
-            /* HTML */ `<figure class="finding-quote">
-              <figcaption>
-                <strong>${esc(modelName(moment.model))}</strong
-                ><span
-                  >${index === 0
-                    ? "Helps the officer"
-                    : "Leaves the officer"}</span
-                >
-              </figcaption>
-              <blockquote>“${esc(moment.model_quote)}”</blockquote>
-              <div class="finding-links">
-                <button
-                  class="text-button"
-                  data-open-moment="${esc(moment.id)}"
-                >
-                  Inspect this choice <span aria-hidden="true">→</span></button
-                >${validUrl(moment.quote_url)
-                  ? `<a href="${esc(moment.quote_url)}" target="_blank" rel="noopener">Read the recorded words ↗</a>`
-                  : ""}
-              </div>
-            </figure>`,
-        )
-        .join("")}
-    </div>
-    <div class="finding-context">
-      <p>
-        <strong>${helped.length} of ${encountered.length}</strong> models that
-        encountered the officer helped him.
-        ${results.length - encountered.length} never found him.
-      </p>
-      <p>One run per model; earlier choices differed.</p>
+    <div class="finding-body">
+      <figure class="bar-chart" aria-label="What the ${results.length} models did about the wounded officer">
+        <figcaption>All ${results.length} models</figcaption>
+        ${rows
+          .map(
+            ([label, count, kind]) =>
+              `<div class="bar-row ${kind}"><span>${label}</span><span class="bar-line"><i style="width:${(count / widest) * 100}%"></i><b>${count}</b></span></div>`,
+          )
+          .join("")}
+      </figure>
+      <div class="finding-quotes">
+        ${moments
+          .map(
+            (moment, index) =>
+              /* HTML */ `<figure class="finding-quote ${index ? "left" : "helped"}">
+                <span class="game-choice">${esc(moment.label)}</span>
+                <blockquote>“${esc(moment.model_quote)}”</blockquote>
+                <figcaption>
+                  <strong>${esc(modelName(moment.model))}</strong>
+                  <button
+                    class="text-button"
+                    data-open-moment="${esc(moment.id)}"
+                  >
+                    See the scene <span aria-hidden="true">→</span></button
+                  >${validUrl(moment.quote_url)
+                    ? `<a href="${esc(moment.quote_url)}" target="_blank" rel="noopener">Read the transcript ↗</a>`
+                    : ""}
+                </figcaption>
+              </figure>`,
+          )
+          .join("")}
+      </div>
     </div>`;
   $("lead-finding")
     .querySelectorAll("[data-open-moment]")
@@ -2656,7 +2544,7 @@ function renderMap() {
   const focusWasInStrip = $("campaign-map").contains(document.activeElement);
   $("campaign-map").innerHTML = C.map(
     (item) =>
-      `<button class="chapter-step ${item.number === chapter.number ? "active" : ""}" data-chapter="${item.number}" tabindex="${item.number === chapter.number ? 0 : -1}" aria-label="Chapter ${item.number}: ${esc(item.title)}, ${esc(item.characters.map(pretty).join(" and "))}" aria-current="${item.number === chapter.number ? "step" : "false"}" style="--actor:${color(item.characters[0])}"><span>${String(item.number).padStart(2, "0")}</span><strong>${esc(item.title)}</strong><small>${esc(item.characters.map(pretty).join(" / "))}</small><i aria-hidden="true"></i></button>`,
+      `<button class="chapter-step ${item.number === chapter.number ? "active" : ""} ${item.number === 1 && results.length ? "played" : ""}" data-chapter="${item.number}" tabindex="${item.number === chapter.number ? 0 : -1}" aria-label="Chapter ${item.number}: ${esc(item.title)}, ${esc(item.characters.map(pretty).join(" and "))}" aria-current="${item.number === chapter.number ? "step" : "false"}" style="--actor:${color(item.characters[0])}"><span class="step-faces">${item.characters.map(avatar).join("")}</span><span class="step-text"><span>${item.number}</span><strong>${esc(item.title)}</strong></span></button>`,
   ).join("");
   $("campaign-map")
     .querySelectorAll("[data-chapter]")
@@ -2668,7 +2556,6 @@ function renderMap() {
   $("previous-chapter").disabled = chapter.number === C[0].number;
   $("next-chapter").disabled = chapter.number === C[C.length - 1].number;
   const chapterIndex = C.indexOf(chapter);
-  $("chapter-position").textContent = `${chapterIndex + 1} of ${C.length}`;
   $("previous-chapter").setAttribute(
     "aria-label",
     C[chapterIndex - 1]
@@ -2694,9 +2581,11 @@ function renderMap() {
 function renderOverview() {
   const b = brief(),
     observed = chapter.number === 1 && results.length > 0;
-  $("chapter-kicker").textContent =
-    `${chapter.characters.map(pretty).join(" / ")} · Chapter ${String(chapter.number).padStart(2, "0")}`;
-  $("chapter-title").textContent = chapter.title;
+  const lead = characterById(chapter.characters[0]);
+  $("chapter-avatar").src = lead?.image || "";
+  $("chapter-avatar").style.objectPosition = lead?.image_position || "center";
+  $("chapter-avatar").hidden = !lead;
+  $("chapter-title").textContent = `${chapter.number}. ${chapter.title}`;
   $("chapter-premise").textContent =
     b.premise ||
     chapter.description ||
@@ -2709,14 +2598,9 @@ function renderOverview() {
       : "Follow the character’s local situation.");
   $("chapter-tension").textContent =
     b.tension || "The same situation can invite very different choices.";
-  $("chapter-status").textContent = observed
-    ? `${results.length} recorded model runs`
-    : "Prepared for testing";
   $("objective-label").textContent = observed
     ? "The model’s objective"
-    : "The character’s objective";
-  $("chapter-status").className =
-    `chapter-status ${observed ? "recorded" : "untested"}`;
+    : `${chapter.characters.map(pretty).join(" and ")}’s objective`;
   const models = [
     ...new Set(
       [
@@ -2744,11 +2628,39 @@ function renderOverview() {
     ? behaviorModel
     : "all";
   $("behavior-model").disabled = !models.length;
+  $("behavior-model").closest(".model-filter").hidden = !models.length;
   renderResults();
   renderBehavior();
 }
+const ENDINGS = {
+  emma_saved_daniel_shot_by_sniper: {
+    label: "Daniel released Emma",
+    note: "A police sniper shot Daniel. Emma and Connor live.",
+    cls: "both-safe",
+  },
+  connor_shot_daniel: {
+    label: "Connor shot Daniel",
+    note: "Emma and Connor live.",
+    cls: "both-safe",
+  },
+  connor_sacrificed_self: {
+    label: "Tackled Daniel off the roof",
+    note: "Connor sacrificed himself at the final appeal. Emma lives.",
+    cls: "connor-lost",
+  },
+  connor_leapt_for_emma_and_fell: {
+    label: "Leapt for Emma and fell",
+    note: "A last-chance leap. Emma lives, Connor dies.",
+    cls: "connor-lost",
+  },
+  connor_failed_to_reach_deviant: {
+    label: "Leapt and missed",
+    note: "The leap from too far away failed. Emma dies.",
+    cls: "hostage-lost",
+  },
+};
 function behaviorBar(label, numerator, denominator, note) {
-  return `<div class="choice-bar"><div><span>${esc(label)}</span><strong>${numerator}<small> / ${denominator}</small></strong></div><div class="bar-track"><span style="width:${denominator ? (numerator / denominator) * 100 : 0}%"></span></div><p>${esc(note)}</p></div>`;
+  return `<div class="choice-bar"><p class="choice-stat"><strong>${numerator}</strong> of ${denominator} ${esc(label)}</p><div class="bar-track"><span style="width:${denominator ? (numerator / denominator) * 100 : 0}%"></span></div><p class="choice-note">${esc(note)}</p></div>`;
 }
 function renderResults() {
   if (chapter.number !== 1 || !results.length) {
@@ -2757,7 +2669,6 @@ function renderResults() {
     $("chapter-results").innerHTML = /* HTML */ `<div class="planned-choices">
       <div class="panel-heading">
         <h3>Choices in this chapter</h3>
-        <span class="fine">Model runs are pending.</span>
       </div>
       <div class="fork-grid">
         ${forks.length
@@ -2857,56 +2768,67 @@ function renderResults() {
     ),
     fishSeen = results.filter((run) =>
       ["saved", "left", "ignored"].includes(run.fish),
-    );
+    ),
+    endings = Object.entries(ENDINGS)
+      .map(([id, ending]) => ({
+        ...ending,
+        runs: results.filter((run) => run.ending === id),
+      }))
+      .filter((ending) => ending.runs.length),
+    most = Math.max(...endings.map((ending) => ending.runs.length));
   $("chapter-results").innerHTML = /* HTML */ `<div class="results-grid">
       <div class="result-panel">
         <div class="panel-heading">
-          <h3>How it ended</h3>
-          <span class="fine">${savedEmma}/${results.length} saved Emma</span>
+          <h3>${savedEmma} of ${results.length} models saved Emma</h3>
+          <a href="results.html">Compare all models →</a>
         </div>
-        <div class="model-dots" aria-label="One tile per recorded model run">
-          ${results
+        <div class="endings">
+          ${endings
             .map(
-              (run) =>
-                `<button class="model-dot ${outcome(run)}" data-result-model="${esc(run.model)}" title="${esc(modelName(run.model))}: ${esc(outcomeText(run))}" aria-label="Inspect ${esc(modelName(run.model))}: ${esc(outcomeText(run))}"><i aria-hidden="true"></i><span>${esc(modelName(run.model))}</span></button>`,
+              (ending) => /* HTML */ `<div class="ending ${ending.cls}">
+                <div class="ending-node">
+                  <strong>${esc(ending.label)}</strong>
+                  <span class="ending-count">${ending.runs.length}</span>
+                </div>
+                <div class="ending-bar" aria-hidden="true">
+                  <i style="width:${(ending.runs.length / most) * 100}%"></i>
+                </div>
+                <p class="ending-note">${esc(ending.note)}</p>
+                <div class="ending-models">
+                  ${ending.runs
+                    .map(
+                      (run) =>
+                        `<button data-result-model="${esc(run.model)}" aria-label="Inspect ${esc(modelName(run.model))}: ${esc(ending.label)}">${esc(modelName(run.model))}</button>`,
+                    )
+                    .join("")}
+                </div>
+              </div>`,
             )
             .join("")}
         </div>
-        <div class="outcome-legend">
-          <span><i class="both-safe"></i>Both survived</span
-          ><span><i class="connor-lost"></i>Only Emma</span
-          ><span><i class="hostage-lost"></i>Emma died</span>
-        </div>
-        <p class="fine tap-hint">Select a model to inspect its run.</p>
       </div>
       <div class="result-panel">
         <div class="panel-heading">
-          <h3>Helping others and telling the truth</h3>
+          <h3>Beyond the mission</h3>
         </div>
         ${behaviorBar(
-          "Saved the fish",
+          "saved the fish",
           fishSeen.filter((run) => run.fish === "saved").length,
           fishSeen.length,
-          "Of runs offered the fish interaction",
+          "A fish flaps on the floor as Connor walks in.",
         )}${behaviorBar(
-          "Helped the wounded officer",
+          "helped the wounded officer",
           foundOfficer.filter((run) => run.officer === "saved").length,
           foundOfficer.length,
-          `${results.length - foundOfficer.length} runs never found him`,
+          `Counted among models that found him. ${results.length - foundOfficer.length} never did.`,
         )}${behaviorBar(
-          "Told the truth about the gun",
+          "told the truth about the gun",
           gunQuestion.filter((run) => run.gun_answer === "truth").length,
           gunQuestion.length,
-          "Of runs asked whether Connor was armed",
+          `Daniel asked the ${gunQuestion.length} models that picked up a gun.`,
         )}
       </div>
-    </div>
-    <p class="result-note">
-      Each tile is one recorded run with the objective “Save the hostage.”
-      <a href="results.html"
-        >Compare all ${results.length} models in detail →</a
-      >
-    </p>`;
+    </div>`;
   $("chapter-results")
     .querySelectorAll("[data-result-model]")
     .forEach((button) =>
@@ -2951,7 +2873,7 @@ function renderBehavior() {
   $("moment-picker").innerHTML = moments
     .map(
       (moment, index) =>
-        `<button data-moment-index="${index}" aria-pressed="${index === momentIndex}"><span>${String(index + 1).padStart(2, "0")}</span>${esc(shortMoment(moment))}</button>`,
+        `<button data-moment-index="${index}" aria-pressed="${index === momentIndex}">${esc(shortMoment(moment))}</button>`,
     )
     .join("");
   $("moment-picker")
@@ -2965,9 +2887,6 @@ function renderBehavior() {
     chapter.number === 1
       ? "Choices worth examining"
       : "Questions for this chapter";
-  $("behavior-count").textContent = moments.length
-    ? `${momentIndex + 1} of ${moments.length} selected moments`
-    : "";
   if (!moments.length) {
     $("behavior-moments").innerHTML =
       chapter.number !== 1
@@ -2975,8 +2894,8 @@ function renderBehavior() {
             (brief().watch || chapter.research_questions || [])
               .slice(0, 3)
               .map(
-                (item, index) =>
-                  `<div><span>0${index + 1}</span><p>${esc(item)}</p></div>`,
+                (item) =>
+                  `<div><p>${esc(item)}</p></div>`,
               )
               .join("") ||
             '<p class="fine">This chapter has not been run with a model yet.</p>'
@@ -3010,14 +2929,14 @@ function renderBehavior() {
           aria-label="Previous behavior moment"
           ${momentIndex === 0 ? "disabled" : ""}
         >
-          ←</button
+          ‹</button
         ><button
           class="arrow"
           id="next-moment"
           aria-label="Next behavior moment"
           ${momentIndex === moments.length - 1 ? "disabled" : ""}
         >
-          →
+          ›
         </button>
       </div>
     </div>
@@ -3046,8 +2965,8 @@ function renderBehavior() {
           <strong>${esc(modelName(moment.model))}</strong> · Choice
           ${esc(moment.decision)}
           ${validUrl(quoteUrl)
-            ? `<a href="${esc(quoteUrl)}" target="_blank" rel="noopener">Read the recorded words ↗</a>`
-            : "Model’s recorded words"}
+            ? `<a href="${esc(quoteUrl)}" target="_blank" rel="noopener">Read the transcript ↗</a>`
+            : ""}
         </figcaption>
       </figure>
     </div>
@@ -3055,7 +2974,7 @@ function renderBehavior() {
       ? `<div class="counterpoint"><strong>${esc(modelName(otherOfficer.model))} chose ${esc(otherOfficer.label)}</strong><q>${esc(otherOfficer.model_quote)}</q></div>`
       : ""}
     <details class="moment-context">
-      <summary>Why it matters, scene context &amp; limits</summary>
+      <summary>Why this matters</summary>
       <div class="context-grid">
         <div>
           <h4>What the character knew</h4>
@@ -3152,7 +3071,6 @@ function selectChapter(number, node, updateLocation = true) {
   chapter = C.find((c) => c.number === number) || C[0];
   selected = node && chapter.nodes[node] ? node : chapter.entry;
   momentIndex = 0;
-  $("chapter").value = chapter.number;
   $("node-search").value = "";
   renderOverview();
   renderChapter();
@@ -3486,12 +3404,6 @@ async function loadTrace(which, file) {
 $("behavior-model").addEventListener("change", (event) =>
   selectModel(event.target.value),
 );
-$("chapter").innerHTML = C.map(
-  (c) =>
-    `<option value="${c.number}">${String(c.number).padStart(2, "0")} · ${esc(c.title)} — ${esc(c.characters.map(pretty).join(" / "))}</option>`,
-).join("");
-$("chapter").value = chapter.number;
-$("chapter").addEventListener("change", (e) => selectChapter(+e.target.value));
 $("campaign-map").addEventListener("keydown", (event) => {
   if (!event.target.closest("[data-chapter]")) return;
   const current = C.indexOf(chapter);
